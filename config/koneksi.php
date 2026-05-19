@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 $host = "localhost";
-$db   = "nama_database";
+$port = "3306";
+$db   = "umkm_desa";
 $user = "root";
 $pass = "";
 
@@ -13,9 +14,12 @@ try {
         $pass
     );
 
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn->setAttribute(
+        PDO::ATTR_ERRMODE,
+        PDO::ERRMODE_EXCEPTION
+    );
 
 } catch (PDOException $e) {
-    error_log($e->getMessage());
-    die("Terjadi kesalahan pada server.");
+
+    die($e->getMessage());
 }

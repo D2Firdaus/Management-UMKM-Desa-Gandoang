@@ -1,0 +1,168 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #fbf8f2;
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 35px;
+  background: #f4f1eb;
+}
+
+.card-dashboard {
+  background: white;
+  border-radius: 25px;
+  padding: 35px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-dashboard h2 {
+  color: #65835e;
+}
+
+.card-dashboard p {
+  color: #666;
+}
+
+.judul-form {
+  text-align: center;
+  color: #65835e;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.form-bantuan {
+  display: grid;
+  grid-template-columns: 130px 20px 1fr;
+  gap: 28px 15px;
+  align-items: center;
+  max-width: 850px;
+  margin: auto;
+}
+
+.form-bantuan label {
+  font-size: 20px;
+}
+
+.form-bantuan input,
+.form-bantuan select,
+.form-bantuan textarea {
+  border-radius: 10px;
+  border: 1px solid #e1e1e1;
+  padding: 12px 18px;
+  font-size: 18px;
+}
+
+.form-bantuan textarea {
+  height: 130px;
+  resize: none;
+}
+
+.prioritas {
+  display: flex;
+  gap: 35px;
+  align-items: center;
+}
+
+.prioritas label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.prioritas input {
+  width: 25px;
+  height: 25px;
+  accent-color: #65835e;
+}
+
+.tombol {
+  margin-top: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tombol_batal {
+  background: #f0f2e6;
+  color: #65835e;
+  padding: 14px 55px;
+  border-radius: 7px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.tombol_simpan {
+  background: #65835e;
+  color: white;
+  padding: 14px 35px;
+  border: none;
+  border-radius: 7px;
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .sidebar.close {
+    margin-left: -280px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .card-dashboard {
+    padding: 20px;
+  }
+
+  .form-bantuan {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .form-bantuan span {
+    display: none;
+  }
+
+  .radio-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tombol {
+    margin-top: 40px;
+    gap: 15px;
+  }
+}
