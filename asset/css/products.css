@@ -1,0 +1,84 @@
+:root {
+  --primary-background: #fbf8f2;
+  --card-content-background: #fefdfb;
+  --font-family: Inter;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--primary-background);
+}
+
+.content {
+  background-color: var(--card-content-background);
+  box-shadow: 0 0.5rem 5px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.card-header h1 {
+  color: #638558;
+}
+
+.input-search {
+  background-color: transparent;
+  border: transparent;
+  width: 13rem;
+}
+
+.input-search:focus {
+  background-color: transparent !important;
+  outline: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 1rem 1rem 0 0;
+}
+
+/* Warna Background Header */
+.table thead tr {
+  background-color: #edf1e6 !important;
+}
+
+/* Menargetkan teks di header jika ingin disesuaikan */
+.table thead th {
+  background-color: inherit;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table > tbody > tr > *,
+.table > thead > tr > * {
+  padding: 1rem 0 1rem 0;
+}
+
+.table > tbody > tr:nth-of-type(even) > * {
+  background-color: #f2f2f2 !important;
+}
+
+.table > tbody > tr:nth-of-type(even):hover > * {
+  background-color: #cdcdcd !important;
+  transition: background-color 0.2s ease;
+}
+
+.table > tbody > tr:nth-of-type(odd) > * {
+  background-color: #fefdfb !important;
+}
+
+.table > tbody > tr:nth-of-type(odd):hover > * {
+  background-color: #d6d6d6 !important;
+}
