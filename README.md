@@ -1,4 +1,4 @@
-<p align="center">
+[<p align="center">
   <img src="https://drive.google.com/uc?export=view&id=1mJfdTRTyXhvMdAM1dTbNhwjz9RvkxBBS" width="100%">
 </p>
 
@@ -705,3 +705,4 @@ http://localhost/Management_UMKM_Desa_Gandoang
 
 Project ini dibuat untuk mendukung digitalisasi UMKM Desa serta memenuhi tugas akhir matakuliah Rekayasa Perangkat Lunak & Pemrograman Berbasis Web.
 
+](https://umkmdesagandoang.my.id/views/auth/login.php)
