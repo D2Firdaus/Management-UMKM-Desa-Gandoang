@@ -212,7 +212,6 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </table>
                     </div>
                     <!-- akhir tabel -->
-
                     <br>
 
                     <!-- awal dari pagination -->

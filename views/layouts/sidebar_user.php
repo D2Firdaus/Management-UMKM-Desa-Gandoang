@@ -5,22 +5,32 @@ session_start();
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
 
+$current_path = dirname($_SERVER['PHP_SELF']);
+
+// Fungsi untuk mengecek apakah folder saat ini mengandung nama kategori
+function isFolderActive($folderName)
+{
+    global $current_path;
+    // Mengembalikan 'active' jika path mengandung nama folder tersebut
+    return str_contains($current_path, $folderName) ? 'active' : '';
+}
+
 // $id_user = $_SESSION['id_user'];
 
-// $sql = "SELECT 
-//             user.nama,
-//             profile.foto
-//         FROM user
+// $sql = "SELECT
+// user.nama,
+// profile.foto
+// FROM user
 
-//         JOIN profile
-//             ON user.id_user = profile.id_user
+// JOIN profile
+// ON user.id_user = profile.id_user
 
-//         WHERE user.id_user = :id_user";
+// WHERE user.id_user = :id_user";
 
 // $stmt = $conn->prepare($sql);
 
 // $stmt->execute([
-//     ':id_user' => $id_user
+// ':id_user' => $id_user
 // ]);
 
 // $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -128,32 +138,32 @@ require_once __DIR__ . '/../../config/path_config.php';
         <!-- awal isi menu -->
         <div class="isi_menu">
 
-            <a href="#">
+            <a href="#" class="<?= isFolderActive('dashboard') ?>">
                 <img src="<?= $asset_path ?>icon/home.png" style="padding:5px" width="30px" height="30px">
                 Dashboard
             </a>
 
-            <a href="#">
+            <a href="#" class="<?= isFolderActive('profile') ?>">
                 <img src="<?= $asset_path ?>icon/profile.png" style="padding:5px" width="30px" height="30px">
                 Profile
             </a>
 
-            <a href="#">
+            <a href="#" class="<?= isFolderActive('umkm') ?>">
                 <img src="<?= $asset_path ?>icon/umkm.png" style="padding:5px" width="30px" height="30px">
                 Profile UMKM
             </a>
 
-            <a href="#">
+            <a href="#" class="<?= isFolderActive('products') ?>">
                 <img src="<?= $asset_path ?>icon/produk.png" style="padding:5px" width="30px" height="30px">
                 Detail Produk
             </a>
 
-            <a href="#" class="active">
+            <a href="#" class="<?= isFolderActive('bantuan') ?>">
                 <img src="<?= $asset_path ?>icon/bantuan.png" style="padding:5px" width="30px" height="30px">
                 Ajukan Bantuan
             </a>
 
-            <a href="#">
+            <a href="#" class="<?= isFolderActive('journey') ?>">
                 <img src="<?= $asset_path ?>icon/journey.png" style="padding:5px" width="30px" height="30px">
                 Journey
             </a>
