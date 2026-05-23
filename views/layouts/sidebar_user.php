@@ -146,7 +146,7 @@ function isActive(string $path): string {
                 Profile
             </a>
 
-            <a href="<?= BASE_URL ?>views/umkm/index.php" class="<?= isActive('views/profile_umkm/') ?>">
+            <a href="<?= BASE_URL ?>views/umkm/index.php" class="<?= isActive('views/umkm/') ?>">
                 <img src="<?= $asset_path ?>icon/umkm.png" style="padding:5px" width="30px" height="30px">
                 Profile UMKM
             </a>
