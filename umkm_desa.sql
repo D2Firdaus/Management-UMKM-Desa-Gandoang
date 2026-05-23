@@ -38,12 +38,12 @@ INSERT INTO `user` (`id_user`, `nama`, `email`, `password`, `status`) VALUES
 CREATE TABLE `profile` (
   `id_profile` int NOT NULL AUTO_INCREMENT,
   `id_user` int NOT NULL,
-  `nik` varchar(16) NOT NULL,
-  `no_hp` varchar(15) NOT NULL,
-  `no_kk` varchar(16) NOT NULL,
+  `nik` TEXT NOT NULL,
+  `no_hp` TEXT NOT NULL,
+  `no_kk` TEXT NOT NULL,
+  `foto_ktp` varchar(255) DEFAULT NULL,
   `foto_kk` varchar(255) NOT NULL,
   PRIMARY KEY (`id_profile`),
-  UNIQUE KEY `nik` (`nik`,`no_hp`,`no_kk`),
   KEY `id_user` (`id_user`),
   CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
