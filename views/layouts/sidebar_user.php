@@ -1,6 +1,7 @@
 <?php
-
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
@@ -25,6 +26,13 @@ require_once __DIR__ . '/../../config/path_config.php';
 
 // $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Menentukan status active secara dinamis berdasarkan URL script saat ini
+$current_page = $_SERVER['SCRIPT_NAME'] ?? '';
+
+function isActive(string $path): string {
+    global $current_page;
+    return (strpos($current_page, $path) !== false) ? 'active' : '';
+}
 ?>
 
 <style>
@@ -133,12 +141,12 @@ require_once __DIR__ . '/../../config/path_config.php';
                 Dashboard
             </a>
 
-            <a href="#">
+            <a href="<?= BASE_URL ?>views/profile/index.php" class="<?= isActive('views/profile/') ?>">
                 <img src="<?= $asset_path ?>icon/profile.png" style="padding:5px" width="30px" height="30px">
                 Profile
             </a>
 
-            <a href="#">
+            <a href="<?= BASE_URL ?>views/umkm/index.php" class="<?= isActive('views/umkm/') ?>">
                 <img src="<?= $asset_path ?>icon/umkm.png" style="padding:5px" width="30px" height="30px">
                 Profile UMKM
             </a>
@@ -148,7 +156,7 @@ require_once __DIR__ . '/../../config/path_config.php';
                 Detail Produk
             </a>
 
-            <a href="#" class="active">
+            <a href="<?= BASE_URL ?>views/bantuan/index.php" class="<?= isActive('views/bantuan/') ?>">
                 <img src="<?= $asset_path ?>icon/bantuan.png" style="padding:5px" width="30px" height="30px">
                 Ajukan Bantuan
             </a>
