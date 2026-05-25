@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 html,
@@ -39,8 +39,8 @@ body {
 .card-dashboard {
     background: white;
     border-radius: 25px;
-    padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 35px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* Header Section */

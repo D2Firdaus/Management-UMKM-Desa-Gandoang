@@ -1,6 +1,33 @@
 <?php
-$search     = isset($_GET['search'])   ? trim($_GET['search'])      : '';
-$per_page   = isset($_GET['show'])     ? (int)$_GET['show']         : 3;
+ob_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require_once __DIR__ . '/../../config/koneksi.php';
+require_once __DIR__ . '/../../config/path_config.php';
+require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
+
+$controller = new ProductController($conn);
+$data = $controller->index();
+
+$products     = $data['products'];
+$search       = $data['search'];
+$per_page     = $data['per_page'];
+$current_page = $data['current_page'];
+$total_pages  = $data['total_pages'];
+
+$sidebar_file = (
+    isset($_SESSION['user_role']) &&
+    $_SESSION['user_role'] === 'admin'
+)
+? 'sidebar_admin.php'
+: 'sidebar_user.php';
 ?>
 
 <!DOCTYPE html>
@@ -16,123 +43,140 @@ $per_page   = isset($_GET['show'])     ? (int)$_GET['show']         : 3;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="../../asset/boostrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../asset/boostrap/css/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../../asset/css/products.css">
+    <link rel="stylesheet" href="../../asset/icon/bootstrap-icons.min.css">
+    
+    <!-- bootstrap -->
+    <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- css -->
+    <link href="<?= $asset_path ?>css/bantuan.css" rel="stylesheet">
 
 </head>
 
 <body>
-    <!-- Navbar -->
 
-    <!-- Left Sidebar -->
-    <!-- Content -->
-    <div class="container-sm p-md-5 mt-5 content rounded-5">
-        <div class="card-header">
-            <h1 class="fs-2 fw-bold">Detail Produk</h1>
-            <p class="fs-5">Daftar produk yang tersedia.</p>
-        </div>
+    <div class="wrapper">
 
-        <!-- TOOLBAR: Show Entries + Search -->
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 pt-5">
+        <!-- sidebar -->
+    <?php require_once __DIR__ . '/../layouts/' . $sidebar_file; ?>
+        <!-- akhir sidebar -->
+        <!-- Content -->
+        <div class="main">
 
-            <!-- Show entries -->
-            <form method="GET" class="show-entries d-flex align-items-center gap-2">
-                <label for="show">Show</label>
-                <select name="show" id="show" onchange="this.form.submit()">
-                    <?php foreach ([3, 5, 10, 25] as $opt): ?>
-                        <option value="<?= $opt ?>" <?= $per_page == $opt ? 'selected' : '' ?>><?= $opt ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <label>entries</label>
-                <!-- Pertahankan search saat ganti show -->
-                <?php if ($search): ?>
-                    <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
-                <?php endif; ?>
-            </form>
+            <!-- Navbar -->
+            <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
+            <!-- Akhir Navbar -->
+            <div class="content">
+                <div class="card-dashboard">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3">
+                        <div>
+                            <h2>Detail Produk</h2>
+                            <p>Daftar produk yang tersedia.</p>
+                        </div>
+                    </div>
 
-            <!-- Search -->
-            <form method="GET" class="search-form">
-                <!-- Pertahankan show saat search -->
-                <div class="input-group justify-content-center align-items-center border border-1 m-3 border-black rounded-3">
-                    <input
-                        type="text"
-                        name="search"
-                        class="input-group-text text-start input-search"
-                        placeholder="Cari Produk..."
-                        value="<?= htmlspecialchars($search) ?>"
-                        autocomplete="off">
-                    <button class="input-group-text bg-white border-0" onclick="this.form.submit()">
-                        <i class="bi bi-search"></i>
-                    </button>
-                    <input type="hidden" name="show" value="<?= $per_page ?>">
-                    <input type="hidden" name="page" value="1">
+                    <!-- search -->
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3">
+
+                        <form method="get">
+                            Show
+                            <select name="show" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                                <?php foreach ([3, 5, 10, 25] as $opt): ?>
+                                    <option value="<?= $opt ?>" <?= $per_page == $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            entries
+                            <?php if ($search): ?>
+                                <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+                            <?php endif; ?>
+                        </form>
+
+                        <form method="get" class="d-flex gap-2">
+                            <input type="hidden" name="show" value="<?= $per_page ?>">
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Cari Produk..."
+                                value="<?= htmlspecialchars($search) ?>">
+                            <button type="submit" class="btn tombol_cari">
+                                Cari
+                            </button>
+                        </form>
+
+                    </div>
+                    <!-- akhir search -->
+
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nama Produk</th>
+                                <th scope="col">Harga</th>
+                                <th scope="col">Stok</th>
+                                <th scope="col">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop produk -->
+                            <?php foreach ($products as $row): ?>
+                                <tr>
+                                    <td><?= $row['id_produk'] ?></td>
+                                    <td><?= htmlspecialchars($row['nama_produk']) ?></td>
+                                    <td>Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
+                                    <td><?= $row['kategori'] ?></td>
+                                    <td>
+                                        <a href="edit.php?id=<?= $row['id_produk'] ?>" class="btn btn-warning btn-sm">
+                                            <img src="<?= $asset_path ?>/icon/edit.png" width="30px" height="30px">
+                                        </a>
+                                        <a href="delete.php?id=<?= $row['id_produk'] ?>" class="btn btn-danger btn-sm">
+                                            <img src="<?= $asset_path ?>icon/hapus.png" style="padding:5px" width="30px" height="30px">
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
-            </form>
+                    <ul class="pagination custom-pagination justify-content-center mt-4 flex-wrap">
 
-        </div>
+                        <!-- tombol previous -->
+                        <li class="page-item <?= ($current_page == 1) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page - 1 ?>&show=<?= $per_page ?>">
+                                Previous
+                            </a>
+                        </li>
 
-        <!-- Table -->
-        <div class="table-responsive mt-5">
-            <table class="table table-hover text-center">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Nama Produk</th>
-                        <th scope="col">Harga</th>
-                        <th scope="col">Stok</th>
-                        <th scope="col">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Loop produk -->
-                    <tr>
-                        <td>1</td>
-                        <td>Produk A</td>
-                        <td>Rp 100.000</td>
-                        <td>50</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Produk B</td>
-                        <td>Rp 150.000</td>
-                        <td>30</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Produk C</td>
-                        <td>Rp 200.000</td>
-                        <td>20</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        <!-- nomor halaman -->
+                        <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                            <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                                <a class="page-link" href="?page=<?= $i ?>&show=<?= $per_page ?>">
+                                    <?= $i ?>
+                                </a>
+                            </li>
+                        <?php } ?>
 
-        </div>
-        <!-- Footer -->
+                        <!-- tombol next -->
+                        <li class="page-item <?= ($current_page == $total_pages) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page + 1 ?>&show=<?= $per_page ?>">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Akhir Pagination -->
+                    <div class="d-flex justify-content-end">
+                        <a href="addProduct.php" class="btn" id="tambah">
+                            + Tambah Produk
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        <script src="<?= $asset_path ?>js/bantuan.js"></script>
+
+        <?php ob_end_flush(); ?>
 </body>
 
 </html>

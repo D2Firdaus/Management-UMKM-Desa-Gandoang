@@ -21,7 +21,7 @@ $sidebar_file = (
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile UMKM - UMKM Gandoang</title>
+    <title>Journey - UMKM Gandoang</title>
 
     <!-- Font Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,12 +55,12 @@ $sidebar_file = (
                 <div class="card-dashboard">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3">
                         <div>
-                            <h2>Profile UMKM</h2>
-                            <p>Manajemen data dan profil usaha UMKM Anda.</p>
+                            <h2>Journey</h2>
+                            <p>Lacak riwayat perjalanan dan status UMKM Anda.</p>
                         </div>
                     </div>
 
-                    <!-- konten dan form umkm akan diisi di sini -->
+                    <!-- konten dan form journey akan diisi di sini -->
 
                 </div>
             </div>

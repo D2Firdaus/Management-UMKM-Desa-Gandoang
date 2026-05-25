@@ -3,12 +3,19 @@ ob_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// Proteksi: harus login dan role admin
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || $_SESSION['user_role'] !== 'admin') {
+    header('Location: ../auth/login.php');
+    exit;
+}
+
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
-$id = $_GET['id'] ?? null;
 
+$id = $_GET['id'] ?? null;
 if (!$id) {
-    header("Location: bantuan.php");
+    header("Location: validasi_bantuan.php");
     exit;
 }
 
@@ -26,20 +33,19 @@ $stmt->execute([
 ]);
 
 $bantuan = $stmt->fetch(PDO::FETCH_ASSOC);
-
 if (!$bantuan) {
-    header("Location: index.php");
+    header("Location: validasi_bantuan.php");
     exit;
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hapus Bantuan</title>
+    <title>Hapus Validasi Bantuan - Admin</title>
 
     <link href="<?= $asset_path ?>boostrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= $asset_path ?>css/tambah_bantuan.css" rel="stylesheet">
@@ -49,10 +55,10 @@ if (!$bantuan) {
 
     <div class="wrapper">
 
-        <?php 
-        $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'sidebar_admin.php' : 'sidebar_user.php';
-        require_once __DIR__ . '/../layouts/' . $sidebar_file; 
-        ?>
+        <!-- sidebar -->
+        <?php require_once __DIR__ . '/../layouts/sidebar_admin.php'; ?>
+        <!-- akhir sidebar -->
+
         <div class="main">
 
             <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
@@ -61,12 +67,13 @@ if (!$bantuan) {
 
                 <div class="card-dashboard">
 
-                    <form action="<?= $bantuan_controller_path ?>proses_hapus_bantuan.php" method="post">
-                        <h2 class="judul-form">Form Hapus Bantuan</h2>
+                    <form action="../../controllers/validasi_bantuanControllers/proses_hapus_validasi_bantuan.php" method="post">
+                        <h2 class="judul-form">Form Hapus Validasi Bantuan</h2>
 
                         <div style="margin-bottom: 90px; font-size: 20px;">
                             Nama UMKM : <?= htmlspecialchars($bantuan['nama_umkm']); ?><br>
-                            Deskripsi Kebutuhan : <?= htmlspecialchars($bantuan['deskripsi']); ?>
+                            Deskripsi Kebutuhan : <?= htmlspecialchars($bantuan['deskripsi']); ?><br>
+                            Jenis Bantuan : <?= htmlspecialchars($bantuan['jenis']); ?>
                         </div>
 
                         <input type="hidden" name="id_kebutuhan" value="<?= $bantuan['id_kebutuhan']; ?>">
@@ -77,8 +84,7 @@ if (!$bantuan) {
                         </div>
 
                         <div class="tombol">
-
-                            <a href="index.php" class="tombol_batal">
+                            <a href="validasi_bantuan.php" class="tombol_batal">
                                 Batal
                             </a>
 
@@ -86,7 +92,6 @@ if (!$bantuan) {
                                 <img src="<?= $asset_path ?>icon/simpan.png" style="padding:5px" width="30px" height="30px">
                                 Simpan
                             </button>
-
                         </div>
 
                     </form>

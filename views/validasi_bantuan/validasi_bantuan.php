@@ -3,20 +3,22 @@ ob_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
+// Proteksi: harus login dan role admin
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || $_SESSION['user_role'] !== 'admin') {
+    header('Location: ../auth/login.php');
+    exit;
+}
+
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
 
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5;
-
 if (!in_array($limit, [3, 5, 10])) {
     $limit = 5;
 }
 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-
 if ($page < 1) {
     $page = 1;
 }
@@ -28,7 +30,7 @@ $total_sql = "SELECT COUNT(*) AS total
               FROM bantuan
               LEFT JOIN umkm ON bantuan.id_umkm = umkm.id_umkm
               LEFT JOIN user AS pengaju ON umkm.id_user = pengaju.id_user
-              LEFT JOIN user AS validator ON umkm.id_validator = validator.id_user
+              LEFT JOIN user AS validator ON bantuan.id_validator = validator.id_user
               WHERE bantuan.status != 'dihapus'
               AND (
                     bantuan.jenis LIKE :search
@@ -56,16 +58,12 @@ $sql = "SELECT
             pengaju.nama AS nama_pengaju,
             validator.nama AS nama_validator
         FROM bantuan
-
         LEFT JOIN umkm 
             ON bantuan.id_umkm = umkm.id_umkm
-
         LEFT JOIN user AS pengaju
             ON umkm.id_user = pengaju.id_user
-
         LEFT JOIN user AS validator
-            ON umkm.id_validator = validator.id_user
-
+            ON bantuan.id_validator = validator.id_user
         WHERE bantuan.status != 'dihapus'
         AND (
             bantuan.jenis LIKE :search
@@ -77,7 +75,7 @@ $sql = "SELECT
             OR pengaju.nama LIKE :search
             OR validator.nama LIKE :search
         )
-
+        ORDER BY bantuan.id_kebutuhan DESC
         LIMIT $limit OFFSET $offset";
 
 $stmt = $conn->prepare($sql);
@@ -89,20 +87,17 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Ajukan Bantuan</title>
+    <title>Validasi Bantuan - Admin</title>
 
     <!-- bootstrap -->
-    <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="<?= $asset_path ?>boostrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- css -->
-    <link href="<?= $asset_path ?>/css/bantuan.css" rel="stylesheet">
-
+    <link href="<?= $asset_path ?>css/bantuan.css" rel="stylesheet">
 </head>
 
 <body>
@@ -111,10 +106,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="wrapper">
 
         <!-- sidebar -->
-        <?php 
-        $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'sidebar_admin.php' : 'sidebar_user.php';
-        require_once __DIR__ . '/../layouts/' . $sidebar_file; 
-        ?>
+        <?php require_once __DIR__ . '/../layouts/sidebar_admin.php'; ?>
         <!-- akhir sidebar -->
 
         <!-- main -->
@@ -129,8 +121,8 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="card-dashboard">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3">
                         <div>
-                            <h2>Detail Bantuan</h2>
-                            <p>Verifikasi Bantuan Yang Diajukan Oleh UMKM</p>
+                            <h2>Validasi Bantuan</h2>
+                            <p>Verifikasi & Validasi Pengajuan Bantuan UMKM</p>
                         </div>
                     </div>
 
@@ -145,20 +137,17 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <option value="10" <?= ($limit == 10) ? 'selected' : '' ?>>10</option>
                             </select>
                             entries
-
                             <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
                         </form>
 
                         <form method="get" class="d-flex gap-2">
                             <input type="hidden" name="limit" value="<?= $limit ?>">
-
                             <input
                                 type="text"
                                 name="search"
                                 class="form-control"
                                 placeholder="Cari Pengajuan..."
                                 value="<?= htmlspecialchars($search) ?>">
-
                             <button type="submit" class="btn tombol_cari">
                                 Cari
                             </button>
@@ -172,49 +161,58 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <table class="table align-middle">
                             <thead>
                                 <tr>
-                                    <th>id_kebutuhan</th>
-                                    <th>nama_umkm</th>
-                                    <th>prioritas</th>
-                                    <th>nama_pengaju</th>
-                                    <th>nama_validator</th>
-                                    <th>jenis_bantuan</th>
-                                    <th>tanggal_pengajuan</th>
-                                    <th>tanggal_validasi</th>
+                                    <th>ID Kebutuhan</th>
+                                    <th>Nama UMKM</th>
+                                    <th>Prioritas</th>
+                                    <th>Pemilik / Pengaju</th>
+                                    <th>Validator</th>
+                                    <th>Jenis Bantuan</th>
+                                    <th>Tanggal Pengajuan</th>
+                                    <th>Tanggal Validasi</th>
                                     <th>Catatan</th>
-                                    <th>deskripsi</th>
-                                    <th>status</th>
-                                    <th>aksi</th>
+                                    <th>Deskripsi</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($data as $row): ?>
+                                <?php if (empty($data)): ?>
                                     <tr>
-                                        <td><?= $row['id_kebutuhan']; ?></td>
-                                        <td><?= htmlspecialchars($row['nama_umkm']); ?></td>
-                                        <td><?= htmlspecialchars($row['prioritas']); ?></td>
-                                        <td><?= htmlspecialchars($row['nama_pengaju'] ?? 'Tidak diketahui'); ?></td>
-                                        <td><?= $row['tanggal_validasi'] ? htmlspecialchars($row['nama_validator']) : 'Belum divalidasi'; ?></td>
-                                        <td><?= htmlspecialchars($row['jenis']); ?></td>
-                                        <td><?= $row['tanggal_pengajuan']; ?></td>
-                                        <td><?= $row['tanggal_validasi'] ?? 'Null'; ?></td>
-                                        <td><?= $row['catatan'] ? htmlspecialchars($row['catatan']) : 'Belum ada catatan'; ?></td>
-                                        <td><?= htmlspecialchars($row['deskripsi']); ?></td>
-                                        <td>
-                                            <span class="<?= $row['status']; ?>">
-                                                <?= $row['status']; ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="edit_bantuan.php?id=<?= $row['id_kebutuhan'] ?>" class="btn btn-warning btn-sm">
-                                                <img src="<?= $asset_path ?>/icon/edit.png" width="30px" height="30px">
-                                            </a>
-
-                                            <a href="hapus_bantuan.php?id=<?= $row['id_kebutuhan'] ?>" class="btn btn-danger btn-sm">
-                                                <img src="<?= $asset_path ?>icon/hapus.png" style="padding:5px" width="30px" height="30px">
-                                            </a>
-                                        </td>
+                                        <td colspan="12" class="text-center py-4 text-muted">Tidak ada data pengajuan bantuan.</td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php else: ?>
+                                    <?php foreach ($data as $row): ?>
+                                        <tr>
+                                            <td><?= $row['id_kebutuhan']; ?></td>
+                                            <td><?= htmlspecialchars($row['nama_umkm']); ?></td>
+                                            <td>
+                                                <span class="badge bg-<?= $row['prioritas'] === 'tinggi' ? 'danger' : ($row['prioritas'] === 'sedang' ? 'warning' : 'secondary') ?>">
+                                                    <?= ucfirst($row['prioritas']); ?>
+                                                </span>
+                                            </td>
+                                            <td><?= htmlspecialchars($row['nama_pengaju'] ?? 'Tidak diketahui'); ?></td>
+                                            <td><?= ($row['status'] !== 'pending' && $row['id_validator']) ? htmlspecialchars($row['nama_validator'] ?? '') : 'Belum divalidasi'; ?></td>
+                                            <td><?= htmlspecialchars($row['jenis']); ?></td>
+                                            <td><?= $row['tanggal_pengajuan']; ?></td>
+                                            <td><?= $row['tanggal_validasi'] ?? '-'; ?></td>
+                                            <td><?= $row['catatan'] ? htmlspecialchars($row['catatan']) : 'Belum ada catatan'; ?></td>
+                                            <td><?= htmlspecialchars($row['deskripsi']); ?></td>
+                                            <td>
+                                                <span class="<?= $row['status']; ?>">
+                                                    <?= ucfirst($row['status']); ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="edit_validasi_bantuan.php?id=<?= $row['id_kebutuhan'] ?>" class="btn btn-warning btn-sm" title="Validasi">
+                                                    <img src="<?= $asset_path ?>/icon/edit.png" width="30px" height="30px">
+                                                </a>
+                                                <a href="hapus_validasi_bantuan.php?id=<?= $row['id_kebutuhan'] ?>" class="btn btn-danger btn-sm" title="Hapus">
+                                                    <img src="<?= $asset_path ?>icon/hapus.png" style="padding:5px" width="30px" height="30px">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -222,46 +220,36 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     <br>
 
-                    <!-- awal dari pagination -->
-                    <ul class="pagination custom-pagination justify-content-center mt-4 flex-wrap">
-
-                        <!-- tombol previous -->
-                        <li class="page-item <?= ($page == 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $page - 1 ?>&limit=<?= $limit ?>">
-                                Previous
-                            </a>
-                        </li>
-
-                        <!-- nomor halaman -->
-                        <?php for ($i = 1; $i <= $total_page; $i++) { ?>
-                            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                                <a class="page-link" href="?page=<?= $i ?>&limit=<?= $limit ?>">
-                                    <?= $i ?>
+                    <!-- pagination -->
+                    <div class="d-flex flex-column align-items-center mt-4">
+                        <ul class="pagination custom-pagination justify-content-center">
+                            <!-- tombol previous -->
+                            <li class="page-item <?= ($page == 1) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page - 1 ?>&limit=<?= $limit ?>&search=<?= urlencode($search) ?>">
+                                    Previous
                                 </a>
                             </li>
-                        <?php } ?>
 
-                        <!-- tombol next -->
-                        <li class="page-item <?= ($page == $total_page) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $page + 1 ?>&limit=<?= $limit ?>">
-                                Next
-                            </a>
-                        </li>
+                            <!-- nomor halaman -->
+                            <?php for ($i = 1; $i <= $total_page; $i++) { ?>
+                                <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                                    <a class="page-link" href="?page=<?= $i ?>&limit=<?= $limit ?>&search=<?= urlencode($search) ?>">
+                                        <?= $i ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
 
-                    </ul>
-                    <!-- akhir dari pagination -->
-
-                    <!-- tambah -->
-                    <div class="d-flex justify-content-end">
-                        <a href="tambah_bantuan.php" class="btn" id="tambah">
-                            + Tambah Pengajuan
-                        </a>
+                            <!-- tombol next -->
+                            <li class="page-item <?= ($page == $total_page) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page + 1 ?>&limit=<?= $limit ?>&search=<?= urlencode($search) ?>">
+                                    Next
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <!-- akhir tambah -->
+                    <!-- akhir pagination -->
 
                 </div>
-                <!-- akhir card dashboard -->
-
             </div>
             <!-- akhir content -->
 
@@ -271,42 +259,21 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <!-- akhir pembungkus utama -->
 
-    <!-- alert sukses -->
-    <?php if (isset($_GET['status']) && $_GET['status'] == 'tambah_sukses'): ?>
+    <!-- alert validasi sukses -->
+    <?php if (isset($_GET['status']) && $_GET['status'] == 'validasi_sukses'): ?>
         <div class="alert_sukses_menambah">
             <div class="box_sukses_menambah">
                 <div class="icon_sukses_menambah">
                     <img src="<?= $asset_path ?>/icon/sukses.png" alt="Sukses">
                 </div>
-                <h2>Berhasil Menambahkan</h2>
-                <p>Pengajuan Bantuan Berhasil Ditambahkan</p>
-                <a href="index.php" class="tombol_sukses_menambah">
-                    Tutup
-                </a>
+                <h2>Berhasil Validasi</h2>
+                <p>Pengajuan Bantuan Berhasil Divalidasi</p>
+                <a href="validasi_bantuan.php" class="tombol_sukses_menambah">Tutup</a>
             </div>
         </div>
     <?php endif; ?>
-    <!-- akhir alert sukses -->
 
-
-    <!-- alert sukses mengedit -->
-
-    <!-- alert edit sukses -->
-    <?php if (isset($_GET['status']) && $_GET['status'] == 'edit_sukses'): ?>
-        <div class="alert_sukses_menambah">
-            <div class="box_sukses_menambah">
-                <div class="icon_sukses_menambah">
-                    <img src="<?= $asset_path ?>/icon/sukses.png" alt="Sukses">
-                </div>
-                <h2>Berhasil Mengedit</h2>
-                <p>Pengajuan Bantuan Berhasil Diperbarui</p>
-                <a href="index.php" class="tombol_sukses_menambah">Tutup</a>
-            </div>
-        </div>
-    <?php endif; ?>
-    <!-- akhir alert edit sukses -->
-
-    <!-- alert sukses menghapus bantuan -->
+    <!-- alert sukses menghapus -->
     <?php if (isset($_GET['status']) && $_GET['status'] == 'hapus_sukses'): ?>
         <div class="alert_sukses_menambah">
             <div class="box_sukses_menambah">
@@ -315,14 +282,12 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <h2>Berhasil Menghapus</h2>
                 <p>Pengajuan Bantuan Berhasil Dihapus</p>
-                <a href="index.php" class="tombol_sukses_menambah">Tutup</a>
+                <a href="validasi_bantuan.php" class="tombol_sukses_menambah">Tutup</a>
             </div>
         </div>
     <?php endif; ?>
-    <!-- akhir alert sukses menghapus bantuan -->
 
     <script src="<?= $asset_path ?>/js/bantuan.js"></script>
-
 </body>
 
 </html>

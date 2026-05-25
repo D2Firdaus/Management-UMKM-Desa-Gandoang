@@ -23,117 +23,122 @@ if (!isset($_SESSION['otp_verified'])) {
 
         .main {
             flex: 1;
-            background: url('../asset/images/bg-desa.png') center/cover no-repeat;
+            background: url('<?= $asset_path ?>images/backround_desa.png') center/cover no-repeat;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
         }
 
         .card {
             background: white;
-            border-radius: 16px;
-            padding: 2.5rem;
+            border-radius: 35px;
+            padding: 3rem 2.5rem;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 440px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
         }
 
         .card .logo {
             text-align: center;
-        }
-
-        .card .logo span {
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #2d5a3f;
-            display: block;
-        }
-
-        .card .logo h2 {
-            font-size: 1.6rem;
-            color: #2d5a3f;
-            margin: 0;
+            margin-bottom: 1rem;
         }
 
         .card h1 {
             text-align: center;
-            font-size: 1.4rem;
-            color: #2d5a3f;
-            margin: 1rem 0 0.3rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e3d2b;
+            margin: 0 0 0.5rem;
         }
 
         .card .subtitle {
             text-align: center;
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            font-weight: 500;
         }
 
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
 
         .form-group label {
             display: block;
             font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #1e3d2b;
         }
 
         .input-wrap {
             display: flex;
             align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 0.7rem 1rem;
-            gap: 0.6rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            gap: 0.8rem;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrap:focus-within {
+            border-color: #65835e;
         }
 
         .input-wrap input {
             border: none;
             outline: none;
             flex: 1;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            color: #333;
             font-family: 'Poppins', sans-serif;
         }
 
         .input-wrap .icon {
-            color: #999;
-            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .toggle-pw {
             cursor: pointer;
-            color: #999;
             border: none;
             background: none;
-            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
         }
 
         .hint {
-            font-size: 0.75rem;
-            color: #2d5a3f;
-            margin-top: 0.4rem;
+            font-size: 0.8rem;
+            color: #65835e;
+            margin-top: 0.6rem;
+            font-weight: 500;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 0.8rem;
-            background: #2d5a3f;
+            padding: 0.9rem;
+            background: #65835e;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             font-family: 'Poppins', sans-serif;
+            transition: background 0.2s;
         }
 
         .btn-submit:hover {
-            background: #1e3d2b;
+            background: #4f6b49;
         }
 
         .error-msg {
@@ -151,7 +156,15 @@ if (!isset($_SESSION['otp_verified'])) {
 <body>
     <div class="main">
         <div class="card">
-            <div class="logo"><img src="<?= $asset_path ?>images/logo.png" alt="UMKM Gandoang" style="height:60px;"></div>
+            <div class="logo">
+                <img src="<?= $asset_path ?>images/logo_form.png" alt="UMKM Gandoang" style="height:55px;">
+            </div>
+
+            <!-- password illustration -->
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <img src="<?= $asset_path ?>images/password.png" style="width: 140px; height: auto;">
+            </div>
+
             <h1>Buat Password</h1>
             <p class="subtitle">Buat password untuk akun Anda</p>
 
@@ -164,17 +177,25 @@ if (!isset($_SESSION['otp_verified'])) {
                 <div class="form-group">
                     <label for="password">Kata Sandi</label>
                     <div class="input-wrap">
-                        <span class="icon">&#128274;</span>
+                        <span class="icon">
+                            <img src="<?= $asset_path ?>images/gembok.png" style="width: 18px; height: 18px; opacity: 0.6;">
+                        </span>
                         <input type="password" name="password" id="password" placeholder="Masukkan Kata Sandi" required>
-                        <button type="button" class="toggle-pw" onclick="toggle('password')">&#128065;</button>
+                        <button type="button" class="toggle-pw" onclick="togglePassword('password')">
+                            <img src="<?= $asset_path ?>images/hide_eye.png" id="eye-icon-password" style="width: 20px; height: 20px; opacity: 0.6;">
+                        </button>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="confirm_password">Konfirmasi Kata Sandi</label>
                     <div class="input-wrap">
-                        <span class="icon">&#128274;</span>
+                        <span class="icon">
+                            <img src="<?= $asset_path ?>images/gembok.png" style="width: 18px; height: 18px; opacity: 0.6;">
+                        </span>
                         <input type="password" name="confirm_password" id="confirm_password" placeholder="Masukkan Kata Sandi" required>
-                        <button type="button" class="toggle-pw" onclick="toggle('confirm_password')">&#128065;</button>
+                        <button type="button" class="toggle-pw" onclick="togglePassword('confirm_password')">
+                            <img src="<?= $asset_path ?>images/hide_eye.png" id="eye-icon-confirm_password" style="width: 20px; height: 20px; opacity: 0.6;">
+                        </button>
                     </div>
                     <p class="hint">Minimal 8 karakter dengan kombinasi huruf dan angka</p>
                 </div>
@@ -184,9 +205,16 @@ if (!isset($_SESSION['otp_verified'])) {
     </div>
     <?php include '../layouts/footer.php'; ?>
     <script>
-        function toggle(id) {
+        function togglePassword(id) {
             var p = document.getElementById(id);
-            p.type = p.type === 'password' ? 'text' : 'password';
+            var icon = document.getElementById('eye-icon-' + id);
+            if (p.type === 'password') {
+                p.type = 'text';
+                icon.style.opacity = '1';
+            } else {
+                p.type = 'password';
+                icon.style.opacity = '0.6';
+            }
         }
     </script>
 </body>

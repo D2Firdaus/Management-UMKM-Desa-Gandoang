@@ -17,7 +17,7 @@ class UserModel
     public function findByEmail(string $email): array|false
     {
         $stmt = $this->conn->prepare(
-            "SELECT id_user, nama, email, password, status FROM user WHERE email = :email"
+            "SELECT id_user, nama, email, password, status, role FROM user WHERE email = :email"
         );
         $stmt->execute([':email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -43,7 +43,7 @@ class UserModel
     public function create(string $nama, string $email, string $hashedPassword): void
     {
         $stmt = $this->conn->prepare(
-            "INSERT INTO user (nama, email, password, status) VALUES (:nama, :email, :password, 'aktif')"
+            "INSERT INTO user (nama, email, password, status, role) VALUES (:nama, :email, :password, 'aktif', 'umkm')"
         );
         $stmt->execute([
             ':nama'     => $nama,

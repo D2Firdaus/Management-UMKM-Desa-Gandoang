@@ -1,4 +1,8 @@
 <?php
+ob_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -52,7 +56,10 @@ $umkm_data = $umkm_result->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="wrapper">
 
-        <?php require_once __DIR__ . '/../layouts/sidebar_user.php'; ?>
+        <?php 
+        $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'sidebar_admin.php' : 'sidebar_user.php';
+        require_once __DIR__ . '/../layouts/' . $sidebar_file; 
+        ?>
 
         <div class="main">
 

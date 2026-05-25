@@ -1,38 +1,8 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
 
-// $id_user = $_SESSION['id_user'];
-
-// $sql = "SELECT 
-//             user.nama,
-//             profile.foto
-//         FROM user
-
-//         JOIN profile
-//             ON user.id_user = profile.id_user
-
-//         WHERE user.id_user = :id_user";
-
-// $stmt = $conn->prepare($sql);
-
-// $stmt->execute([
-//     ':id_user' => $id_user
-// ]);
-
-// $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Menentukan status active secara dinamis berdasarkan URL script saat ini
-$current_page = $_SERVER['SCRIPT_NAME'] ?? '';
-
-function isActive(string $path): string {
-    global $current_page;
-    return (strpos($current_page, $path) !== false) ? 'active' : '';
-}
 ?>
 
 <style>
@@ -53,16 +23,29 @@ function isActive(string $path): string {
         margin-left: -280px;
     }
 
+    /* Overlay backdrop untuk mobile */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 199;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
     .sidebar_atas {
         display: flex;
-        gap: 15px;
+        gap: 3px;
         align-items: center;
         margin-bottom: 40px;
     }
 
     .foto_profil {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
         object-fit: cover;
     }
@@ -83,21 +66,38 @@ function isActive(string $path): string {
         display: flex;
         flex-direction: column;
         gap: 15px;
+        position: relative;
     }
 
     .isi_menu a {
+        position: relative;
         text-decoration: none;
         color: #65835e;
         padding: 14px 18px;
         border-radius: 12px;
         transition: 0.3s;
         font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .isi_menu a:hover,
     .isi_menu a.active {
         background: #6d8d69;
         color: white;
+    }
+
+    .isi_menu a.active::before {
+        content: '';
+        position: absolute;
+        left: -18px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 35px;
+        background-color: #65835e;
+        border-radius: 4px;
     }
 
     /* Gambar Bawah Sidebar */
@@ -111,57 +111,96 @@ function isActive(string $path): string {
         width: 100%;
         display: block;
     }
-
     /* Akhir Gambar Bawah Sidebar */
+
+    /* === RESPONSIVE MOBILE === */
+    @media (max-width: 768px) {
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            margin-left: -280px;
+            z-index: 1000;
+        }
+
+        .sidebar.close {
+            margin-left: 0;
+        }
+
+        .sidebar-close-btn {
+            display: block;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: #65835e;
+            cursor: pointer;
+            line-height: 1;
+            z-index: 1010;
+        }
+    }
+
+    /* Desktop close button hidden */
+    @media (min-width: 769px) {
+        .sidebar-close-btn {
+            display: none;
+        }
+    }
 </style>
 
 <div class="sidebar">
+    <!-- Close button for mobile -->
+    <button class="sidebar-close-btn" id="sidebarCloseBtn">&times;</button>
 
     <!-- pembungkus utama -->
     <div>
 
         <!-- awal sidebar atas -->
         <div class="sidebar_atas">
-            <?php /* <img src="<?= $asset_path ?>images/<?= $user['foto']; ?>" class="foto_profil"> */ ?>
-            <img src="<?= $asset_path ?>/images/arif.jpg" class="foto_profil">
+            <img src="<?= $asset_path ?>/images/profile.png" class="foto_profil">
 
             <div>
-                <?php /* <h2><?= htmlspecialchars($user['nama']); ?></h2> */ ?>
-                <h2>Udin Petot</h2>
+                <h2><?= htmlspecialchars($_SESSION['user_nama'] ?? 'Pengguna') ?></h2>
                 <p>Your Personal Account</p>
             </div>
         </div>
         <!-- akhir sidebar atas -->
 
         <!-- awal isi menu -->
+        <?php
+        $current_uri = $_SERVER['REQUEST_URI'];
+        $is_dashboard = strpos($current_uri, '/views/layouts/dashboard_user.php') !== false;
+        ?>
         <div class="isi_menu">
 
-            <a href="#">
+            <a href="<?= $view_path ?>layouts/dashboard_user.php" class="<?= $is_dashboard ? 'active' : '' ?>">
                 <img src="<?= $asset_path ?>icon/home.png" style="padding:5px" width="30px" height="30px">
                 Dashboard
             </a>
 
-            <a href="<?= BASE_URL ?>views/profile/index.php" class="<?= isActive('views/profile/') ?>">
+            <a href="<?= $view_path ?>profile/index.php" class="<?= strpos($current_uri, '/views/profile') !== false ? 'active' : '' ?>">
                 <img src="<?= $asset_path ?>icon/profile.png" style="padding:5px" width="30px" height="30px">
                 Profile
             </a>
 
-            <a href="<?= BASE_URL ?>views/umkm/index.php" class="<?= isActive('views/umkm/') ?>">
+            <a href="<?= $view_path ?>umkm/index.php" class="<?= strpos($current_uri, '/views/umkm') !== false ? 'active' : '' ?>">
                 <img src="<?= $asset_path ?>icon/umkm.png" style="padding:5px" width="30px" height="30px">
                 Profile UMKM
             </a>
 
-            <a href="#">
+            <a href="<?= $view_path ?>products/index.php" class="<?= strpos($current_uri, '/views/products') !== false ? 'active' : '' ?>">
                 <img src="<?= $asset_path ?>icon/produk.png" style="padding:5px" width="30px" height="30px">
                 Detail Produk
             </a>
 
-            <a href="<?= BASE_URL ?>views/bantuan/index.php" class="<?= isActive('views/bantuan/') ?>">
+            <a href="<?= $view_path ?>bantuan/index.php" class="<?= strpos($current_uri, '/views/bantuan') !== false ? 'active' : '' ?>">
                 <img src="<?= $asset_path ?>icon/bantuan.png" style="padding:5px" width="30px" height="30px">
                 Ajukan Bantuan
             </a>
 
-            <a href="#">
+            <a href="<?= $view_path ?>journey/index.php" class="<?= strpos($current_uri, '/views/journey') !== false ? 'active' : '' ?>">
                 <img src="<?= $asset_path ?>icon/journey.png" style="padding:5px" width="30px" height="30px">
                 Journey
             </a>

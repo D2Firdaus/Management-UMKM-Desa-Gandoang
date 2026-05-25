@@ -59,9 +59,14 @@ class AuthController
         $_SESSION['user_id']    = $user['id_user'];
         $_SESSION['user_nama']  = $user['nama'];
         $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_role']  = $user['role'];
         $_SESSION['logged_in']  = true;
 
-        header('Location: ../../views/dashboard.php');
+        if ($user['role'] === 'admin') {
+            header('Location: ../../views/layouts/dashboard_admin.php');
+        } else {
+            header('Location: ../../views/layouts/dashboard_user.php');
+        }
         exit;
     }
 

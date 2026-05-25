@@ -1,0 +1,191 @@
+<?php
+
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+require_once __DIR__ . '/../../config/koneksi.php';
+require_once __DIR__ . '/../../config/path_config.php';
+
+?>
+
+<style>
+    .sidebar {
+        width: 280px;
+        min-width: 280px;
+        height: 100vh;
+        background: #f8f7eb;
+        padding: 25px;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+    }
+
+    .sidebar.close {
+        margin-left: -280px;
+    }
+
+    .sidebar_atas {
+        display: flex;
+        gap: 3px;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .foto_profil {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .sidebar_atas h2 {
+        color: #65835e;
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+
+    .sidebar_atas p {
+        font-size: 14px;
+        color: #444;
+        margin-bottom: 0;
+    }
+
+    .isi_menu {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        position: relative;
+    }
+
+    .isi_menu a {
+        position: relative;
+        text-decoration: none;
+        color: #65835e;
+        padding: 14px 18px;
+        border-radius: 12px;
+        transition: 0.3s;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .isi_menu a:hover,
+    .isi_menu a.active {
+        background: #6d8d69;
+        color: white;
+    }
+
+    .isi_menu a.active::before {
+        content: '';
+        position: absolute;
+        left: -18px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 35px;
+        background-color: #65835e;
+        border-radius: 4px;
+    }
+
+    /* Gambar Bawah Sidebar */
+    .sidebar_bawah {
+        margin-left: -25px;
+        margin-right: -25px;
+        margin-bottom: -25px;
+    }
+
+    .sidebar_bawah img {
+        width: 100%;
+        display: block;
+    }
+    /* Akhir Gambar Bawah Sidebar */
+
+    /* === RESPONSIVE MOBILE === */
+    @media (max-width: 768px) {
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            margin-left: -280px;
+            z-index: 1000;
+        }
+
+        .sidebar.close {
+            margin-left: 0;
+        }
+
+        .sidebar-close-btn {
+            display: block;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: #65835e;
+            cursor: pointer;
+            line-height: 1;
+            z-index: 1010;
+        }
+    }
+
+    /* Desktop close button hidden */
+    @media (min-width: 769px) {
+        .sidebar-close-btn {
+            display: none;
+        }
+    }
+</style>
+
+<div class="sidebar">
+    <!-- Close button for mobile -->
+    <button class="sidebar-close-btn" id="sidebarCloseBtn">&times;</button>
+
+    <!-- pembungkus utama -->
+    <div>
+
+        <!-- awal sidebar atas -->
+        <div class="sidebar_atas">
+            <img src="<?= $asset_path ?>/images/profile.png" class="foto_profil">
+
+            <div>
+                <h2><?= htmlspecialchars($_SESSION['user_nama'] ?? 'Admin') ?></h2>
+                <p>Your Personal Account</p>
+            </div>
+        </div>
+        <!-- akhir sidebar atas -->
+
+        <!-- awal isi menu -->
+        <?php $current_uri = $_SERVER['REQUEST_URI']; ?>
+        <div class="isi_menu">
+
+            <a href="<?= $view_path ?>layouts/dashboard_admin.php" class="<?= strpos($current_uri, '/dashboard_admin.php') !== false ? 'active' : '' ?>">
+                <img src="<?= $asset_path ?>icon/home.png" style="padding:5px" width="30px" height="30px">
+                Dashboard
+            </a>
+
+            <a href="<?= $view_path ?>validasi_bantuan/validasi_bantuan.php" class="<?= (strpos($current_uri, '/views/validasi_bantuan') !== false || strpos($current_uri, '/views/bantuan') !== false) ? 'active' : '' ?>">
+                <img src="<?= $asset_path ?>icon/bantuan.png" style="padding:5px" width="30px" height="30px">
+                Validasi Bantuan
+            </a>
+
+            <a href="<?= $view_path ?>validasi_umkm/validasi_umkm.php" class="<?= strpos($current_uri, '/views/validasi_umkm') !== false ? 'active' : '' ?>">
+                <img src="<?= $asset_path ?>icon/umkm.png" style="padding:5px" width="30px" height="30px">
+                Validasi UMKM
+            </a>
+
+        </div>
+        <!-- akhir isi menu -->
+
+    </div>
+
+    <!-- bawah -->
+    <div class="sidebar_bawah">
+        <img src="<?= $asset_path ?>images/sidebar.png">
+    </div>
+    <!-- akhir bawah -->
+
+</div>
+<!-- akhir pembungkus utama -->
