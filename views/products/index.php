@@ -150,7 +150,17 @@ $sidebar_file = (
                         </li>
 
                         <!-- nomor halaman -->
-                        <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                        <?php 
+                        $start_page = 1;
+                        if ($current_page >= 5) {
+                            $start_page = floor($current_page / 5) * 5;
+                        }
+                        $end_page = min($start_page + 5, $total_pages);
+                        if ($start_page > 1 && $start_page > $total_pages) {
+                            $start_page = max(1, $total_pages - 5);
+                        }
+                        for ($i = $start_page; $i <= $end_page; $i++) { 
+                        ?>
                             <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
                                 <a class="page-link" href="?page=<?= $i ?>&show=<?= $per_page ?>">
                                     <?= $i ?>

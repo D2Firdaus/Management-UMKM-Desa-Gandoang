@@ -25,6 +25,19 @@ require_once __DIR__ . '/../../config/path_config.php';
         margin-left: -280px;
     }
 
+    /* Overlay backdrop untuk mobile */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 199;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
     .sidebar_atas {
         display: flex;
         gap: 3px;
@@ -100,6 +113,7 @@ require_once __DIR__ . '/../../config/path_config.php';
         width: 100%;
         display: block;
     }
+
     /* Akhir Gambar Bawah Sidebar */
 
     /* === RESPONSIVE MOBILE === */
@@ -108,12 +122,16 @@ require_once __DIR__ . '/../../config/path_config.php';
             position: fixed;
             left: 0;
             top: 0;
-            margin-left: -280px;
+            margin-left: 0;
             z-index: 1000;
+            overflow-y: auto;
+            width: 280px !important;
+            min-width: 280px !important;
+            padding: 25px !important;
         }
 
         .sidebar.close {
-            margin-left: 0;
+            margin-left: -280px;
         }
 
         .sidebar-close-btn {
@@ -131,10 +149,13 @@ require_once __DIR__ . '/../../config/path_config.php';
         }
     }
 
-    /* Desktop close button hidden */
+    /* Desktop close button and overlay hidden */
     @media (min-width: 769px) {
         .sidebar-close-btn {
             display: none;
+        }
+        .sidebar-overlay {
+            display: none !important;
         }
     }
 </style>

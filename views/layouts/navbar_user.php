@@ -11,6 +11,8 @@
         justify-content: space-between;
         padding: 0 30px;
         color: white;
+        position: relative;
+        z-index: 100;
     }
 
     /* Akhir Navbar */
@@ -27,6 +29,7 @@
         align-items: center;
         gap: 6px;
         cursor: pointer;
+        transition: 0.3s;
     }
 
     .hamburger span {
@@ -54,10 +57,50 @@
         font-size: 18px;
         text-decoration: none;
         color: #fafbfa;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .tombol_logout a img {
-        margin-right: 1rem;
+        margin-right: 0rem;
+    }
+
+    /* Responsive Mobile */
+    @media (max-width: 768px) {
+        .navbar {
+            padding: 0 20px;
+        }
+
+        .tombol_logout a {
+            font-size: 16px;
+        }
+
+        .tombol_logout a img {
+            width: 20px !important;
+            height: 20px !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .navbar {
+            padding: 0 15px;
+        }
+
+        .hamburger {
+            width: 40px;
+            height: 40px;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+        }
+
+        .tombol_logout a {
+            font-size: 14px;
+        }
     }
 
     /* Akhir Tombol Hamburger */

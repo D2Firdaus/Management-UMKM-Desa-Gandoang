@@ -13,10 +13,42 @@ body {
   background: #fbf8f2;
 }
 
+/* === MOBILE GLOBAL SCROLL FIX === */
+@media (max-width: 768px) {
+  html,
+  body {
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+}
+
 .wrapper {
   display: flex;
   width: 100%;
   height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: auto;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  /* sidebar pakai position:fixed di mobile, jadi tidak perlu ambil space di flex */
+  .wrapper > .sidebar {
+    flex: none;
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .wrapper > .main {
+    width: 100%;
+    flex: 1;
+  }
 }
 
 /* Main */
@@ -27,6 +59,15 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+@media (max-width: 768px) {
+  .main {
+    height: auto;
+    min-height: 100vh;
+    width: 100%;
+  }
+}
+
 /* Akhir main */
 
 /* content */
@@ -37,6 +78,14 @@ body {
   overflow-x: hidden;
   padding: 35px;
   background: #f4f1eb;
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex: none;
+    overflow-y: visible;
+    height: auto;
+  }
 }
 
 .card-dashboard {
@@ -119,6 +168,7 @@ body {
   background-color: #e9ece5;
   transition: 0.2s;
 }
+
 /* akhir tabel */
 
 /* status */
@@ -142,6 +192,7 @@ body {
   padding: 8px 14px;
   border-radius: 8px;
 }
+
 /* akhir status */
 
 /* pagination */
@@ -175,6 +226,7 @@ body {
 .custom-pagination .page-link:focus {
   box-shadow: none;
 }
+
 /* akhir pagination */
 
 /* tombol pencarian */
@@ -193,6 +245,7 @@ body {
   box-shadow: none;
   color: #ffffff;
 }
+
 /* akhir tombol pencarian */
 
 /* tombol tambah */
@@ -203,6 +256,7 @@ body {
   background-color: #618764;
   color: #ffffff;
 }
+
 /* akhir tombol tambah */
 
 /* alert sukses */
@@ -258,6 +312,7 @@ body {
   font-size: 22px;
   display: inline-block;
 }
+
 /* akhir alert sukses */
 
 /* RESPONSIVE */
@@ -275,10 +330,28 @@ body {
   }
 
   .content {
-    padding: 20px;
+    padding: 15px;
+    padding-bottom: 120px;
   }
 
   .card-dashboard {
-    padding: 20px;
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  .custom-pagination .page-link {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+  }
+
+  .custom-pagination {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-pagination .page-link {
+    padding: 4px 8px !important;
+    font-size: 12px !important;
   }
 }

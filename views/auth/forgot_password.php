@@ -77,6 +77,8 @@
             border: none;
             outline: none;
             flex: 1;
+            min-width: 0;
+            width: 100%;
             font-size: 0.9rem;
             font-family: 'Poppins', sans-serif;
         }

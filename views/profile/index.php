@@ -363,6 +363,7 @@ function statusPopup(): void
     <?php statusPopup(); ?>
 
     <script src="<?= BASE_URL ?>asset/boostrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= BASE_URL ?>asset/js/bantuan.js"></script>
 
     <script>
         // ─── Preview gambar yang baru dipilih ────────────────────────────────────

@@ -94,6 +94,8 @@ if (!isset($_SESSION['reset_verified']) || !isset($_SESSION['reset_email'])) {
             border: none;
             outline: none;
             flex: 1;
+            min-width: 0;
+            width: 100%;
             font-size: 0.95rem;
             color: #333;
             font-family: 'Poppins', sans-serif;
