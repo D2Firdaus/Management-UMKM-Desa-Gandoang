@@ -1,0 +1,170 @@
+:root {
+  --primary-background: #fbf8f2;
+  --card-content-background: #fefdfb;
+  --font-family: Inter;
+  --primary-green: #65835e;
+  --dark-green: #6d8d69;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  background-color: var(--primary-background);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  body, html {
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+}
+
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: auto;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  .wrapper > .sidebar {
+    flex: none;
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .sidebar.close {
+    margin-left: -280px;
+  }
+
+  .wrapper > .main {
+    width: 100%;
+    flex: 1;
+  }
+}
+
+/* Main */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .main {
+    height: auto;
+    min-height: 100vh;
+    width: 100%;
+  }
+}
+
+.content {
+  padding: 35px;
+  margin: 25px;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin: 10px;
+    padding: 15px;
+    padding-bottom: 60px;
+  }
+}
+
+/* Form Card */
+.form-card {
+  background-color: var(--card-content-background);
+  border-radius: 16px;
+  padding: 40px 50px;
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .form-card {
+    padding: 25px 20px;
+  }
+}
+
+/* Upload Area */
+.upload-area {
+  border: 2px dashed #c0cfc0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.preview-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: #f1f5f1;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+/* Buttons */
+.btn-batal {
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 8px;
+  padding: 8px 24px;
+  transition: background-color 0.2s;
+}
+
+.btn-batal:hover {
+  background-color: #c8c8c8;
+  color: #111;
+}
+
+.btn-simpan {
+  background-color: var(--primary-green);
+  color: white;
+  border-radius: 8px;
+  padding: 8px 24px;
+  transition: background-color 0.2s;
+}
+
+.btn-simpan:hover {
+  background-color: var(--dark-green);
+  color: white;
+}
+
+/* Form controls */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.2rem rgba(101, 131, 94, 0.2);
+}

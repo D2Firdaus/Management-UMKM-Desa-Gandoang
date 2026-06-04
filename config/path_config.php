@@ -15,3 +15,4 @@ $view_path = BASE_URL . 'views/';
 define('CONTROLLER_PATH', BASE_URL . 'controllers/');
 $auth_controller_path = CONTROLLER_PATH . 'authControllers/';
 $bantuan_controller_path = CONTROLLER_PATH . 'bantuanControllers/';
+$product_controller_path = CONTROLLER_PATH . 'productControllers/';
