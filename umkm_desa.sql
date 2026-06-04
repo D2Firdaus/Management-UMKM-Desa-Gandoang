@@ -7,6 +7,7 @@
 -- Server version: 8.4.3
 -- PHP Version: 8.3.30
 
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -78,6 +79,10 @@ CREATE TABLE `journey` (
 -- Dumping data for table `journey`
 --
 
+--
+-- Dumping data untuk tabel `journey`
+--
+
 INSERT INTO `journey` (`id_journey`, `id_umkm`, `foto`, `deksripsi`, `tanggal`) VALUES
 (1, 1, 'journey1.jpg', 'Pembukaan warung pertama kali', '2024-01-15'),
 (2, 1, 'journey2.jpg', 'Renovasi warung dan tambah menu', '2024-06-20'),
@@ -93,34 +98,35 @@ INSERT INTO `journey` (`id_journey`, `id_umkm`, `foto`, `deksripsi`, `tanggal`) 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `produk`
+-- Struktur dari tabel `produk`
 --
 
 CREATE TABLE `produk` (
-  `id_produk` int NOT NULL,
-  `id_umkm` int NOT NULL,
-  `nama_produk` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kategori` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `harga` int NOT NULL,
-  `deksripsi` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `foto` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `id_produk` int(11) NOT NULL,
+  `id_umkm` int(11) NOT NULL,
+  `nama_produk` varchar(100) NOT NULL,
+  `status` enum('aktif','dihapus') NOT NULL DEFAULT 'aktif',
+  `kategori` varchar(50) NOT NULL,
+  `harga` int(11) NOT NULL,
+  `deskripsi` text NOT NULL,
+  `foto` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `produk`
+-- Dumping data untuk tabel `produk`
 --
 
-INSERT INTO `produk` (`id_produk`, `id_umkm`, `nama_produk`, `kategori`, `harga`, `deksripsi`, `foto`) VALUES
-(1, 1, 'Nasi Goreng Spesial', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg'),
-(2, 1, 'Mie Ayam Bakso', 'Makanan', 12000, 'Mie ayam dengan bakso sapi', 'mieayam.jpg'),
-(3, 2, 'Beras Premium 5kg', 'Sembako', 65000, 'Beras kualitas premium', 'beras.jpg'),
-(4, 2, 'Minyak Goreng 2L', 'Sembako', 32000, 'Minyak goreng kemasan 2 liter', 'minyak.jpg'),
-(5, 3, 'Service Ringan Motor', 'Jasa', 50000, 'Ganti oli dan tune up', 'service.jpg'),
-(6, 4, 'Kaos Polos', 'Pakaian', 45000, 'Kaos cotton combed 30s', 'kaos.jpg'),
-(7, 5, 'Keripik Singkong Original', 'Makanan', 10000, 'Keripik singkong renyah 200gr', 'keripik.jpg'),
-(8, 5, 'Keripik Singkong Pedas', 'Makanan', 12000, 'Keripik singkong pedas 200gr', 'keripik_pedas.jpg'),
-(9, 7, 'Lele Segar 1kg', 'Perikanan', 25000, 'Lele segar siap masak', 'lele.jpg'),
-(10, 10, 'Kue Lapis Legit', 'Makanan', 85000, 'Kue lapis legit homemade', 'lapis.jpg');
+INSERT INTO `produk` (`id_produk`, `id_umkm`, `nama_produk`, `status`, `kategori`, `harga`, `deskripsi`, `foto`) VALUES
+(1, 1, 'Nasi Goreng Spesial', 'dihapus', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg'),
+(2, 1, 'Mie Ayam Bakso', 'aktif', 'Makanan', 12000, 'Mie ayam dengan bakso sapi', 'mieayam.jpg'),
+(3, 2, 'Beras Premium 5kg', 'aktif', 'Sembako', 65000, 'Beras kualitas premium', 'beras.jpg'),
+(4, 2, 'Minyak Goreng 2L', 'aktif', 'Sembako', 32000, 'Minyak goreng kemasan 2 liter', 'minyak.jpg'),
+(5, 3, 'Service Ringan Motor', 'aktif', 'Jasa', 50000, 'Ganti oli dan tune up', 'service.jpg'),
+(6, 4, 'Kaos Polos', 'aktif', 'Pakaian', 45000, 'Kaos cotton combed 30s', 'kaos.jpg'),
+(7, 5, 'Keripik Singkong Original', 'aktif', 'Makanan', 10000, 'Keripik singkong renyah 200gr', 'keripik.jpg'),
+(8, 5, 'Keripik Singkong Pedas', 'aktif', 'Makanan', 12000, 'Keripik singkong pedas 200gr', 'keripik_pedas.jpg'),
+(9, 7, 'Lele Segar 1kg', 'aktif', 'Perikanan', 25000, 'Lele segar siap masak', 'lele.jpg'),
+(10, 10, 'Kue Lapis Legit', 'aktif', 'Makanan', 85000, 'Kue lapis legit homemade', 'lapis.jpg');
 
 -- --------------------------------------------------------
 
@@ -241,6 +247,7 @@ ALTER TABLE `journey`
 
 --
 -- Indexes for table `produk`
+
 --
 ALTER TABLE `produk`
   ADD PRIMARY KEY (`id_produk`),
@@ -262,6 +269,7 @@ ALTER TABLE `umkm`
 
 --
 -- Indexes for table `user`
+
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`),
@@ -326,12 +334,14 @@ ALTER TABLE `journey`
 
 --
 -- Constraints for table `produk`
+
 --
 ALTER TABLE `produk`
   ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_umkm`) REFERENCES `umkm` (`id_umkm`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `profile`
+
 --
 ALTER TABLE `profile`
   ADD CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;

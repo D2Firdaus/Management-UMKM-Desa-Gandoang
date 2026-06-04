@@ -9,6 +9,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
 require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
@@ -44,12 +47,11 @@ $sidebar_file = (
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../../asset/icon/bootstrap-icons.min.css">
-    
     <!-- bootstrap -->
     <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- css -->
-    <link href="<?= $asset_path ?>css/bantuan.css" rel="stylesheet">
+    <link href="<?= $asset_path ?>/css/products/products.css" rel="stylesheet">
 
 </head>
 
@@ -59,6 +61,7 @@ $sidebar_file = (
 
         <!-- sidebar -->
     <?php require_once __DIR__ . '/../layouts/' . $sidebar_file; ?>
+
         <!-- akhir sidebar -->
         <!-- Content -->
         <div class="main">
@@ -66,56 +69,58 @@ $sidebar_file = (
             <!-- Navbar -->
             <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
             <!-- Akhir Navbar -->
-            <div class="content">
-                <div class="card-dashboard">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3">
-                        <div>
-                            <h2>Detail Produk</h2>
-                            <p>Daftar produk yang tersedia.</p>
-                        </div>
-                    </div>
+            <div class="content rounded-5">
+                <div class="card-header">
+                    <h1 class="fs-2 fw-bold">Detail Produk</h1>
+                    <p class="fs-5">Daftar produk yang tersedia.</p>
+                </div>
 
-                    <!-- search -->
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3">
+                <!-- TOOLBAR: Show Entries + Search -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-                        <form method="get">
-                            Show
-                            <select name="show" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
-                                <?php foreach ([3, 5, 10, 25] as $opt): ?>
-                                    <option value="<?= $opt ?>" <?= $per_page == $opt ? 'selected' : '' ?>><?= $opt ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            entries
-                            <?php if ($search): ?>
-                                <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
-                            <?php endif; ?>
-                        </form>
+                    <!-- Show entries -->
+                    <form method="GET" class="show-entries d-flex align-items-center gap-2">
+                        <label for="show">Show</label>
+                        <select name="show" id="show" onchange="this.form.submit()">
+                            <?php foreach ([3, 5, 10] as $opt): ?>
+                                <option value="<?= $opt ?>" <?= $per_page == $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <label>entries</label>
+                        <?php if ($search): ?>
+                            <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+                        <?php endif; ?>
+                    </form>
 
-                        <form method="get" class="d-flex gap-2">
-                            <input type="hidden" name="show" value="<?= $per_page ?>">
+                    <!-- Search -->
+                    <form method="GET" class="search-form">
+                        <div class="input-group justify-content-center align-items-center border border-1 m-3 border-black rounded-3">
                             <input
                                 type="text"
                                 name="search"
-                                class="form-control"
+                                class="input-group-text text-start input-search"
                                 placeholder="Cari Produk..."
-                                value="<?= htmlspecialchars($search) ?>">
-                            <button type="submit" class="btn tombol_cari">
-                                Cari
+                                value="<?= htmlspecialchars($search) ?>"
+                                autocomplete="off">
+                            <button class="input-group-text bg-white border-0" onclick="this.form.submit()">
+                                <i class="bi bi-search"></i>
                             </button>
-                        </form>
+                            <input type="hidden" name="show" value="<?= $per_page ?>">
+                            <input type="hidden" name="page" value="1">
+                        </div>
+                    </form>
 
-                    </div>
-                    <!-- akhir search -->
+                </div>
 
                 <!-- Table -->
-                <div class="table-responsive">
-                    <table class="table align-middle">
+                <div class="table-responsive mt-5">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Nama Produk</th>
                                 <th scope="col">Harga</th>
-                                <th scope="col">Stok</th>
+                                <th scope="col">Kategori</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>
@@ -128,19 +133,14 @@ $sidebar_file = (
                                     <td>Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
                                     <td><?= $row['kategori'] ?></td>
                                     <td>
-                                        <a href="edit.php?id=<?= $row['id_produk'] ?>" class="btn btn-warning btn-sm">
-                                            <img src="<?= $asset_path ?>/icon/edit.png" width="30px" height="30px">
-                                        </a>
-                                        <a href="delete.php?id=<?= $row['id_produk'] ?>" class="btn btn-danger btn-sm">
-                                            <img src="<?= $asset_path ?>icon/hapus.png" style="padding:5px" width="30px" height="30px">
-                                        </a>
+                                        <a href="editProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                                        <a href="deleteProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                </div>
-                    <ul class="pagination custom-pagination justify-content-center mt-4 flex-wrap">
+                    <ul class="pagination custom-pagination justify-content-center mt-4">
 
                         <!-- tombol previous -->
                         <li class="page-item <?= ($current_page == 1) ? 'disabled' : '' ?>">
@@ -166,6 +166,8 @@ $sidebar_file = (
                         </li>
                     </ul>
                     <!-- Akhir Pagination -->
+
+                    <!-- Add Button -->
                     <div class="d-flex justify-content-end">
                         <a href="addProduct.php" class="btn" id="tambah">
                             + Tambah Produk
@@ -173,7 +175,6 @@ $sidebar_file = (
                     </div>
                 </div>
             </div>
-
         <script src="<?= $asset_path ?>js/bantuan.js"></script>
 
         <?php ob_end_flush(); ?>
