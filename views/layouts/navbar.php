@@ -123,7 +123,11 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
 
     @media (max-width: 768px) {
         nav {
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .logo img {
+            height: 26px;
         }
 
         .hamburger-main {

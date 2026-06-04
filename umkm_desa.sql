@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 25, 2026 at 03:05 PM
+-- Generation Time: Jun 04, 2026 at 03:40 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.30
 
@@ -58,7 +58,72 @@ INSERT INTO `bantuan` (`id_kebutuhan`, `id_umkm`, `jenis`, `prioritas`, `status`
 (11, 10, 'pakan', 'sedang', 'pending', NULL, 'a', NULL, '2026-05-20', NULL),
 (12, 1, 'pakan', 'rendah', 'disetujui', 'oke', '1', '2026-05-20', '2026-05-20', 12),
 (13, 10, 'asqwasdas', 'tinggi', 'pending', NULL, 'asdas', NULL, '2026-05-25', NULL),
-(14, 1, 'asqwasdas', 'rendah', 'pending', NULL, 'asd', NULL, '2026-05-25', NULL);
+(14, 1, 'Trasnport', 'rendah', 'pending', NULL, 'Pengantaran Ke Desa Sebelah', NULL, '2026-05-25', NULL);
+
+--
+-- Triggers `bantuan`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_bantuan_update` BEFORE UPDATE ON `bantuan` FOR EACH ROW INSERT INTO bantuan_history (
+    id_kebutuhan,
+    id_umkm,
+    jenis,
+    prioritas,
+    status,
+    catatan,
+    deskripsi,
+    tanggal_validasi,
+    tanggal_pengajuan,
+    id_validator,
+    action_type
+)
+VALUES (
+    OLD.id_kebutuhan,
+    OLD.id_umkm,
+    OLD.jenis,
+    OLD.prioritas,
+    OLD.status,
+    OLD.catatan,
+    OLD.deskripsi,
+    OLD.tanggal_validasi,
+    OLD.tanggal_pengajuan,
+    OLD.id_validator,
+    CASE
+        WHEN NEW.status = 'dihapus' THEN 'SOFT_DELETE'
+        ELSE 'UPDATE'
+    END
+)
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bantuan_history`
+--
+
+CREATE TABLE `bantuan_history` (
+  `id_history` int NOT NULL,
+  `id_kebutuhan` int DEFAULT NULL,
+  `id_umkm` int DEFAULT NULL,
+  `jenis` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `prioritas` enum('rendah','sedang','tinggi') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('pending','disetujui','ditolak','dihapus') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `catatan` text COLLATE utf8mb4_unicode_ci,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `tanggal_validasi` date DEFAULT NULL,
+  `tanggal_pengajuan` date DEFAULT NULL,
+  `id_validator` int DEFAULT NULL,
+  `action_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `bantuan_history`
+--
+
+INSERT INTO `bantuan_history` (`id_history`, `id_kebutuhan`, `id_umkm`, `jenis`, `prioritas`, `status`, `catatan`, `deskripsi`, `tanggal_validasi`, `tanggal_pengajuan`, `id_validator`, `action_type`, `action_time`) VALUES
+(1, 14, 1, 'asqwasdas', 'rendah', 'pending', NULL, 'asd', NULL, '2026-05-25', NULL, 'UPDATE', '2026-06-04 15:11:48');
 
 -- --------------------------------------------------------
 
@@ -90,6 +155,46 @@ INSERT INTO `journey` (`id_journey`, `id_umkm`, `foto`, `deksripsi`, `tanggal`) 
 (9, 8, 'journey9.jpg', 'Buka kelas jahit untuk ibu-ibu', '2024-07-10'),
 (10, 10, 'journey10.jpg', 'Ikut bazar desa pertama kali', '2024-11-25');
 
+--
+-- Triggers `journey`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_journey_update` BEFORE UPDATE ON `journey` FOR EACH ROW INSERT INTO journey_history (
+    id_journey,
+    id_umkm,
+    foto,
+    deksripsi,
+    tanggal,
+    action_type
+)
+VALUES (
+    OLD.id_journey,
+    OLD.id_umkm,
+    OLD.foto,
+    OLD.deksripsi,
+    OLD.tanggal,
+    'UPDATE'
+)
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `journey_history`
+--
+
+CREATE TABLE `journey_history` (
+  `id_history` int NOT NULL,
+  `id_journey` int DEFAULT NULL,
+  `id_umkm` int DEFAULT NULL,
+  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `dekripsi` text COLLATE utf8mb4_unicode_ci,
+  `tanggal` date DEFAULT NULL,
+  `action_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -102,7 +207,7 @@ CREATE TABLE `produk` (
   `nama_produk` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `kategori` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `harga` int NOT NULL,
-  `deksripsi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `foto` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -110,7 +215,7 @@ CREATE TABLE `produk` (
 -- Dumping data for table `produk`
 --
 
-INSERT INTO `produk` (`id_produk`, `id_umkm`, `nama_produk`, `kategori`, `harga`, `deksripsi`, `foto`) VALUES
+INSERT INTO `produk` (`id_produk`, `id_umkm`, `nama_produk`, `kategori`, `harga`, `deskripsi`, `foto`) VALUES
 (1, 1, 'Nasi Goreng Spesial', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg'),
 (2, 1, 'Mie Ayam Bakso', 'Makanan', 12000, 'Mie ayam dengan bakso sapi', 'mieayam.jpg'),
 (3, 2, 'Beras Premium 5kg', 'Sembako', 65000, 'Beras kualitas premium', 'beras.jpg'),
@@ -120,7 +225,54 @@ INSERT INTO `produk` (`id_produk`, `id_umkm`, `nama_produk`, `kategori`, `harga`
 (7, 5, 'Keripik Singkong Original', 'Makanan', 10000, 'Keripik singkong renyah 200gr', 'keripik.jpg'),
 (8, 5, 'Keripik Singkong Pedas', 'Makanan', 12000, 'Keripik singkong pedas 200gr', 'keripik_pedas.jpg'),
 (9, 7, 'Lele Segar 1kg', 'Perikanan', 25000, 'Lele segar siap masak', 'lele.jpg'),
-(10, 10, 'Kue Lapis Legit', 'Makanan', 85000, 'Kue lapis legit homemade', 'lapis.jpg');
+(10, 10, 'Kue Lapis Legit', 'Makanan', 85000, 'Kue lapis legit homemade', 'lapis.jpg'),
+(11, 5, 'Singkong Rebus', 'Kuliner', 1000, 'Lezat Dan Bergizi', 'prod_6a2148bd225cd7.75935071.jpg');
+
+--
+-- Triggers `produk`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_produk_update` BEFORE UPDATE ON `produk` FOR EACH ROW INSERT INTO produk_history (
+    id_produk,
+    id_umkm,
+    nama_produk,
+    kategori,
+    harga,
+    deskripsi,
+    foto,
+    action_type
+)
+VALUES (
+    OLD.id_produk,
+    OLD.id_umkm,
+    OLD.nama_produk,
+    OLD.kategori,
+    OLD.harga,
+    OLD.deskripsi,
+    OLD.foto,
+    'UPDATE'
+)
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `produk_history`
+--
+
+CREATE TABLE `produk_history` (
+  `id_history` int NOT NULL,
+  `id_produk` int DEFAULT NULL,
+  `id_umkm` int DEFAULT NULL,
+  `nama_produk` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kategori` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `harga` int DEFAULT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -155,6 +307,52 @@ INSERT INTO `profile` (`id_profile`, `id_user`, `nik`, `no_hp`, `no_kk`, `foto_k
 (10, 10, '3201010101010010', '081234567810', '3201010101010010', NULL, 'kk_dewi.jpg'),
 (11, 11, 'qCokj7RaDuChzZ6WqlasTWhRE0X4t8bBa4E9+Ayw9yZsz0FSCj+GxBCu7sg/8dhU', 'M1S/iwjSVJqJRKfFngRUMAHHlR95UYTHUlZeNQJScGs=', '7ucDqbdniR1GAkzwtoDnxPQmM50SDLa3pTmM+yOxSkLc/FEfyd9YQRO/yvXxIp2S', 'd7de41842c27a1f1f12bd65831d38c92.jpg', '2612024e6e147017c926a2054d662949.jpeg');
 
+--
+-- Triggers `profile`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_profile_update` BEFORE UPDATE ON `profile` FOR EACH ROW INSERT INTO profile_history (
+    id_profile,
+    id_user,
+    nik,
+    no_hp,
+    no_kk,
+    foto_ktp,
+    foto_kk,
+    action_type
+)
+VALUES (
+    OLD.id_profile,
+    OLD.id_user,
+    OLD.nik,
+    OLD.no_hp,
+    OLD.no_kk,
+    OLD.foto_ktp,
+    OLD.foto_kk,
+    'UPDATE'
+)
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `profile_history`
+--
+
+CREATE TABLE `profile_history` (
+  `id_history` int NOT NULL,
+  `id_profile` int DEFAULT NULL,
+  `id_user` int DEFAULT NULL,
+  `nik` text COLLATE utf8mb4_unicode_ci,
+  `no_hp` text COLLATE utf8mb4_unicode_ci,
+  `no_kk` text COLLATE utf8mb4_unicode_ci,
+  `foto_ktp` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto_kk` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -185,6 +383,52 @@ INSERT INTO `umkm` (`id_umkm`, `nama_umkm`, `id_user`, `id_validator`, `alamat`,
 (8, 'Jahit Rina Collection', 8, 1, 'Jl. Raya Cileungsi No.30', 'aktif'),
 (9, 'Toko Bangunan Maju', 9, 1, 'Jl. Gandoang No.35, RT 02/RW 03', 'pending'),
 (10, 'Kue Basah Bu Dewi', 10, 1, 'Jl. Jonggol No.12, RT 03/RW 01', 'aktif');
+
+--
+-- Triggers `umkm`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_umkm_update` BEFORE UPDATE ON `umkm` FOR EACH ROW INSERT INTO umkm_history (
+    id_umkm,
+    nama_umkm,
+    id_user,
+    id_validator,
+    alamat,
+    status,
+    action_type
+)
+VALUES (
+    OLD.id_umkm,
+    OLD.nama_umkm,
+    OLD.id_user,
+    OLD.id_validator,
+    OLD.alamat,
+    OLD.status,
+    CASE
+        WHEN NEW.status = 'nonaktif' THEN 'SOFT_DELETE'
+        ELSE 'UPDATE'
+    END
+)
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `umkm_history`
+--
+
+CREATE TABLE `umkm_history` (
+  `id_history` int NOT NULL,
+  `id_umkm` int DEFAULT NULL,
+  `nama_umkm` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_user` int DEFAULT NULL,
+  `id_validator` int DEFAULT NULL,
+  `alamat` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('pending','aktif','nonaktif') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -218,7 +462,9 @@ INSERT INTO `user` (`id_user`, `nama`, `password`, `email`, `status`, `role`) VA
 (10, 'Dewi Lestari', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'dewi@gmail.com', 'aktif', 'umkm'),
 (11, 'Budi', '$2y$10$t7SEnyb/90bnyoPaFyVyI.L70Yn2xr4LggQInO7/pZZ1LPmagSzzm', '2410631170034@student.unsika.ac.id', 'aktif', 'umkm'),
 (12, 'Maman Racing', '$2y$10$t7SEnyb/90bnyoPaFyVyI.L70Yn2xr4LggQInO7/pZZ1LPmagSzzm', 'contoh0031@gmail.com', 'aktif', 'admin'),
-(13, 'Martinah', '$2y$10$htSz1qWHfkrai37/YE/oUOwI9t8a.21E6XkZauxHjZweXamn/6af.', 'contoh0030@gmail.com', 'aktif', 'umkm');
+(13, 'Martinah', '$2y$10$htSz1qWHfkrai37/YE/oUOwI9t8a.21E6XkZauxHjZweXamn/6af.', 'contoh0030@gmail.com', 'aktif', 'umkm'),
+(14, 'Bahlil Ganteng', '$2y$10$HwV11g1jYDg1PGTjJeQY6eQpw3I3oamysrRN4ZF7DEaoQI0pbEKmu', 'contoh0004@gmail.com', 'aktif', 'umkm'),
+(15, 'Bahlil Jamsut', '$2y$10$vEzyPY6.U5UUxGhAkDzso.D6ZJ6zj3ao3KZTlMjX2BBcHA1AKI2Ky', 'contoh0006@gmail.com', 'aktif', 'umkm');
 
 --
 -- Indexes for dumped tables
@@ -233,11 +479,23 @@ ALTER TABLE `bantuan`
   ADD KEY `fk_bantuan_validator` (`id_validator`);
 
 --
+-- Indexes for table `bantuan_history`
+--
+ALTER TABLE `bantuan_history`
+  ADD PRIMARY KEY (`id_history`);
+
+--
 -- Indexes for table `journey`
 --
 ALTER TABLE `journey`
   ADD PRIMARY KEY (`id_journey`),
   ADD KEY `id_umkm` (`id_umkm`);
+
+--
+-- Indexes for table `journey_history`
+--
+ALTER TABLE `journey_history`
+  ADD PRIMARY KEY (`id_history`);
 
 --
 -- Indexes for table `produk`
@@ -247,6 +505,12 @@ ALTER TABLE `produk`
   ADD KEY `id_umkm` (`id_umkm`);
 
 --
+-- Indexes for table `produk_history`
+--
+ALTER TABLE `produk_history`
+  ADD PRIMARY KEY (`id_history`);
+
+--
 -- Indexes for table `profile`
 --
 ALTER TABLE `profile`
@@ -254,11 +518,23 @@ ALTER TABLE `profile`
   ADD KEY `id_user` (`id_user`);
 
 --
+-- Indexes for table `profile_history`
+--
+ALTER TABLE `profile_history`
+  ADD PRIMARY KEY (`id_history`);
+
+--
 -- Indexes for table `umkm`
 --
 ALTER TABLE `umkm`
   ADD PRIMARY KEY (`id_umkm`),
   ADD KEY `id_user` (`id_user`,`id_validator`);
+
+--
+-- Indexes for table `umkm_history`
+--
+ALTER TABLE `umkm_history`
+  ADD PRIMARY KEY (`id_history`);
 
 --
 -- Indexes for table `user`
@@ -278,16 +554,34 @@ ALTER TABLE `bantuan`
   MODIFY `id_kebutuhan` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
+-- AUTO_INCREMENT for table `bantuan_history`
+--
+ALTER TABLE `bantuan_history`
+  MODIFY `id_history` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `journey`
 --
 ALTER TABLE `journey`
   MODIFY `id_journey` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `journey_history`
+--
+ALTER TABLE `journey_history`
+  MODIFY `id_history` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `produk`
 --
 ALTER TABLE `produk`
-  MODIFY `id_produk` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_produk` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `produk_history`
+--
+ALTER TABLE `produk_history`
+  MODIFY `id_history` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `profile`
@@ -296,16 +590,28 @@ ALTER TABLE `profile`
   MODIFY `id_profile` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `profile_history`
+--
+ALTER TABLE `profile_history`
+  MODIFY `id_history` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `umkm`
 --
 ALTER TABLE `umkm`
   MODIFY `id_umkm` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `umkm_history`
+--
+ALTER TABLE `umkm_history`
+  MODIFY `id_history` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_user` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables

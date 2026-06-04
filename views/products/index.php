@@ -30,10 +30,6 @@ $status = $_GET['status'] ?? null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Produk</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
     <link href="<?= $asset_path ?>boostrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= $asset_path ?>css/products.css" rel="stylesheet">
@@ -53,7 +49,8 @@ $status = $_GET['status'] ?? null;
             <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
             <!-- Akhir Navbar -->
 
-            <div class="content rounded-5">
+            <div class="content">
+                <div class="card-dashboard">
 
                 <div class="card-header">
                     <h1 class="fs-2 fw-bold">Detail Produk</h1>
@@ -173,6 +170,9 @@ $status = $_GET['status'] ?? null;
                         <a href="addProduct.php" class="btn" id="tambah">+ Tambah Produk</a>
                     </div>
                 </div>
+
+                </div>
+                <!-- akhir card-dashboard -->
 
             </div>
         </div>
