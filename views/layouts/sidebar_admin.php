@@ -90,6 +90,11 @@ require_once __DIR__ . '/../../config/path_config.php';
         color: white;
     }
 
+    .isi_menu a:hover img,
+    .isi_menu a.active img {
+        filter: brightness(0) saturate(100%) invert(97%) sepia(8%) saturate(400%) hue-rotate(330deg) brightness(105%) contrast(97%);
+    }
+
     .isi_menu a.active::before {
         content: '';
         position: absolute;
@@ -154,6 +159,7 @@ require_once __DIR__ . '/../../config/path_config.php';
         .sidebar-close-btn {
             display: none;
         }
+
         .sidebar-overlay {
             display: none !important;
         }
@@ -195,6 +201,16 @@ require_once __DIR__ . '/../../config/path_config.php';
             <a href="<?= $view_path ?>validasi_umkm/validasi_umkm.php" class="<?= strpos($current_uri, '/views/validasi_umkm') !== false ? 'active' : '' ?>">
                 <img src="<?= $asset_path ?>icon/umkm.png" style="padding:5px" width="30px" height="30px">
                 Validasi UMKM
+            </a>
+
+            <a href="<?= $view_path ?>riwayat_bantuan/riwayat_bantuan.php" class="<?= strpos($current_uri, '/views/riwayat_bantuan') !== false ? 'active' : '' ?>">
+                <img src="<?= $asset_path ?>icon/log.png" style="padding:5px" width="30px" height="30px">
+                Riwayat Bantuan
+            </a>
+
+            <a href="<?= $view_path ?>riwayat_umkm/riwayat_umkm.php" class="<?= strpos($current_uri, '/views/riwayat_umkm') !== false ? 'active' : '' ?>">
+                <img src="<?= $asset_path ?>icon/log.png" style="padding:5px" width="30px" height="30px">
+                Riwayat UMKM
             </a>
 
         </div>
