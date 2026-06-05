@@ -211,7 +211,7 @@ class ProfileModel
 
             if ($row && !empty($row[$fileType])) {
                 // Cek di private storage dulu, fallback ke asset/images (legacy)
-                $privatePath = __DIR__ . '/../storage/private/' . $row[$fileType];
+                $privatePath = __DIR__ . '/../storage/private/images' . $row[$fileType];
                 $legacyPath  = __DIR__ . '/../asset/images/'    . $row[$fileType];
                 $filePath    = file_exists($privatePath) ? $privatePath : $legacyPath;
 

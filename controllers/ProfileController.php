@@ -55,7 +55,7 @@ class ProfileController
 
         $oldProfile = $this->profileModel->getProfileByUserId($id_user);
 
-        $uploadDir = __DIR__ . '/../storage/private/';
+        $uploadDir = __DIR__ . '/../storage/private/images/';
 
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);

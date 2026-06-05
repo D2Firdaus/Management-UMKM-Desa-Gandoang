@@ -69,20 +69,16 @@ class ProductController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $oldData = $this->productModel->getById($id);
 
-            // Cek apakah user tidak mengupload foto baru sama sekali
-            // Pada multiple upload, jika kosong, elemen pertama error-nya bernilai 4
             if (!isset($_FILES['foto']['error']) || $_FILES['foto']['error'][0] === 4) {
                 $nama_foto_db = $oldData['foto'];
             } else {
-                // Upload foto-foto baru
                 $nama_foto_db = $this->uploadFoto($_FILES['foto']);
 
-                // Hapus foto-foto lama dari storage folder
                 if ($oldData['foto'] !== 'default.jpg' && !empty($oldData['foto'])) {
                     // Pecah string nama file yang dipisah koma menjadi array
                     $oldImages = explode(',', $oldData['foto']);
                     foreach ($oldImages as $oldImage) {
-                        $oldFilePath = __DIR__ . '/../../asset/images/products/' . trim($oldImage);
+                        $oldFilePath = __DIR__ . '/../../storage/images/products/' . trim($oldImage);
                         if (file_exists($oldFilePath) && !empty($oldImage)) {
                             unlink($oldFilePath);
                         }
@@ -123,7 +119,7 @@ class ProductController
             return 'default.jpg';
         }
 
-        $targetDir = __DIR__ . '/../../asset/images/products/';
+        $targetDir = __DIR__ . '/../../storage/images/products/';
         if (!file_exists($targetDir)) {
             mkdir($targetDir, 0755, true);
         }

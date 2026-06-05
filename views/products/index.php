@@ -44,10 +44,7 @@ $status = $_GET['status'] ?? null;
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../../asset/icon/bootstrap-icons.min.css">
-    <!-- bootstrap -->
     <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- css -->
     <link href="<?= $asset_path ?>/css/products/products.css" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">

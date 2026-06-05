@@ -44,8 +44,9 @@ if (!$profile || empty($profile[$fileType])) {
 $filename = $profile[$fileType];
 
 // Cari file: private storage dulu, fallback ke legacy asset/images
-$privatePath = __DIR__ . '/../storage/private/' . $filename;
+$privatePath = __DIR__ . '/../storage/private/images' . $filename;
 $legacyPath  = __DIR__ . '/../asset/images/'    . $filename;
+
 
 if (file_exists($privatePath)) {
     $filePath = $privatePath;

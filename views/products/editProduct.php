@@ -87,7 +87,7 @@ $product = $controller->getProductById($id);
 
                                                 $nama_pendek = (strlen($img_trimmed) > 7) ? substr($img_trimmed, 0, 7) . '...' : $img_trimmed;
                                                 
-                                                $filePath = __DIR__ . '/../../asset/images/products/' . $img_trimmed;
+                                                $filePath = __DIR__ . '/../../storage/images/products/' . $img_trimmed;
                                                 $file_size_kb = file_exists($filePath) ? number_format(filesize($filePath) / 1024, 1) : '0.0';
                                                 ?>
                                                 
@@ -95,7 +95,7 @@ $product = $controller->getProductById($id);
                                                     id="old-img-<?= $index ?>" 
                                                     style="flex: 1 1 calc(33.333% - 10px); min-width: 150px; max-width: 100%;">
                                                     
-                                                    <img src="../../asset/images/products/<?= htmlspecialchars($img_trimmed) ?>" style="width: 50px; height: 40px; object-fit: cover;" class="rounded">
+                                                    <img src="../../storage/images/products/<?= htmlspecialchars($img_trimmed) ?>" style="width: 50px; height: 40px; object-fit: cover;" class="rounded">
                                                     
                                                     <div class="flex-grow-1" style="min-width: 0;">
                                                         <span class="d-block fw-bold text-truncate small"><?= htmlspecialchars($nama_pendek) ?></span>
@@ -111,7 +111,7 @@ $product = $controller->getProductById($id);
                                         } else {
                                             ?>
                                             <div class="preview-box d-flex align-items-center bg-white p-2 border rounded shadow-sm gap-2" style="flex: 1 1 calc(33.333% - 10px); min-width: 150px; max-width: 100%;">
-                                                <img src="../../asset/images/products/default.jpg" style="width: 50px; height: 40px; object-fit: cover;" class="rounded">
+                                                <img src="../../storage/images/products/default.jpg" style="width: 50px; height: 40px; object-fit: cover;" class="rounded">
                                                 <div class="flex-grow-1">
                                                     <span class="d-block fw-bold small text-muted">default.jpg</span>
                                                 </div>
