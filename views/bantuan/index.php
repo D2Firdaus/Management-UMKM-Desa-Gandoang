@@ -1,12 +1,32 @@
 <?php
 
+
+
+// Koneksi Database dan Path
+require_once __DIR__ . '/../../config/koneksi.php';
+require_once __DIR__ . '/../../config/path_config.php';
+// Akhir Koneksi Database dan Path
+
+
+
 // Session
 ob_start();
 
+
+
+// ─── Auth Guard ───────────────────────────────────────────────────────────────
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Akhir Session
+
+$id_user = $_SESSION['user_id'] ?? null;
+
+if (!$id_user) {
+    $_SESSION['error'] = 'Silakan login terlebih dahulu.';
+    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    exit;
+}
+// Akhir Auth Guard
 
 
 
@@ -15,13 +35,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 // Akhir Error Handling
-
-
-
-// Koneksi Database dan Path
-require_once __DIR__ . '/../../config/koneksi.php';
-require_once __DIR__ . '/../../config/path_config.php';
-// Akhir Koneksi Database dan Path
 
 
 

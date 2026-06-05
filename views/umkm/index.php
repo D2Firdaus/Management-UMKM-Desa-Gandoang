@@ -16,8 +16,14 @@ require_once __DIR__ . '/../../config/path_config.php';
 require_once __DIR__ . '/../../models/UmkmModel.php';
 
 // ─── Auth Guard ───────────────────────────────────────────────────────────────
-$id_user = (int) ($_SESSION['user_id'] ?? 0);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$id_user = $_SESSION['user_id'] ?? null;
+
 if (!$id_user) {
+    $_SESSION['error'] = 'Silakan login terlebih dahulu.';
     header('Location: ' . BASE_URL . 'views/auth/login.php');
     exit;
 }

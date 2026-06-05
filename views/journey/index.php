@@ -1,12 +1,23 @@
 <?php
-ob_start();
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
 require_once __DIR__ . '/../../controllers/journeyControllers/JourneyController.php';
+
+ob_start();
+
+// ─── Auth Guard ───────────────────────────────────────────────────────────────
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$id_user = $_SESSION['user_id'] ?? null;
+
+if (!$id_user) {
+    $_SESSION['error'] = 'Silakan login terlebih dahulu.';
+    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    exit;
+}
 
 $journeyController = new JourneyController($conn);
 
