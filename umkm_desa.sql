@@ -362,6 +362,7 @@ CREATE TABLE `profile_history` (
 CREATE TABLE `umkm` (
   `id_umkm` int NOT NULL,
   `nama_umkm` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_usaha` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `id_user` int NOT NULL,
   `id_validator` int NOT NULL,
   `alamat` text COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -372,17 +373,17 @@ CREATE TABLE `umkm` (
 -- Dumping data for table `umkm`
 --
 
-INSERT INTO `umkm` (`id_umkm`, `nama_umkm`, `id_user`, `id_validator`, `alamat`, `status`) VALUES
-(1, 'Warung Makan Barokah', 1, 1, 'Jl. Gandoang No.1, RT 01/RW 01', 'aktif'),
-(2, 'Toko Kelontong Sejahtera', 2, 1, 'Jl. Gandoang No.5, RT 02/RW 01', 'aktif'),
-(3, 'Bengkel Motor Jaya', 3, 1, 'Jl. Raya Cileungsi No.10', 'aktif'),
-(4, 'Konveksi Mandiri', 4, 1, 'Jl. Gandoang No.15, RT 03/RW 02', 'aktif'),
-(5, 'Keripik Singkong Ibu Ani', 5, 1, 'Jl. Jonggol No.8, RT 01/RW 03', 'aktif'),
-(6, 'Salon Cantik Alami', 6, 12, 'Jl. Gandoang No.20, RT 04/RW 01', 'pending'),
-(7, 'Ternak Lele Makmur', 7, 1, 'Jl. Gandoang No.25, RT 05/RW 02', 'aktif'),
-(8, 'Jahit Rina Collection', 8, 1, 'Jl. Raya Cileungsi No.30', 'aktif'),
-(9, 'Toko Bangunan Maju', 9, 1, 'Jl. Gandoang No.35, RT 02/RW 03', 'pending'),
-(10, 'Kue Basah Bu Dewi', 10, 1, 'Jl. Jonggol No.12, RT 03/RW 01', 'aktif');
+INSERT INTO `umkm` (`id_umkm`, `nama_umkm`, `jenis_usaha`, `id_user`, `id_validator`, `alamat`, `status`) VALUES
+(1, 'Warung Makan Barokah', 'kuliner', 1, 1, 'Jl. Gandoang No.1, RT 01/RW 01', 'aktif'),
+(2, 'Toko Kelontong Sejahtera', 'perdagangan', 2, 1, 'Jl. Gandoang No.5, RT 02/RW 01', 'aktif'),
+(3, 'Bengkel Motor Jaya', 'jasa', 3, 1, 'Jl. Raya Cileungsi No.10', 'aktif'),
+(4, 'Konveksi Mandiri', 'konveksi', 4, 1, 'Jl. Gandoang No.15, RT 03/RW 02', 'aktif'),
+(5, 'Keripik Singkong Ibu Ani', 'kuliner', 5, 1, 'Jl. Jonggol No.8, RT 01/RW 03', 'aktif'),
+(6, 'Salon Cantik Alami', 'jasa', 6, 12, 'Jl. Gandoang No.20, RT 04/RW 01', 'pending'),
+(7, 'Ternak Lele Makmur', 'peternakan', 7, 1, 'Jl. Gandoang No.25, RT 05/RW 02', 'aktif'),
+(8, 'Jahit Rina Collection', 'konveksi', 8, 1, 'Jl. Raya Cileungsi No.30', 'aktif'),
+(9, 'Toko Bangunan Maju', 'perdagangan', 9, 1, 'Jl. Gandoang No.35, RT 02/RW 03', 'pending'),
+(10, 'Kue Basah Bu Dewi', 'kuliner', 10, 1, 'Jl. Jonggol No.12, RT 03/RW 01', 'aktif');
 
 --
 -- Triggers `umkm`
@@ -391,6 +392,7 @@ DELIMITER $$
 CREATE TRIGGER `trg_umkm_update` BEFORE UPDATE ON `umkm` FOR EACH ROW INSERT INTO umkm_history (
     id_umkm,
     nama_umkm,
+    jenis_usaha,
     id_user,
     id_validator,
     alamat,
@@ -400,6 +402,7 @@ CREATE TRIGGER `trg_umkm_update` BEFORE UPDATE ON `umkm` FOR EACH ROW INSERT INT
 VALUES (
     OLD.id_umkm,
     OLD.nama_umkm,
+    OLD.jenis_usaha,
     OLD.id_user,
     OLD.id_validator,
     OLD.alamat,
@@ -422,6 +425,7 @@ CREATE TABLE `umkm_history` (
   `id_history` int NOT NULL,
   `id_umkm` int DEFAULT NULL,
   `nama_umkm` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_usaha` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `id_user` int DEFAULT NULL,
   `id_validator` int DEFAULT NULL,
   `alamat` text COLLATE utf8mb4_unicode_ci,

@@ -1,0 +1,141 @@
+<?php
+declare(strict_types=1);
+
+class UmkmModel
+{
+    private PDO $conn;
+
+    public function __construct(PDO $conn)
+    {
+        $this->conn = $conn;
+    }
+
+    // ─── Ambil semua UMKM milik user tertentu (pagination + search) ──────────
+    public function getAllByUser(int $id_user, int $limit, int $offset, string $search = ''): array
+    {
+        $sql = "SELECT
+                    u.id_umkm,
+                    u.nama_umkm,
+                    u.jenis_usaha,
+                    u.alamat,
+                    u.status,
+                    usr.nama AS nama_pengaju,
+                    v.nama   AS nama_validator
+                FROM umkm u
+                LEFT JOIN user  AS usr ON u.id_user      = usr.id_user
+                LEFT JOIN user  AS v   ON u.id_validator = v.id_user
+                WHERE u.id_user = :id_user
+                  AND (
+                        u.nama_umkm    LIKE :search
+                     OR u.jenis_usaha  LIKE :search
+                     OR u.alamat       LIKE :search
+                     OR u.status       LIKE :search
+                  )
+                ORDER BY u.id_umkm DESC
+                LIMIT $limit OFFSET $offset";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':id_user' => $id_user,
+            ':search'  => "%$search%",
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // ─── Hitung total UMKM milik user (untuk pagination) ─────────────────────
+    public function countByUser(int $id_user, string $search = ''): int
+    {
+        $sql = "SELECT COUNT(*) AS total
+                FROM umkm u
+                WHERE u.id_user = :id_user
+                  AND (
+                        u.nama_umkm    LIKE :search
+                     OR u.jenis_usaha  LIKE :search
+                     OR u.alamat       LIKE :search
+                     OR u.status       LIKE :search
+                  )";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':id_user' => $id_user,
+            ':search'  => "%$search%",
+        ]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    // ─── Ambil satu UMKM berdasar id_umkm dan id_user ────────────────────────
+    public function getByIdAndUser(int $id_umkm, int $id_user): array|false
+    {
+        $sql = "SELECT * FROM umkm
+                WHERE id_umkm = :id_umkm
+                  AND id_user = :id_user
+                LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':id_umkm' => $id_umkm,
+            ':id_user' => $id_user,
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // ─── Tambah UMKM baru ─────────────────────────────────────────────────────
+    public function insert(int $id_user, string $nama_umkm, string $jenis_usaha, string $alamat): bool
+    {
+        // Default status = pending
+        $sql = "INSERT INTO umkm (nama_umkm, jenis_usaha, id_user, id_validator, alamat, status)
+                VALUES (:nama_umkm, :jenis_usaha, :id_user, :id_validator, :alamat, 'pending')";
+
+        // Cari id admin pertama sebagai default validator
+        $admin_stmt = $this->conn->query("SELECT id_user FROM user WHERE role = 'admin' LIMIT 1");
+        $admin      = $admin_stmt->fetch(PDO::FETCH_ASSOC);
+        $id_validator = $admin ? (int) $admin['id_user'] : $id_user;
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':nama_umkm'    => $nama_umkm,
+            ':jenis_usaha'  => $jenis_usaha,
+            ':id_user'      => $id_user,
+            ':id_validator' => $id_validator,
+            ':alamat'       => $alamat,
+        ]);
+    }
+
+    // ─── Update UMKM ─────────────────────────────────────────────────────────
+    public function update(int $id_umkm, int $id_user, string $nama_umkm, string $jenis_usaha, string $alamat): bool
+    {
+        $sql = "UPDATE umkm
+                SET nama_umkm    = :nama_umkm,
+                    jenis_usaha  = :jenis_usaha,
+                    alamat       = :alamat
+                WHERE id_umkm = :id_umkm
+                  AND id_user = :id_user";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':nama_umkm'   => $nama_umkm,
+            ':jenis_usaha' => $jenis_usaha,
+            ':alamat'      => $alamat,
+            ':id_umkm'     => $id_umkm,
+            ':id_user'     => $id_user,
+        ]);
+    }
+
+    // ─── Soft-delete: set status = nonaktif ──────────────────────────────────
+    public function softDelete(int $id_umkm, int $id_user): bool
+    {
+        $sql = "UPDATE umkm
+                SET status = 'nonaktif'
+                WHERE id_umkm = :id_umkm
+                  AND id_user = :id_user";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':id_umkm' => $id_umkm,
+            ':id_user' => $id_user,
+        ]);
+    }
+}
