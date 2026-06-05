@@ -203,7 +203,7 @@ CREATE TABLE `journey_history` (
   `id_journey` int(11) DEFAULT NULL,
   `id_umkm` int(11) DEFAULT NULL,
   `foto` varchar(255) DEFAULT NULL,
-  `dekripsi` text DEFAULT NULL,
+  `deskripsi` text DEFAULT NULL,
   `tanggal` date DEFAULT NULL,
   `action_type` varchar(20) DEFAULT NULL,
   `action_time` timestamp NULL DEFAULT current_timestamp()
