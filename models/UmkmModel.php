@@ -138,4 +138,17 @@ class UmkmModel
             ':id_user' => $id_user,
         ]);
     }
+
+    // ─── Ambil data UMKM untuk dropdown ──────────────────────────────────────
+    public function getAllDropdownByUser(int $id_user): array
+    {
+        $sql = "SELECT id_umkm, nama_umkm 
+                FROM umkm 
+                WHERE id_user = :id_user AND status = 'aktif'
+                ORDER BY nama_umkm ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id_user' => $id_user]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

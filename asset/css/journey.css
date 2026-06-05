@@ -1,0 +1,104 @@
+/* Styling for Journey Feature */
+
+/* Image thumbnail in index table */
+.journey-photo {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.journey-photo:hover {
+    transform: scale(1.1);
+}
+
+/* Custom Table Design */
+.journey-table th {
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.journey-table td {
+    vertical-align: middle;
+}
+
+/* Button Tambah Journey */
+.btn-tambah-journey {
+    background-color: #558057 !important;
+    border-color: #558057 !important;
+    color: #fff !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-tambah-journey:hover {
+    background-color: #436645 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styles */
+.form-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.form-title {
+    color: #558057;
+    font-weight: 700;
+}
+
+.btn-batal {
+    background-color: #e8f5e9;
+    color: #558057;
+    border: none;
+    font-weight: 500;
+}
+
+.btn-batal:hover {
+    background-color: #dcedc8;
+    color: #436645;
+}
+
+.btn-simpan {
+    background-color: #558057;
+    color: #fff;
+    border: none;
+    font-weight: 500;
+}
+
+.btn-simpan:hover {
+    background-color: #436645;
+    color: #fff;
+}
+
+/* Upload Button Custom */
+.btn-upload-custom {
+    background-color: #e8f5e9;
+    color: #558057;
+    border: 1px dashed #558057;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-upload-custom:hover {
+    background-color: #c8e6c9;
+}
+
+.image-preview-box {
+    background-color: #f8f9fa;
+    max-width: 300px;
+}
+
+.preview-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
