@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://umkmdesagandoang.my.id/views/layouts/bantuan.php">
+  <a href="https://umkmdesagandoang.my.id/views/auth/login.php">
     <img src="https://img.shields.io/badge/LIVE%20DEMO-VISIT%20WEBSITE-2ea44f?style=for-the-badge&logo=googlechrome&logoColor=white">
   </a>
 </p>
