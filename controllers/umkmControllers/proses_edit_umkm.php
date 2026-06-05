@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$id_umkm    = (int) ($_POST['id_umkm']    ?? 0);
+$id_umkm    = (string) ($_POST['id_umkm']    ?? 0);
 $nama_umkm  = trim($_POST['nama_umkm']    ?? '');
 $jenis_usaha = trim($_POST['jenis_usaha'] ?? '');
 $alamat     = trim($_POST['alamat']       ?? '');

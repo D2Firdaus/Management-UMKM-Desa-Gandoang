@@ -22,7 +22,7 @@ if (!$id_user) {
 }
 
 // ─── Ambil data UMKM ──────────────────────────────────────────────────────────
-$id_umkm = (int) ($_GET['id'] ?? 0);
+$id_umkm = (string) ($_GET['id'] ?? 0);
 if (!$id_umkm) {
     header('Location: index.php');
     exit;
