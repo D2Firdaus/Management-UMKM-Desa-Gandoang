@@ -55,8 +55,8 @@ html {
 }
 
 .input-search {
-  background-color: transparent;
-  border: transparent;
+  background-color: transparent !important;
+  border: transparent !important;
   width: 13rem;
 }
 

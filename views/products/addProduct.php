@@ -72,8 +72,8 @@ require_once __DIR__ . '/../../config/path_config.php';
                             <label class="col-sm-3 form-label text-end">Pilih UMKM :</label>
                             <div class="col-sm-9">
                                 <select name="id_umkm" class="form-select bg-light" style="width: 200px;">
-                                    <option value="1">Konveksi</option>
-                                    <option value="2">Kuliner</option>
+                                    <option value="872c6ba7-60b5-11f1-89fb-00e01e54316e">Warung Makan Barokah</option>
+                                    <option value="872c74a0-60b5-11f1-89fb-00e01e54316e">Toko Kelontong Sejahtera</option>
                                 </select>
                             </div>
                         </div>
