@@ -15,7 +15,7 @@ $id_user = $_SESSION['user_id'] ?? null;
 
 if (!$id_user) {
     $_SESSION['error'] = 'Silakan login terlebih dahulu.';
-    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    header('Location: ' . $base_url . '/views/auth/login.php');
     exit;
 }
 
@@ -56,6 +56,7 @@ function getFileSizeFormatted(string $filename): string
 
 function statusPopup(): void
 {
+    global $base_url;
     if (!isset($_GET['status'])) {
         return;
     }
@@ -114,7 +115,7 @@ function statusPopup(): void
     <div class="alert_sukses_menambah">
         <div class="box_sukses_menambah">
             <div class="icon_sukses_menambah">
-                <img src="<?= BASE_URL ?>asset/icon/<?= htmlspecialchars($data['icon']) ?>" alt="Status">
+                <img src="<?= $base_url ?>asset/icon/<?= htmlspecialchars($data['icon']) ?>" alt="Status">
             </div>
 
             <h2><?= $data['title'] ?></h2>
@@ -139,8 +140,8 @@ function statusPopup(): void
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-    <link href="<?= BASE_URL ?>asset/boostrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?= BASE_URL ?>asset/css/profile.css" rel="stylesheet">
+    <link href="<?= $base_url ?>asset/boostrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= $base_url ?>asset/css/profile.css" rel="stylesheet">
 </head>
 
 <body>
@@ -166,7 +167,7 @@ function statusPopup(): void
                         </div>
                     </div>
 
-                    <form id="profileForm" action="<?= BASE_URL ?>controllers/ProfileController.php?action=save" method="POST"
+                    <form id="profileForm" action="<?= $base_url ?>controllers/ProfileController.php?action=save" method="POST"
                         enctype="multipart/form-data">
                         <div class="form-grid">
 
@@ -233,7 +234,7 @@ function statusPopup(): void
                                     if ($ktpExists): ?>
                                         <div class="file-preview-card" id="preview_ktp_container">
                                             <div class="file-preview-info">
-                                                <img src="<?= BASE_URL ?>controllers/FileController.php?type=foto_ktp"
+                                                <img src="<?= $base_url ?>controllers/FileController.php?type=foto_ktp"
                                                     class="file-preview-thumbnail" alt="Foto KTP">
                                                 <div class="file-preview-details">
                                                     <span class="file-preview-name" title="Dokumen KTP tersimpan">
@@ -245,7 +246,7 @@ function statusPopup(): void
                                                 </div>
                                             </div>
 
-                                            <a href="<?= BASE_URL ?>controllers/ProfileController.php?action=deleteFile&file_type=foto_ktp"
+                                            <a href="<?= $base_url ?>controllers/ProfileController.php?action=deleteFile&file_type=foto_ktp"
                                                 class="btn-delete-file"
                                                 onclick="return confirm('Apakah Anda yakin ingin menghapus foto KTP ini?')">
                                                 🗑
@@ -287,7 +288,7 @@ function statusPopup(): void
                                     if ($kkExists): ?>
                                         <div class="file-preview-card" id="preview_kk_container">
                                             <div class="file-preview-info">
-                                                <img src="<?= BASE_URL ?>controllers/FileController.php?type=foto_kk"
+                                                <img src="<?= $base_url ?>controllers/FileController.php?type=foto_kk"
                                                     class="file-preview-thumbnail" alt="Foto KK">
                                                 <div class="file-preview-details">
                                                     <span class="file-preview-name" title="Dokumen KK tersimpan">
@@ -299,7 +300,7 @@ function statusPopup(): void
                                                 </div>
                                             </div>
 
-                                            <a href="<?= BASE_URL ?>controllers/ProfileController.php?action=deleteFile&file_type=foto_kk"
+                                            <a href="<?= $base_url ?>controllers/ProfileController.php?action=deleteFile&file_type=foto_kk"
                                                 class="btn-delete-file"
                                                 onclick="return confirm('Apakah Anda yakin ingin menghapus foto KK ini?')">
                                                 🗑
@@ -331,7 +332,7 @@ function statusPopup(): void
 
                             <div class="form-actions">
                                 <button type="submit" class="btn-submit">
-                                    <img src="<?= BASE_URL ?>asset/icon/simpan.png" alt="Simpan" class="icon-simpan">
+                                    <img src="<?= $base_url ?>asset/icon/simpan.png" alt="Simpan" class="icon-simpan">
                                     Simpan
                                 </button>
                             </div>
@@ -347,7 +348,7 @@ function statusPopup(): void
     <div class="alert_sukses_menambah" id="validationModal" style="display:none;">
         <div class="box_sukses_menambah">
             <div class="icon_sukses_menambah">
-                <img src="<?= BASE_URL ?>asset/icon/hapus_alert.png" alt="Validasi Gagal">
+                <img src="<?= $base_url ?>asset/icon/hapus_alert.png" alt="Validasi Gagal">
             </div>
             <h2>Validasi<br>Gagal</h2>
             <p id="validationModalMessage">-</p>
@@ -362,7 +363,7 @@ function statusPopup(): void
 
     <?php statusPopup(); ?>
 
-    <script src="<?= BASE_URL ?>asset/boostrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= $base_url ?>asset/boostrap/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // ─── Preview gambar yang baru dipilih ────────────────────────────────────

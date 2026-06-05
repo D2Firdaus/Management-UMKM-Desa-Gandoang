@@ -2,14 +2,14 @@
 
 class ProductModel
 {
-    private $db;
+    private PDO $db;
 
-    public function __construct($db)
+    public function __construct(PDO $db)
     {
         $this->db = $db;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $sql = "SELECT * FROM produk WHERE id_produk = :id";
         $stmt = $this->db->prepare($sql);
@@ -17,7 +17,7 @@ class ProductModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create($data)
+    public function create(array $data)
     {
         $sql = "INSERT INTO produk (id_umkm, nama_produk, kategori, harga, deskripsi, foto) 
                 VALUES (:id_umkm, :nama_produk, :kategori, :harga, :deskripsi, :foto)";
@@ -33,7 +33,7 @@ class ProductModel
         ]);
     }
 
-    public function update($id, $data)
+    public function update(int $id, array $data)
     {
         $sql = "UPDATE produk SET 
                 nama_produk = :nama_produk, 
@@ -54,14 +54,14 @@ class ProductModel
         ]);
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         $sql = "UPDATE produk SET status = 'dihapus' WHERE id_produk = :id";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
 
-    public function search($keyword)
+    public function search(string $keyword)
     {
         $sql = "SELECT * FROM produk WHERE (nama_produk LIKE :keyword OR kategori LIKE :keyword) AND status != 'dihapus'";
         $stmt = $this->db->prepare($sql);
@@ -69,7 +69,7 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getPaginated($search = '', $per_page = 3, $offset = 0)
+    public function getPaginated(string $search = '', int $per_page = 3, int $offset = 0)
     {
         if ($search !== '') {
             $total_sql = "SELECT COUNT(*) FROM produk WHERE nama_produk LIKE :keyword AND status != 'dihapus'";

@@ -205,56 +205,38 @@ function isFolderActive($folderName)
         ?>
         <div class="isi_menu">
 
-<<<<<<< HEAD
             <a href="<?= $view_path ?>layouts/dashboard_user.php" class="<?= $is_dashboard ? 'active' : '' ?>">
-=======
-            <a href="#" class="<?= isFolderActive('dashboard') ?>">
->>>>>>> c56cea897c8c74c4be99537f0053e91d676a2d7d
+
                 <img src="<?= $asset_path ?>icon/home.png" style="padding:5px" width="30px" height="30px">
                 Dashboard
             </a>
 
-<<<<<<< HEAD
             <a href="<?= $view_path ?>profile/index.php" class="<?= strpos($current_uri, '/views/profile') !== false ? 'active' : '' ?>">
-=======
-            <a href="#" class="<?= isFolderActive('profile') ?>">
->>>>>>> c56cea897c8c74c4be99537f0053e91d676a2d7d
+
                 <img src="<?= $asset_path ?>icon/profile.png" style="padding:5px" width="30px" height="30px">
                 Profile
             </a>
 
-<<<<<<< HEAD
             <a href="<?= $view_path ?>umkm/index.php" class="<?= strpos($current_uri, '/views/umkm') !== false ? 'active' : '' ?>">
-=======
-            <a href="#" class="<?= isFolderActive('umkm') ?>">
->>>>>>> c56cea897c8c74c4be99537f0053e91d676a2d7d
+
                 <img src="<?= $asset_path ?>icon/umkm.png" style="padding:5px" width="30px" height="30px">
                 Profile UMKM
             </a>
 
-<<<<<<< HEAD
             <a href="<?= $view_path ?>products/index.php" class="<?= strpos($current_uri, '/views/products') !== false ? 'active' : '' ?>">
-=======
-            <a href="#" class="<?= isFolderActive('products') ?>">
->>>>>>> c56cea897c8c74c4be99537f0053e91d676a2d7d
+
                 <img src="<?= $asset_path ?>icon/produk.png" style="padding:5px" width="30px" height="30px">
                 Detail Produk
             </a>
 
-<<<<<<< HEAD
             <a href="<?= $view_path ?>bantuan/index.php" class="<?= strpos($current_uri, '/views/bantuan') !== false ? 'active' : '' ?>">
-=======
-            <a href="#" class="<?= isFolderActive('bantuan') ?>">
->>>>>>> c56cea897c8c74c4be99537f0053e91d676a2d7d
+
                 <img src="<?= $asset_path ?>icon/bantuan.png" style="padding:5px" width="30px" height="30px">
                 Ajukan Bantuan
             </a>
 
-<<<<<<< HEAD
             <a href="<?= $view_path ?>journey/index.php" class="<?= strpos($current_uri, '/views/journey') !== false ? 'active' : '' ?>">
-=======
-            <a href="#" class="<?= isFolderActive('journey') ?>">
->>>>>>> c56cea897c8c74c4be99537f0053e91d676a2d7d
+
                 <img src="<?= $asset_path ?>icon/journey.png" style="padding:5px" width="30px" height="30px">
                 Journey
             </a>

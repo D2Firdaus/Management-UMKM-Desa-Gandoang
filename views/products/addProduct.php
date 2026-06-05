@@ -63,18 +63,8 @@ require_once __DIR__ . '/../../config/path_config.php';
                                     <label for="foto" class="btn btn-sm btn-light border">
                                         <i class="bi bi-cloud-upload"></i> Upload
                                     </label>
-                                    <input type="file" name="foto" id="foto" class="d-none" onchange="previewFile()">
-
-                                    <div id="file-preview" class="preview-box d-none">
-                                        <img src="" id="img-placeholder" style="width: 40px; height: 30px; object-fit: cover;">
-                                        <div>
-                                            <span id="file-name" class="d-block fw-bold">Jeruk.JPG</span>
-                                            <span id="file-size" class="text-muted">156 Kb</span>
-                                        </div>
-                                        <button type="button" class="btn btn-sm btn-outline-danger ms-auto border-0" onclick="removeFile()">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
+                                    <input type="file" name="foto[]" id="foto" class="d-none" onchange="previewFiles()" multiple accept=".jpg, .jpeg, .png, .webp">
+                                    <div id="preview-container" class="d-flex flex-wrap flex-row gap-2 mt-2"></div>
                                 </div>
                             </div>
                         </div>
@@ -110,30 +100,86 @@ require_once __DIR__ . '/../../config/path_config.php';
     </div>
 
     <script>
-        function previewFile() {
-            const file = document.querySelector('#foto').files[0];
-            const preview = document.querySelector('#file-preview');
-            const imgPlaceholder = document.querySelector('#img-placeholder');
-            const name = document.querySelector('#file-name');
-            const size = document.querySelector('#file-size');
+        // 1. Buat kantong penampung file global di latar belakang
+        let kumpulanFile = new DataTransfer();
 
-            if (file) {
-                preview.classList.remove('d-none');
+        function previewFiles() {
+            const input = document.querySelector('#foto');
+            const container = document.querySelector('#preview-container');
+            
+            // Ambil file yang baru saja dipilih user di klik terbaru
+            const fileBaru = input.files;
 
-                name.innerText = file.name;
-                size.innerText = (file.size / 1024).toFixed(1) + ' Kb';
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imgPlaceholder.src = e.target.result;
+            // 2. Masukkan file-file baru ke dalam kantong utama kita
+            Array.from(fileBaru).forEach(file => {
+                // Cek jika kantong belum penuh (maksimal 3)
+                if (kumpulanFile.items.length < 3) {
+                    kumpulanFile.items.add(file);
+                } else {
+                    alert('Maksimal foto yang diperbolehkan hanya 3 file!');
                 }
-                reader.readAsDataURL(file);
-            }
+            });
+
+            // 3. Sinkronisasikan isi kantong ke input file HTML agar saat di-submit PHP menerima data yang benar
+            input.files = kumpulanFile.files;
+
+            // 4. Render ulang tampilan preview berdasarkan isi kantong terbaru
+            renderPreview();
         }
 
-        function removeFile() {
-            document.querySelector('#foto').value = '';
-            document.querySelector('#file-preview').classList.add('d-none');
+        function renderPreview() {
+            const container = document.querySelector('#preview-container');
+            container.innerHTML = ''; // Kosongkan tampilan lama
+
+            // Looping isi kantong untuk membuat kotak preview dinamis
+            Array.from(kumpulanFile.files).forEach((file, index) => {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    let namaTeks = file.name;
+                    if (namaTeks.length > 7) {
+                        // Potong dari karakter ke-0 sampai ke-7, lalu tambahkan titik-titik
+                        namaTeks = namaTeks.substring(0, 7) + '...';
+                    }
+                    const previewBox = document.createElement('div');
+                    previewBox.className = "preview-box d-flex align-items-center bg-white p-2 border rounded shadow-sm gap-3";
+                    previewBox.innerHTML = `
+                        <img src="${e.target.result}" style="width: 50px; height: 40px; object-fit: cover;" class="rounded">
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <span class="d-block fw-bold text-truncate small">${namaTeks}</span>
+                            <span class="text-muted small">${(file.size / 1024).toFixed(1)} Kb</span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="removeSingleFile(${index})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
+                    container.appendChild(previewBox);
+                }
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 5. Fungsi hapus satu per satu file yang terpilih
+        function removeSingleFile(index) {
+            const input = document.querySelector('#foto');
+            
+            // Buat kantong baru cadangan
+            const kantongBaru = new DataTransfer();
+            
+            // Pindahkan semua file KECUALI file yang ingin dihapus (berdasarkan indeksnya)
+            Array.from(kumpulanFile.files).forEach((file, i) => {
+                if (i !== index) {
+                    kantongBaru.items.add(file);
+                }
+            });
+
+            // Ganti isi kantong utama dengan kantong yang sudah dikurangi
+            kumpulanFile = kantongBaru;
+
+            // Sinkronisasikan ulang ke input file HTML dan render ulang tampilannya
+            input.files = kumpulanFile.files;
+            renderPreview();
         }
     </script>
 </body>
