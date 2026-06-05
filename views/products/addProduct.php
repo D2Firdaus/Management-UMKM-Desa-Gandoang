@@ -1,4 +1,9 @@
 <?php
+ob_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../../config/path_config.php';
 ?>
 
@@ -72,8 +77,8 @@ require_once __DIR__ . '/../../config/path_config.php';
                             <label class="col-sm-3 form-label text-end">Pilih UMKM :</label>
                             <div class="col-sm-9">
                                 <select name="id_umkm" class="form-select bg-light" style="width: 200px;">
-                                    <option value="872c6ba7-60b5-11f1-89fb-00e01e54316e">Warung Makan Barokah</option>
-                                    <option value="872c74a0-60b5-11f1-89fb-00e01e54316e">Toko Kelontong Sejahtera</option>
+                                    <option value="84d1cc3f-60bc-11f1-bf39-00e01e54316e">Warung Makan Barokah</option>
+                                    <option value="84d1cc3f-60bc-11f1-bf39-00e01e54316e">Toko Kelontong Sejahtera</option>
                                 </select>
                             </div>
                         </div>
@@ -168,6 +173,7 @@ require_once __DIR__ . '/../../config/path_config.php';
             renderPreview();
         }
     </script>
+    <?php ob_end_flush(); ?>
 </body>
 
 </html>

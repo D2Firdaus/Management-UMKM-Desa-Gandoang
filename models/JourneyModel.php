@@ -25,7 +25,7 @@ class JourneyModel
                 LIMIT :limit OFFSET :offset";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+        $stmt->bindValue(':id_user', $id_user, PDO::PARAM_STR);
         $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);

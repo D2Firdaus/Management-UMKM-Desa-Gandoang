@@ -392,7 +392,7 @@ CREATE TABLE `profile_history` (
 --
 
 CREATE TABLE `umkm` (
-  `id_umkm` varchar(36) NOT NULL DEFAULT uuid(),
+  `id_umkm` varchar(36) NOT NULL DEFAULT (uuid()),
   `nama_umkm` varchar(100) NOT NULL,
   `jenis_usaha` varchar(100) NOT NULL DEFAULT '',
   `id_user` int(11) NOT NULL,
