@@ -5,6 +5,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
 require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
@@ -28,7 +36,19 @@ $status = $_GET['status'] ?? null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Produk</title>
+    <title>Products</title>
+
+    <!-- Font Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../asset/icon/bootstrap-icons.min.css">
+    <!-- bootstrap -->
+    <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- css -->
+    <link href="<?= $asset_path ?>/css/products/products.css" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
     <link href="<?= $asset_path ?>boostrap/css/bootstrap.min.css" rel="stylesheet">
@@ -48,15 +68,11 @@ $status = $_GET['status'] ?? null;
             <!-- Navbar -->
             <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
             <!-- Akhir Navbar -->
-
-            <div class="content">
-                <div class="card-dashboard">
-
+            <div class="content rounded-5">
                 <div class="card-header">
                     <h1 class="fs-2 fw-bold">Detail Produk</h1>
                     <p class="fs-5">Daftar produk yang tersedia.</p>
                 </div>
-
                 <?php if ($status === 'success'): ?>
                     <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
                         Produk berhasil ditambahkan!
@@ -76,7 +92,6 @@ $status = $_GET['status'] ?? null;
 
                 <!-- TOOLBAR: Show Entries + Search -->
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
-
                     <!-- Show entries -->
                     <form method="GET" class="show-entries d-flex align-items-center gap-2">
                         <label for="show">Show</label>
@@ -148,9 +163,8 @@ $status = $_GET['status'] ?? null;
                             <?php endif; ?>
                         </tbody>
                     </table>
-
-                    <!-- Pagination -->
-                    <ul class="pagination custom-pagination justify-content-center mt-4 flex-wrap">
+                    <ul class="pagination custom-pagination justify-content-center mt-4">
+                        <!-- tombol previous -->
                         <li class="page-item <?= ($current_page == 1) ? 'disabled' : '' ?>">
                             <a class="page-link" href="?page=<?= $current_page - 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">Previous</a>
                         </li>
@@ -166,19 +180,16 @@ $status = $_GET['status'] ?? null;
                     <!-- Akhir Pagination -->
 
                     <!-- Add Button -->
-                    <div class="d-flex justify-content-end mt-2">
-                        <a href="addProduct.php" class="btn" id="tambah">+ Tambah Produk</a>
+                    <div class="d-flex justify-content-end">
+                        <a href="addProduct.php" class="btn" id="tambah">
+                            + Tambah Produk
+                        </a>
                     </div>
                 </div>
-
-                </div>
                 <!-- akhir card-dashboard -->
-
             </div>
         </div>
-
     </div>
-
     <script src="<?= $asset_path ?>boostrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?= $asset_path ?>js/bantuan.js"></script>
     <?php ob_end_flush(); ?>

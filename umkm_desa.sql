@@ -7,6 +7,7 @@
 -- Server version: 8.4.3
 -- PHP Version: 8.3.30
 
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -143,6 +144,10 @@ CREATE TABLE `journey` (
 -- Dumping data for table `journey`
 --
 
+--
+-- Dumping data untuk tabel `journey`
+--
+
 INSERT INTO `journey` (`id_journey`, `id_umkm`, `foto`, `deksripsi`, `tanggal`) VALUES
 (1, 1, 'journey1.jpg', 'Pembukaan warung pertama kali', '2024-01-15'),
 (2, 1, 'journey2.jpg', 'Renovasi warung dan tambah menu', '2024-06-20'),
@@ -198,13 +203,14 @@ CREATE TABLE `journey_history` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `produk`
+-- Struktur dari tabel `produk`
 --
 
 CREATE TABLE `produk` (
   `id_produk` int NOT NULL,
   `id_umkm` int NOT NULL,
   `nama_produk` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('aktif','dihapus') NOT NULL DEFAULT 'aktif',
   `kategori` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `harga` int NOT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -212,7 +218,7 @@ CREATE TABLE `produk` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `produk`
+-- Dumping data untuk tabel `produk`
 --
 
 INSERT INTO `produk` (`id_produk`, `id_umkm`, `nama_produk`, `kategori`, `harga`, `deskripsi`, `foto`) VALUES
@@ -503,6 +509,7 @@ ALTER TABLE `journey_history`
 
 --
 -- Indexes for table `produk`
+
 --
 ALTER TABLE `produk`
   ADD PRIMARY KEY (`id_produk`),
@@ -542,6 +549,7 @@ ALTER TABLE `umkm_history`
 
 --
 -- Indexes for table `user`
+
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`),
@@ -636,12 +644,14 @@ ALTER TABLE `journey`
 
 --
 -- Constraints for table `produk`
+
 --
 ALTER TABLE `produk`
   ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_umkm`) REFERENCES `umkm` (`id_umkm`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `profile`
+
 --
 ALTER TABLE `profile`
   ADD CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;

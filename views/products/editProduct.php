@@ -1,45 +1,19 @@
 <?php
-ob_start();
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-require_once __DIR__ . '/../../config/koneksi.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once __DIR__ . '/../../config/path_config.php';
+require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
 
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$id = $_GET['id'];
 if (!$id) {
     header("Location: index.php");
     exit;
 }
 
 $controller = new ProductController($conn);
-$product    = $controller->getProductById($id);
-
-if (!$product) {
-    header("Location: index.php");
-    exit;
-}
-
-$user_id = $_SESSION['user_id'] ?? null;
-$user_role = $_SESSION['user_role'] ?? 'umkm';
-
-if ($user_id) {
-    if ($user_role === 'admin') {
-        $stmt = $conn->prepare("SELECT id_umkm, nama_umkm FROM umkm ORDER BY nama_umkm ASC");
-        $stmt->execute();
-    } else {
-        $stmt = $conn->prepare("SELECT id_umkm, nama_umkm FROM umkm WHERE id_user = :id_user ORDER BY nama_umkm ASC");
-        $stmt->execute([':id_user' => $user_id]);
-    }
-    $umkms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    $stmt = $conn->prepare("SELECT id_umkm, nama_umkm FROM umkm ORDER BY nama_umkm ASC");
-    $stmt->execute();
-    $umkms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+$product = $controller->getProductById($id);
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +23,10 @@ if ($user_id) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Produk</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= $asset_path ?>boostrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= $asset_path ?>css/products/addProducts.css">
@@ -71,24 +49,21 @@ if ($user_id) {
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Nama Product :</label>
                             <div class="col-sm-9">
-                                <input type="text" name="nama_produk" class="form-control bg-light"
-                                    value="<?= htmlspecialchars($product['nama_produk']) ?>" required>
+                                <input type="text" name="nama_produk" class="form-control bg-light" placeholder="Asep Jalaludin" value="<?= htmlspecialchars($product['nama_produk']) ?>" required>
                             </div>
                         </div>
 
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Kategori :</label>
                             <div class="col-sm-9">
-                                <input type="text" name="kategori" class="form-control bg-light"
-                                    value="<?= htmlspecialchars($product['kategori']) ?>" required>
+                                <input type="text" name="kategori" class="form-control bg-light" placeholder="perternakan" value="<?= htmlspecialchars($product['kategori']) ?>" required>
                             </div>
                         </div>
 
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Harga :</label>
                             <div class="col-sm-9">
-                                <input type="number" name="harga" class="form-control bg-light"
-                                    value="<?= htmlspecialchars($product['harga']) ?>" required>
+                                <input type="number" name="harga" class="form-control bg-light" placeholder="10.000" value="<?= htmlspecialchars($product['harga']) ?>" required>
                             </div>
                         </div>
 
@@ -99,21 +74,51 @@ if ($user_id) {
                                     <label for="foto" class="btn btn-sm btn-light border">
                                         <i class="bi bi-cloud-upload"></i> Upload
                                     </label>
-                                    <input type="file" name="foto" id="foto" class="d-none"
-                                           accept="image/png, image/jpeg, image/jpg, image/webp"
-                                           onchange="previewFile()">
+                                    <input type="file" name="foto[]" id="foto" class="d-none" accept="image/png, image/jpeg, image/jpg, image/webp" onchange="previewFiles()" multiple>
 
-                                    <div id="file-preview" class="preview-box <?= empty($product['foto']) ? 'd-none' : '' ?>">
-                                        <img src="<?= $asset_path ?>images/products/<?= htmlspecialchars($product['foto'] ?? '') ?>"
-                                             id="img-placeholder" style="width: 40px; height: 30px; object-fit: cover;"
-                                             onerror="this.src='<?= $asset_path ?>images/products/default.jpg'">
-                                        <div>
-                                            <span id="file-name" class="d-block fw-bold"><?= htmlspecialchars($product['foto'] ?? '') ?></span>
-                                            <span id="file-size" class="text-muted">Foto saat ini</span>
-                                        </div>
-                                        <button type="button" class="btn btn-sm btn-outline-danger ms-auto border-0" onclick="removeFile()">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                    <div id="preview-container" class="d-flex flex-row flex-wrap gap-2 mt-2">
+                                        <?php 
+                                        if (!empty($product['foto']) && $product['foto'] !== 'default.jpg') {
+                                            $foto_lama = explode(',', $product['foto']);
+                                            
+                                            foreach ($foto_lama as $index => $img) {
+                                                $img_trimmed = trim($img);
+                                                if (empty($img_trimmed)) continue;
+
+                                                $nama_pendek = (strlen($img_trimmed) > 7) ? substr($img_trimmed, 0, 7) . '...' : $img_trimmed;
+                                                
+                                                $filePath = __DIR__ . '/../../asset/images/products/' . $img_trimmed;
+                                                $file_size_kb = file_exists($filePath) ? number_format(filesize($filePath) / 1024, 1) : '0.0';
+                                                ?>
+                                                
+                                                <div class="preview-box data-lama d-flex align-items-center bg-white p-2 border rounded shadow-sm gap-2" 
+                                                    id="old-img-<?= $index ?>" 
+                                                    style="flex: 1 1 calc(33.333% - 10px); min-width: 150px; max-width: 100%;">
+                                                    
+                                                    <img src="../../asset/images/products/<?= htmlspecialchars($img_trimmed) ?>" style="width: 50px; height: 40px; object-fit: cover;" class="rounded">
+                                                    
+                                                    <div class="flex-grow-1" style="min-width: 0;">
+                                                        <span class="d-block fw-bold text-truncate small"><?= htmlspecialchars($nama_pendek) ?></span>
+                                                        <span class="text-muted small"><?= $file_size_kb ?> Kb</span>
+                                                    </div>
+                                                    
+                                                    <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="removeSingleFile(<?= $index ?>)">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <?php
+                                            }
+                                        } else {
+                                            ?>
+                                            <div class="preview-box d-flex align-items-center bg-white p-2 border rounded shadow-sm gap-2" style="flex: 1 1 calc(33.333% - 10px); min-width: 150px; max-width: 100%;">
+                                                <img src="../../asset/images/products/default.jpg" style="width: 50px; height: 40px; object-fit: cover;" class="rounded">
+                                                <div class="flex-grow-1">
+                                                    <span class="d-block fw-bold small text-muted">default.jpg</span>
+                                                </div>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -122,37 +127,24 @@ if ($user_id) {
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Pilih UMKM :</label>
                             <div class="col-sm-9">
-                                <?php if (empty($umkms)): ?>
-                                    <div class="text-danger small mb-1">
-                                        Anda belum mendaftarkan UMKM. 
-                                        <a href="<?= $view_path ?>umkm/index.php" class="text-decoration-underline text-danger">Daftarkan UMKM</a> terlebih dahulu.
-                                    </div>
-                                    <select name="id_umkm" class="form-select bg-light" style="width: 200px;" disabled required>
-                                        <option value="">Tidak ada UMKM</option>
-                                    </select>
-                                <?php else: ?>
-                                    <select name="id_umkm" class="form-select bg-light" style="width: 200px;" required>
-                                        <?php foreach ($umkms as $umkm): ?>
-                                            <option value="<?= $umkm['id_umkm'] ?>" <?= ($product['id_umkm'] == $umkm['id_umkm']) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($umkm['nama_umkm']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                <?php endif; ?>
+                                <select name="id_umkm" class="form-select bg-light" style="width: 200px;">
+                                    <option value="1" <?= ($product['id_umkm'] == 1) ? 'selected' : ''; ?>>Konveksi</option>
+                                    <option value="2" <?= ($product['id_umkm'] == 2) ? 'selected' : ''; ?>>Kuliner</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <label class="col-sm-3 form-label text-end pt-2">Deskripsi :</label>
                             <div class="col-sm-9">
-                                <textarea name="deskripsi" class="form-control bg-light" rows="4"><?= htmlspecialchars($product['deskripsi'] ?? '') ?></textarea>
+                                <textarea name="deskripsi" class="form-control bg-light" rows="4" placeholder="Good"><?= htmlspecialchars($product['deskripsi']) ?></textarea>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-9 offset-sm-3 d-flex justify-content-between">
                                 <a href="index.php" class="btn btn-batal fw-bold">Batal</a>
-                                <button type="submit" class="btn btn-simpan fw-bold d-flex align-items-center gap-2" <?= empty($umkms) ? 'disabled' : '' ?>>
+                                <button type="submit" class="btn btn-simpan fw-bold d-flex align-items-center gap-2">
                                     <i class="bi bi-floppy"></i> Simpan
                                 </button>
                             </div>
@@ -165,33 +157,87 @@ if ($user_id) {
     </div>
 
     <script>
-        function previewFile() {
-            const file = document.querySelector('#foto').files[0];
-            const preview = document.querySelector('#file-preview');
-            const imgPlaceholder = document.querySelector('#img-placeholder');
-            const name = document.querySelector('#file-name');
-            const size = document.querySelector('#file-size');
+        let kumpulanFile = new DataTransfer();
 
-            if (file) {
-                preview.classList.remove('d-none');
-                name.innerText = file.name;
-                size.innerText = (file.size / 1024).toFixed(1) + ' Kb';
+        function previewFiles() {
+            const input = document.querySelector('#foto');
+            const container = document.querySelector('#preview-container');
+            
+            // Ambil file yang baru saja dipilih user di klik terbaru
+            const fileBaru = input.files;
 
-                const reader = new FileReader();
-                reader.onload = function(e) { imgPlaceholder.src = e.target.result; }
-                reader.readAsDataURL(file);
-            }
+            // 2. Masukkan file-file baru ke dalam kantong utama kita
+            Array.from(fileBaru).forEach(file => {
+                // Cek jika kantong belum penuh (maksimal 3)
+                if (kumpulanFile.items.length < 3) {
+                    kumpulanFile.items.add(file);
+                } else {
+                    alert('Maksimal foto yang diperbolehkan hanya 3 file!');
+                }
+            });
+
+            // 3. Sinkronisasikan isi kantong ke input file HTML agar saat di-submit PHP menerima data yang benar
+            input.files = kumpulanFile.files;
+
+            // 4. Render ulang tampilan preview berdasarkan isi kantong terbaru
+            renderPreview();
         }
 
-        function removeFile() {
-            document.querySelector('#foto').value = '';
-            document.querySelector('#file-preview').classList.add('d-none');
+        function renderPreview() {
+            const container = document.querySelector('#preview-container');
+            container.innerHTML = ''; // Kosongkan tampilan lama
+
+            // Looping isi kantong untuk membuat kotak preview dinamis
+            Array.from(kumpulanFile.files).forEach((file, index) => {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    let namaTeks = file.name;
+                    if (namaTeks.length > 7) {
+                        // Potong dari karakter ke-0 sampai ke-7, lalu tambahkan titik-titik
+                        namaTeks = namaTeks.substring(0, 7) + '...';
+                    }
+                    const previewBox = document.createElement('div');
+                    previewBox.className = "preview-box d-flex align-items-center bg-white p-2 border rounded shadow-sm gap-3";
+                    previewBox.innerHTML = `
+                        <img src="${e.target.result}" style="width: 50px; height: 40px; object-fit: cover;" class="rounded">
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <span class="d-block fw-bold text-truncate small">${namaTeks}</span>
+                            <span class="text-muted small">${(file.size / 1024).toFixed(1)} Kb</span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="removeSingleFile(${index})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
+                    container.appendChild(previewBox);
+                }
+
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 5. Fungsi hapus satu per satu file yang terpilih
+        function removeSingleFile(index) {
+            const input = document.querySelector('#foto');
+            
+            // Buat kantong baru cadangan
+            const kantongBaru = new DataTransfer();
+            
+            // Pindahkan semua file KECUALI file yang ingin dihapus (berdasarkan indeksnya)
+            Array.from(kumpulanFile.files).forEach((file, i) => {
+                if (i !== index) {
+                    kantongBaru.items.add(file);
+                }
+            });
+
+            // Ganti isi kantong utama dengan kantong yang sudah dikurangi
+            kumpulanFile = kantongBaru;
+
+            // Sinkronisasikan ulang ke input file HTML dan render ulang tampilannya
+            input.files = kumpulanFile.files;
+            renderPreview();
         }
     </script>
-
-    <script src="<?= $asset_path ?>boostrap/js/bootstrap.bundle.min.js"></script>
-    <script src="<?= $asset_path ?>js/bantuan.js"></script>
-    <?php ob_end_flush(); ?>
 </body>
 
 </html>

@@ -1,5 +1,7 @@
 <?php
-define('BASE_PATH', __DIR__ . '/');
+$base_url = '/Management_UMKM_Desa_Gandoang';
+$asset_path = $base_url . '/asset/';
+$view_path = $base_url . '/views/';
 
 $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
 $host = $_SERVER['HTTP_HOST'];

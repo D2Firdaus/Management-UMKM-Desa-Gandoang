@@ -17,107 +17,32 @@ html {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  overflow-x: hidden;
-}
-
-/* === MOBILE GLOBAL SCROLL FIX === */
-@media (max-width: 768px) {
-  body,
-  html {
-    height: auto;
-    overflow: auto;
-    overflow-x: hidden;
-  }
+  overflow-x: hidden; /* Mencegah scrollbar horizontal yang tidak perlu */
 }
 
 .wrapper {
   display: flex;
+  min-height: 100vh; /* Gunakan min-height bukan height */
   width: 100%;
-  height: 100vh;
-}
-
-@media (max-width: 768px) {
-  .wrapper {
-    height: auto;
-    min-height: 100vh;
-    flex-direction: column;
-  }
-
-  .wrapper > .sidebar {
-    flex: none;
-    width: 0;
-    min-width: 0;
-    padding: 0;
-    overflow: visible;
-  }
-
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-  }
-
-  .sidebar.close {
-    margin-left: -280px;
-  }
-
-  .wrapper > .main {
-    width: 100%;
-    flex: 1;
-  }
 }
 
 /* Main */
 .main {
   flex: 1;
-  min-width: 0;
-  height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-@media (max-width: 768px) {
-  .main {
-    height: auto;
-    min-height: 100vh;
-    width: 100%;
-  }
+  min-width: 0; /* Penting agar flex child tidak meluber keluar */
+  height: 100vh;
 }
 
 .content {
-  flex: 1;
-  overflow-y: auto;
+  overflow-y: auto; /* Scroll hanya di area ini */
+  padding: 35px; /* Tambahkan padding agar tidak mentok */
+  margin: 25px;
   overflow-x: hidden;
-  padding: 35px;
-  background: #f4f1eb;
-}
-
-@media (max-width: 768px) {
-  .content {
-    flex: none;
-    overflow-y: visible;
-    height: auto;
-    padding: 15px;
-    padding-bottom: 120px;
-  }
-}
-
-.card-dashboard {
-  background: white;
-  border-radius: 25px;
-  padding: 35px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.card-dashboard h1,
-.card-dashboard h2 {
-  color: #65835e;
-  margin-bottom: 5px;
-}
-
-.card-dashboard p {
-  color: #666;
+  background-color: var(--card-content-background);
+  box-shadow: 0 0.5rem 5px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
 }
 
 .card-header {
@@ -142,6 +67,11 @@ html {
   box-shadow: none !important;
 }
 
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .table {
   border-collapse: separate;
   border-spacing: 0;
@@ -163,7 +93,7 @@ html {
 
 .table > tbody > tr > *,
 .table > thead > tr > * {
-  padding: 1rem 0 1rem 0;
+  padding: 1rem;
 }
 
 .table > tbody > tr:nth-of-type(even) > * {
