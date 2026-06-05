@@ -209,14 +209,18 @@ class ProfileModel
             $stmt->execute([':id_user' => $id_user]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row && !empty($row[$fileType])) {
-                // Cek di private storage dulu, fallback ke asset/images (legacy)
-                $privatePath = __DIR__ . '/../storage/private/images' . $row[$fileType];
-                $legacyPath  = __DIR__ . '/../asset/images/'    . $row[$fileType];
-                $filePath    = file_exists($privatePath) ? $privatePath : $legacyPath;
+            if ($row && array_key_exists($fileType, $row)) {
+                // Hapus file fisik jika ada nama file tersimpan
+                if (!empty($row[$fileType])) {
+                    // Cek di private storage dulu, fallback ke asset/images (legacy)
+                    $privatePath = __DIR__ . '/../storage/private/images/' . $row[$fileType];
+                    $legacyPath  = __DIR__ . '/../asset/images/' . $row[$fileType];
 
-                if (file_exists($filePath)) {
-                    @unlink($filePath);
+                    if (file_exists($privatePath)) {
+                        @unlink($privatePath);
+                    } elseif (file_exists($legacyPath)) {
+                        @unlink($legacyPath);
+                    }
                 }
 
                 // Kosongkan nilai di database

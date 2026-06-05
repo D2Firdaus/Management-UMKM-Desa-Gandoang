@@ -33,14 +33,14 @@ $foto_kk = $profile['foto_kk'] ?? '';
 
 function getFileSizeFormatted(string $filename): string
 {
-    $privatePath = __DIR__ . '/../../storage/private/' . $filename;
+    $privatePath = __DIR__ . '/../../storage/private/images/' . $filename;
     $legacyPath  = __DIR__ . '/../../asset/images/'    . $filename;
     $filePath    = file_exists($privatePath) ? $privatePath : $legacyPath;
 
     if (file_exists($filePath)) {
         $bytes = filesize($filePath);
 
-        if ($bytes >= 1048576) {
+        if ($bytes >= 2097152) {
             return number_format($bytes / 1048576, 2) . ' MB';
         }
 
@@ -86,12 +86,12 @@ function statusPopup(): void
         'file_terlalu_besar_ktp' => [
             'icon'    => 'hapus_alert.png',
             'title'   => 'File<br>Terlalu Besar',
-            'message' => 'Foto KTP melebihi batas maksimal 1 MB',
+            'message' => 'Foto KTP melebihi batas maksimal 2 MB',
         ],
         'file_terlalu_besar_kk' => [
             'icon'    => 'hapus_alert.png',
             'title'   => 'File<br>Terlalu Besar',
-            'message' => 'Foto KK melebihi batas maksimal 1 MB',
+            'message' => 'Foto KK melebihi batas maksimal 2 MB',
         ],
         'format_salah_ktp' => [
             'icon'    => 'hapus_alert.png',
@@ -227,7 +227,7 @@ function statusPopup(): void
 
                                     <?php
                                     $ktpExists = !empty($foto_ktp) && (
-                                        file_exists(__DIR__ . '/../../storage/private/' . $foto_ktp) ||
+                                        file_exists(__DIR__ . '/../../storage/private/images/' . $foto_ktp) ||
                                         file_exists(__DIR__ . '/../../asset/images/' . $foto_ktp)
                                     );
                                     if ($ktpExists): ?>
@@ -281,7 +281,7 @@ function statusPopup(): void
 
                                     <?php
                                     $kkExists = !empty($foto_kk) && (
-                                        file_exists(__DIR__ . '/../../storage/private/' . $foto_kk) ||
+                                        file_exists(__DIR__ . '/../../storage/private/images/' . $foto_kk) ||
                                         file_exists(__DIR__ . '/../../asset/images/' . $foto_kk)
                                     );
                                     if ($kkExists): ?>
@@ -383,7 +383,7 @@ function statusPopup(): void
                 nameSpan.textContent = file.name;
 
                 if (sizeSpan) {
-                    sizeSpan.textContent = file.size >= 1048576
+                    sizeSpan.textContent = file.size >= 2097152
                         ? (file.size / 1048576).toFixed(2) + ' MB'
                         : Math.round(file.size / 1024) + ' Kb';
                 }

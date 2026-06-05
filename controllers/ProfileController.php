@@ -74,7 +74,7 @@ class ProfileController
                 exit;
             }
 
-            if ($_FILES['foto_ktp']['size'] > 1048576) {
+            if ($_FILES['foto_ktp']['size'] > 2097152) {
                 header('Location: ../views/profile/index.php?status=file_terlalu_besar_ktp');
                 exit;
             }
@@ -104,7 +104,7 @@ class ProfileController
                 exit;
             }
 
-            if ($_FILES['foto_kk']['size'] > 1048576) {
+            if ($_FILES['foto_kk']['size'] > 2097152) {
                 header('Location: ../views/profile/index.php?status=file_terlalu_besar_kk');
                 exit;
             }
