@@ -149,7 +149,7 @@ CREATE TABLE `journey` (
   `id_journey` int(11) NOT NULL,
   `id_umkm` varchar(36) NOT NULL,
   `foto` varchar(255) NOT NULL,
-  `deksripsi` text NOT NULL,
+  `deskripsi` text NOT NULL,
   `tanggal` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -157,7 +157,7 @@ CREATE TABLE `journey` (
 -- Dumping data untuk tabel `journey`
 --
 
-INSERT INTO `journey` (`id_journey`, `id_umkm`, `foto`, `deksripsi`, `tanggal`) VALUES
+INSERT INTO `journey` (`id_journey`, `id_umkm`, `foto`, `deskripsi`, `tanggal`) VALUES
 (1, '84d1cc3f-60bc-11f1-bf39-00e01e54316d', 'journey1.jpg', 'Pembukaan warung pertama kali', '2024-01-15'),
 (2, '84d1da34-60bc-11f1-bf39-00e01e54316c', 'journey2.jpg', 'Renovasi warung dan tambah menu', '2024-06-20'),
 (3, '84d1dc5f-60bc-11f1-bf39-00e01e54316b', 'journey3.jpg', 'Grand opening toko kelontong', '2024-02-10'),
@@ -177,7 +177,7 @@ CREATE TRIGGER `trg_journey_update` BEFORE UPDATE ON `journey` FOR EACH ROW INSE
     id_journey,
     id_umkm,
     foto,
-    deksripsi,
+    deskripsi,
     tanggal,
     action_type
 )
@@ -185,7 +185,7 @@ VALUES (
     OLD.id_journey,
     OLD.id_umkm,
     OLD.foto,
-    OLD.deksripsi,
+    OLD.deskripsi,
     OLD.tanggal,
     'UPDATE'
 )
