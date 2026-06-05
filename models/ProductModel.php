@@ -12,6 +12,7 @@ class ProductModel
     public function getById(int $id)
     {
         $sql = "SELECT * FROM produk WHERE id_produk = :id";
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -67,6 +68,7 @@ class ProductModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':keyword' => "%$keyword%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     }
 
     public function getPaginated(string $search = '', int $per_page = 3, int $offset = 0)

@@ -13,10 +13,52 @@ body {
   background: #fbf8f2;
 }
 
+/* === MOBILE GLOBAL SCROLL FIX === */
+@media (max-width: 768px) {
+  html,
+  body {
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+}
+
 .wrapper {
   display: flex;
   width: 100%;
   height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: auto;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  .wrapper > .sidebar {
+    flex: none;
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .sidebar.close {
+    margin-left: -280px;
+  }
+
+  .wrapper > .main {
+    width: 100%;
+    flex: 1;
+  }
 }
 
 .main {
@@ -27,12 +69,29 @@ body {
   flex-direction: column;
 }
 
+@media (max-width: 768px) {
+  .main {
+    height: auto;
+    min-height: 100vh;
+    width: 100%;
+  }
+}
+
 .content {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 35px;
   background: #f4f1eb;
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex: none;
+    overflow-y: visible;
+    height: auto;
+    padding-bottom: 40px;
+  }
 }
 
 .card-dashboard {
@@ -70,13 +129,15 @@ body {
   font-size: 20px;
 }
 
-.form-bantuan input,
+.form-bantuan input:not([type="radio"]),
 .form-bantuan select,
 .form-bantuan textarea {
   border-radius: 10px;
   border: 1px solid #e1e1e1;
   padding: 12px 18px;
   font-size: 18px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-bantuan textarea {
@@ -128,41 +189,83 @@ body {
 }
 
 @media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-  }
-
-  .sidebar.close {
-    margin-left: -280px;
-  }
-
   .content {
-    padding: 20px;
+    padding: 15px;
+    padding-bottom: 120px;
   }
 
   .card-dashboard {
-    padding: 20px;
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .judul-form {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .card-dashboard > div[style] {
+    font-size: 14px !important;
+    margin-bottom: 20px !important;
   }
 
   .form-bantuan {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
+    max-width: 100%;
   }
 
   .form-bantuan span {
     display: none;
   }
 
-  .radio-group {
+  .form-bantuan label {
+    font-size: 15px;
+    margin-top: 8px;
+  }
+
+  .form-bantuan input,
+  .form-bantuan select,
+  .form-bantuan textarea {
+    font-size: 14px;
+    padding: 10px 14px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form-bantuan textarea {
+    height: 100px;
+  }
+
+  .prioritas {
     flex-direction: column;
+    gap: 12px;
     align-items: flex-start;
+    width: 100%;
+  }
+
+  .prioritas label {
+    font-size: 14px;
+    margin-top: 0;
+  }
+
+  .prioritas input {
+    width: 20px;
+    height: 20px;
   }
 
   .tombol {
-    margin-top: 40px;
-    gap: 15px;
+    margin-top: 30px;
+    flex-direction: column-reverse;
+    gap: 12px;
   }
-}
+
+  .tombol_batal,
+  .tombol_simpan {
+    width: 100%;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+} 

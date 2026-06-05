@@ -100,6 +100,8 @@
             border: none;
             outline: none;
             flex: 1;
+            min-width: 0;
+            width: 100%;
             font-size: 0.95rem;
             color: #333;
             font-family: 'Poppins', sans-serif;
@@ -222,7 +224,7 @@
 
             <?php if (isset($_SESSION['success'])): ?>
                 <div style="background:#e0ffe0;color:#060;padding:0.6rem;border-radius:6px;font-size:0.8rem;margin-bottom:1rem;text-align:center;position:relative;z-index:2;"><?= htmlspecialchars($_SESSION['success']);
-                                                                                                                                                                             unset($_SESSION['success']); ?></div>
+                                                                                                                                                                                unset($_SESSION['success']); ?></div>
             <?php endif; ?>
 
             <?php if (isset($_SESSION['error'])): ?>

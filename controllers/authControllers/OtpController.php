@@ -20,7 +20,24 @@ class OtpController
         $_SESSION['otp_expiry'] = time() + ($OTP_EXPIRY_MINUTES * 60);
 
         if ($USE_REAL_OTP) {
-            require_once __DIR__ . '/../../vendor/autoload.php';
+            // Load vendor autoload
+            $autoload_paths = [
+                __DIR__ . '/../../vendor/autoload.php',  // Direct path
+                dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php'  // Fallback
+            ];
+
+            $autoload_found = false;
+            foreach ($autoload_paths as $path) {
+                if (file_exists($path)) {
+                    require_once $path;
+                    $autoload_found = true;
+                    break;
+                }
+            }
+
+            if (!$autoload_found) {
+                die('Error: Composer dependencies tidak ditemukan. Jalankan "composer install" di hosting Anda atau upload vendor folder.');
+            }
 
             $mail = new PHPMailer\PHPMailer\PHPMailer(true);
             try {

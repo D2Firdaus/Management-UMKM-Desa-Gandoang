@@ -58,13 +58,13 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
         opacity: 0.8;
     }
 
-    .auth {
+    .auth-desktop {
         display: flex;
         gap: 1rem;
         flex-shrink: 0;
     }
 
-    .auth a {
+    .auth-desktop a {
         text-decoration: none;
         color: white;
         font-size: 0.95rem;
@@ -77,11 +77,15 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
         transition: all 0.2s;
     }
 
-    .auth a:hover {
+    .auth-desktop a:hover {
         background: #A38E34;
         color: #0B1615;
         border-color: #A38E34;
         box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .auth-mobile {
+        display: none;
     }
 
     .hamburger-main {
@@ -119,7 +123,11 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
 
     @media (max-width: 768px) {
         nav {
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .logo img {
+            height: 26px;
         }
 
         .hamburger-main {
@@ -150,17 +158,40 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
             text-align: center;
         }
 
-        .auth {
-            width: 100%;
+        .auth-desktop {
+            display: none;
+        }
+
+        .auth-mobile {
+            display: flex;
             flex-direction: column;
             align-items: center;
             gap: 1rem;
+            width: 100%;
+            margin-top: 0.5rem;
         }
 
-        .auth a {
+        .auth-mobile a {
+            text-decoration: none;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 0.5rem 1.8rem;
+            border-radius: 25px;
+            border: 2px solid #A38E34;
+            background: transparent;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s;
             width: 100%;
             max-width: 250px;
             text-align: center;
+        }
+
+        .auth-mobile a:hover {
+            background: #A38E34;
+            color: #0B1615;
+            border-color: #A38E34;
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.6);
         }
     }
 
@@ -187,9 +218,17 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
         <div class="menu">
             <a href="<?= $view_path ?>products/index.php">Lihat Product</a>
         </div>
+        <div class="auth-mobile">
+            <?php if ($is_logged_in): ?>
+                <a href="<?= $auth_controller_path ?>logout.php">Logout</a>
+            <?php else: ?>
+                <a href="<?= $view_path ?>auth/login.php">Masuk</a>
+                <a href="<?= $view_path ?>auth/register.php">Daftar</a>
+            <?php endif; ?>
+        </div>
     </div>
 
-    <div class="auth">
+    <div class="auth-desktop">
         <?php if ($is_logged_in): ?>
             <a href="<?= $auth_controller_path ?>logout.php">Logout</a>
         <?php else: ?>

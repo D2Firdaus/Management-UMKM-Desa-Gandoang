@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
 
 $id = $_GET['id'];
+
 if (!$id) {
     header("Location: index.php");
     exit;
@@ -14,6 +15,12 @@ if (!$id) {
 
 $controller = new ProductController($conn);
 $product = $controller->getProductById($id);
+$product    = $controller->getProductById($id);
+
+if (!$product) {
+    header("Location: index.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +39,6 @@ $product = $controller->getProductById($id);
     <link rel="stylesheet" href="<?= $asset_path ?>boostrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= $asset_path ?>css/products/addProducts.css">
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
-
 </head>
 
 <body>
@@ -45,7 +51,6 @@ $product = $controller->getProductById($id);
             <div class="content container-fluid">
                 <div class="form-card shadow-sm">
                     <h2 class="text-center fw-bold mb-5" style="color: #65835e;">Form Hapus Produk</h2>
-
                     <form action="<?= $product_controller_path ?>DeleteProduct.php?id=<?= $product['id_produk'] ?>" method="POST" enctype="multipart/form-data">
                         <div style="margin-bottom: 90px; font-size: 20px;">
                             Nama Produk : <?= htmlspecialchars($product['nama_produk']); ?><br>
@@ -66,6 +71,9 @@ $product = $controller->getProductById($id);
             </div>
         </div>
     </div>
+    <script src="<?= $asset_path ?>boostrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= $asset_path ?>js/bantuan.js"></script>
+    <?php ob_end_flush(); ?>
 </body>
 
 </html>

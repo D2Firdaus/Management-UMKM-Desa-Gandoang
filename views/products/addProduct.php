@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../config/path_config.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -38,14 +37,14 @@ require_once __DIR__ . '/../../config/path_config.php';
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Nama Product :</label>
                             <div class="col-sm-9">
-                                <input type="text" name="nama_produk" class="form-control bg-light" placeholder="Asep Jalaludin" required>
+                                <input type="text" name="nama_produk" class="form-control bg-light" placeholder="Nama produk" required>
                             </div>
                         </div>
 
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Kategori :</label>
                             <div class="col-sm-9">
-                                <input type="text" name="kategori" class="form-control bg-light" placeholder="perternakan" required>
+                                <input type="text" name="kategori" class="form-control bg-light" placeholder="Contoh: Kuliner, Konveksi" required>
                             </div>
                         </div>
 
@@ -107,12 +106,9 @@ require_once __DIR__ . '/../../config/path_config.php';
             const input = document.querySelector('#foto');
             const container = document.querySelector('#preview-container');
             
-            // Ambil file yang baru saja dipilih user di klik terbaru
             const fileBaru = input.files;
 
-            // 2. Masukkan file-file baru ke dalam kantong utama kita
             Array.from(fileBaru).forEach(file => {
-                // Cek jika kantong belum penuh (maksimal 3)
                 if (kumpulanFile.items.length < 3) {
                     kumpulanFile.items.add(file);
                 } else {
@@ -120,25 +116,20 @@ require_once __DIR__ . '/../../config/path_config.php';
                 }
             });
 
-            // 3. Sinkronisasikan isi kantong ke input file HTML agar saat di-submit PHP menerima data yang benar
             input.files = kumpulanFile.files;
-
-            // 4. Render ulang tampilan preview berdasarkan isi kantong terbaru
             renderPreview();
         }
 
         function renderPreview() {
             const container = document.querySelector('#preview-container');
-            container.innerHTML = ''; // Kosongkan tampilan lama
+            container.innerHTML = '';
 
-            // Looping isi kantong untuk membuat kotak preview dinamis
             Array.from(kumpulanFile.files).forEach((file, index) => {
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
                     let namaTeks = file.name;
                     if (namaTeks.length > 7) {
-                        // Potong dari karakter ke-0 sampai ke-7, lalu tambahkan titik-titik
                         namaTeks = namaTeks.substring(0, 7) + '...';
                     }
                     const previewBox = document.createElement('div');
@@ -160,24 +151,19 @@ require_once __DIR__ . '/../../config/path_config.php';
             });
         }
 
-        // 5. Fungsi hapus satu per satu file yang terpilih
         function removeSingleFile(index) {
             const input = document.querySelector('#foto');
             
-            // Buat kantong baru cadangan
             const kantongBaru = new DataTransfer();
             
-            // Pindahkan semua file KECUALI file yang ingin dihapus (berdasarkan indeksnya)
             Array.from(kumpulanFile.files).forEach((file, i) => {
                 if (i !== index) {
                     kantongBaru.items.add(file);
                 }
             });
 
-            // Ganti isi kantong utama dengan kantong yang sudah dikurangi
             kumpulanFile = kantongBaru;
 
-            // Sinkronisasikan ulang ke input file HTML dan render ulang tampilannya
             input.files = kumpulanFile.files;
             renderPreview();
         }

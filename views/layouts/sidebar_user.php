@@ -149,12 +149,16 @@ function isFolderActive($folderName)
             position: fixed;
             left: 0;
             top: 0;
-            margin-left: -280px;
+            margin-left: 0;
             z-index: 1000;
+            overflow-y: auto;
+            width: 280px !important;
+            min-width: 280px !important;
+            padding: 25px !important;
         }
 
         .sidebar.close {
-            margin-left: 0;
+            margin-left: -280px;
         }
 
         .sidebar-close-btn {
@@ -172,10 +176,13 @@ function isFolderActive($folderName)
         }
     }
 
-    /* Desktop close button hidden */
+    /* Desktop close button and overlay hidden */
     @media (min-width: 769px) {
         .sidebar-close-btn {
             display: none;
+        }
+        .sidebar-overlay {
+            display: none !important;
         }
     }
 </style>

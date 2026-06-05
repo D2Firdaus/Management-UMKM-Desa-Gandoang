@@ -12,12 +12,13 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
 require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
 
-$controller = new ProductController($conn);
-$data = $controller->index();
+$controller   = new ProductController($conn);
+$data         = $controller->index();
 
 $products     = $data['products'];
 $search       = $data['search'];
@@ -25,12 +26,8 @@ $per_page     = $data['per_page'];
 $current_page = $data['current_page'];
 $total_pages  = $data['total_pages'];
 
-$sidebar_file = (
-    isset($_SESSION['user_role']) &&
-    $_SESSION['user_role'] === 'admin'
-)
-? 'sidebar_admin.php'
-: 'sidebar_user.php';
+// Notifikasi status dari URL
+$status = $_GET['status'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -53,16 +50,18 @@ $sidebar_file = (
     <!-- css -->
     <link href="<?= $asset_path ?>/css/products/products.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
+    <link href="<?= $asset_path ?>boostrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= $asset_path ?>css/products.css" rel="stylesheet">
 </head>
 
 <body>
-
     <div class="wrapper">
 
         <!-- sidebar -->
-    <?php require_once __DIR__ . '/../layouts/' . $sidebar_file; ?>
-
+        <?php require_once __DIR__ . '/../layouts/sidebar_user.php'; ?>
         <!-- akhir sidebar -->
+
         <!-- Content -->
         <div class="main">
 
@@ -74,10 +73,25 @@ $sidebar_file = (
                     <h1 class="fs-2 fw-bold">Detail Produk</h1>
                     <p class="fs-5">Daftar produk yang tersedia.</p>
                 </div>
+                <?php if ($status === 'success'): ?>
+                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                        Produk berhasil ditambahkan!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php elseif ($status === 'updated'): ?>
+                    <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                        Produk berhasil diupdate!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php elseif ($status === 'deleted'): ?>
+                    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                        Produk berhasil dihapus!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
 
                 <!-- TOOLBAR: Show Entries + Search -->
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
                     <!-- Show entries -->
                     <form method="GET" class="show-entries d-flex align-items-center gap-2">
                         <label for="show">Show</label>
@@ -113,7 +127,7 @@ $sidebar_file = (
                 </div>
 
                 <!-- Table -->
-                <div class="table-responsive mt-5">
+                <div class="table-responsive mt-3">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -125,44 +139,42 @@ $sidebar_file = (
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Loop produk -->
-                            <?php foreach ($products as $row): ?>
+                            <?php if (empty($products)): ?>
                                 <tr>
-                                    <td><?= $row['id_produk'] ?></td>
-                                    <td><?= htmlspecialchars($row['nama_produk']) ?></td>
-                                    <td>Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
-                                    <td><?= $row['kategori'] ?></td>
-                                    <td>
-                                        <a href="editProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
-                                        <a href="deleteProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
-                                    </td>
+                                    <td colspan="5" class="text-center text-muted py-4">Tidak ada produk ditemukan.</td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php else: ?>
+                                <?php foreach ($products as $row): ?>
+                                    <tr>
+                                        <td><?= $row['id_produk'] ?></td>
+                                        <td><?= htmlspecialchars($row['nama_produk']) ?></td>
+                                        <td>Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
+                                        <td><?= htmlspecialchars($row['kategori']) ?></td>
+                                        <td>
+                                            <a href="editProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-sm btn-warning">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="deleteProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                     <ul class="pagination custom-pagination justify-content-center mt-4">
-
                         <!-- tombol previous -->
                         <li class="page-item <?= ($current_page == 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $current_page - 1 ?>&show=<?= $per_page ?>">
-                                Previous
-                            </a>
+                            <a class="page-link" href="?page=<?= $current_page - 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">Previous</a>
                         </li>
-
-                        <!-- nomor halaman -->
-                        <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                             <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
-                                <a class="page-link" href="?page=<?= $i ?>&show=<?= $per_page ?>">
-                                    <?= $i ?>
-                                </a>
+                                <a class="page-link" href="?page=<?= $i ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>"><?= $i ?></a>
                             </li>
-                        <?php } ?>
-
-                        <!-- tombol next -->
-                        <li class="page-item <?= ($current_page == $total_pages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $current_page + 1 ?>&show=<?= $per_page ?>">
-                                Next
-                            </a>
+                        <?php endfor; ?>
+                        <li class="page-item <?= ($current_page >= $total_pages) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $current_page + 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">Next</a>
                         </li>
                     </ul>
                     <!-- Akhir Pagination -->
@@ -174,10 +186,13 @@ $sidebar_file = (
                         </a>
                     </div>
                 </div>
+                <!-- akhir card-dashboard -->
             </div>
-        <script src="<?= $asset_path ?>js/bantuan.js"></script>
-
-        <?php ob_end_flush(); ?>
+        </div>
+    </div>
+    <script src="<?= $asset_path ?>boostrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= $asset_path ?>js/bantuan.js"></script>
+    <?php ob_end_flush(); ?>
 </body>
 
 </html>

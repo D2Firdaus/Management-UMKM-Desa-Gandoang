@@ -230,14 +230,24 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </a>
                             </li>
 
-                            <!-- nomor halaman -->
-                            <?php for ($i = 1; $i <= $total_page; $i++) { ?>
-                                <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                                    <a class="page-link" href="?page=<?= $i ?>&limit=<?= $limit ?>&search=<?= urlencode($search) ?>">
-                                        <?= $i ?>
-                                    </a>
-                                </li>
-                            <?php } ?>
+                             <!-- nomor halaman -->
+                             <?php 
+                             $start_page = 1;
+                             if ($page >= 5) {
+                                 $start_page = floor($page / 5) * 5;
+                             }
+                             $end_page = min($start_page + 5, $total_page);
+                             if ($start_page > 1 && $start_page > $total_page) {
+                                 $start_page = max(1, $total_page - 5);
+                             }
+                             for ($i = $start_page; $i <= $end_page; $i++) { 
+                             ?>
+                                 <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                                     <a class="page-link" href="?page=<?= $i ?>&limit=<?= $limit ?>&search=<?= urlencode($search) ?>">
+                                         <?= $i ?>
+                                     </a>
+                                 </li>
+                             <?php } ?>
 
                             <!-- tombol next -->
                             <li class="page-item <?= ($page == $total_page) ? 'disabled' : '' ?>">

@@ -136,12 +136,17 @@ function statusPopup(): void
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Saya - UMKM Desa Gandoang</title>
 
+<<<<<<< HEAD
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
     <link href="<?= $base_url ?>asset/boostrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= $base_url ?>asset/css/profile.css" rel="stylesheet">
+=======
+    <link href="<?= BASE_URL ?>asset/boostrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>asset/css/profile.css" rel="stylesheet">
+>>>>>>> b1d76d657cdb9e41f522b866bb23ec5d0a1a943d
 </head>
 
 <body>
@@ -363,7 +368,12 @@ function statusPopup(): void
 
     <?php statusPopup(); ?>
 
+<<<<<<< HEAD
     <script src="<?= $base_url ?>asset/boostrap/js/bootstrap.bundle.min.js"></script>
+=======
+    <script src="<?= BASE_URL ?>asset/boostrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= BASE_URL ?>asset/js/bantuan.js"></script>
+>>>>>>> b1d76d657cdb9e41f522b866bb23ec5d0a1a943d
 
     <script>
         // ─── Preview gambar yang baru dipilih ────────────────────────────────────

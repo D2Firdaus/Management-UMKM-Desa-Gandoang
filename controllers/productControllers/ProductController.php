@@ -8,7 +8,6 @@ class ProductController
 
     public function __construct(PDO $db)
     {
-        // Inisialisasi Model dengan koneksi database
         $this->productModel = new ProductModel($db);
     }
 
@@ -17,16 +16,14 @@ class ProductController
      */
     public function index()
     {
-        // Ambil parameter dari URL
         $search   = isset($_GET['search']) ? trim($_GET['search']) : '';
         $per_page = isset($_GET['show'])   ? (int)$_GET['show']    : 3;
         $page     = isset($_GET['page'])   ? (int)$_GET['page']    : 1;
         $offset   = ($page - 1) * $per_page;
 
-        // Panggil Model
         $result = $this->productModel->getPaginated($search, $per_page, $offset);
 
-        // Hitung total halaman
+
         $total_pages = ceil($result['total_count'] / $per_page);
 
         return [
@@ -50,7 +47,6 @@ class ProductController
                 'kategori'    => htmlspecialchars($_POST['kategori']),
                 'harga'       => (int)$_POST['harga'],
                 'deskripsi'   => htmlspecialchars($_POST['deskripsi']),
-                // Mengirimkan array $_FILES['foto'] ke fungsi upload multiple
                 'foto'        => $this->uploadFoto($_FILES['foto'])
             ];
 
@@ -62,11 +58,13 @@ class ProductController
     }
 
     public function getProductById(int $id): array|false
+
     {
         return $this->productModel->getById($id);
     }
 
     public function update(int $id)
+
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $oldData = $this->productModel->getById($id);
@@ -109,6 +107,7 @@ class ProductController
     }
 
     public function delete(int $id)
+
     {
         $oldData = $this->productModel->getById($id);
 

@@ -1,7 +1,7 @@
 :root {
   --primary-background: #fbf8f2;
   --card-content-background: #fefdfb;
-  --font-family: Inter;
+  --font-family: Arial, sans-serif;
 }
 
 * {
@@ -150,4 +150,22 @@ html {
   align-items: right;
   background-color: #618764;
   color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .custom-pagination .page-link {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+  }
+
+  .custom-pagination {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-pagination .page-link {
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+  }
 }

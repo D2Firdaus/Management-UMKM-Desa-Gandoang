@@ -149,30 +149,153 @@ if (!isset($_SESSION['reg_email'])) {
             margin-bottom: 1rem;
             text-align: center;
         }
+
+        @media (max-width: 768px) {
+            .main {
+                padding: 1.5rem 1rem;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .card h1 {
+                font-size: 1.4rem;
+            }
+
+            .card .subtitle,
+            .card .email-display {
+                font-size: 0.85rem;
+            }
+
+            .otp-inputs {
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .otp-inputs input {
+                width: 42px;
+                height: 48px;
+                font-size: 1.2rem;
+            }
+
+            .timer {
+                font-size: 0.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .btn-submit {
+                padding: 0.8rem;
+                font-size: 0.95rem;
+            }
+
+            .resend {
+                font-size: 0.8rem;
+                margin-top: 1.5rem;
+            }
+
+            .logo img {
+                height: 45px !important;
+            }
+
+            .otp-inputs input {
+                border-radius: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main {
+                padding: 1rem 0.75rem;
+            }
+
+            .card {
+                padding: 1.5rem 1rem;
+                border-radius: 15px;
+                max-width: 100%;
+            }
+
+            .card h1 {
+                font-size: 1.2rem;
+                margin: 0 0 0.3rem;
+            }
+
+            .card .subtitle {
+                font-size: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .card .email-display {
+                font-size: 0.8rem;
+                margin-bottom: 1rem;
+                word-break: break-all;
+            }
+
+            div[style*="otp illustration"] {
+                margin-bottom: 1rem !important;
+            }
+
+            div[style*="otp illustration"] img {
+                width: 100px !important;
+            }
+
+            .otp-inputs {
+                gap: 0.4rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .otp-inputs input {
+                width: 38px;
+                height: 44px;
+                font-size: 1rem;
+                padding: 0;
+            }
+
+            .timer {
+                font-size: 0.75rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .btn-submit {
+                padding: 0.7rem;
+                font-size: 0.9rem;
+            }
+
+            .resend {
+                font-size: 0.75rem;
+                margin-top: 1rem;
+            }
+
+            .error-msg {
+                font-size: 0.7rem;
+                padding: 0.5rem;
+                margin-bottom: 0.8rem;
+            }
+        }
     </style>
 </head>
-
 <body>
     <div class="main">
         <div class="card">
             <div class="logo">
                 <img src="<?= $asset_path ?>images/logo_form.png" alt="UMKM Gandoang" style="height:55px;">
             </div>
-
+            
             <!-- otp illustration -->
             <div style="text-align: center; margin-bottom: 1.5rem;">
                 <img src="<?= $asset_path ?>images/otp.png" style="width: 140px; height: auto;">
             </div>
-
+            
             <h1>Verifikasi Email</h1>
             <p class="subtitle">Kami telah mengirimkan kode OTP ke email</p>
             <p class="email-display"><?= htmlspecialchars($_SESSION['reg_email']) ?></p>
-
+            
             <?php if (isset($_SESSION['error'])): ?>
-                <div class="error-msg"><?= htmlspecialchars($_SESSION['error']);
-                                        unset($_SESSION['error']); ?></div>
+                <div class="error-msg">
+                    <?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                </div>
             <?php endif; ?>
-
+            
             <form action="<?= $auth_controller_path ?>AuthController.php?action=verifyOtp" method="POST">
                 <div class="otp-inputs">
                     <input type="text" name="otp1" maxlength="1" required autofocus>
@@ -182,23 +305,31 @@ if (!isset($_SESSION['reg_email'])) {
                     <input type="text" name="otp5" maxlength="1" required>
                     <input type="text" name="otp6" maxlength="1" required>
                 </div>
+                
                 <p class="timer">Kirim Ulang Dalam <span id="countdown">00:47</span> detik</p>
                 <button type="submit" class="btn-submit">Lanjutkan</button>
             </form>
-            <p class="resend">Belum menerima kode? <a href="<?= $auth_controller_path ?>OtpController.php?action=resend">Kirim Ulang</a></p>
+            
+            <p class="resend">
+                Belum menerima kode? <a href="<?= $auth_controller_path ?>OtpController.php?action=resend">Kirim Ulang</a>
+            </p>
         </div>
     </div>
+
     <?php include '../layouts/footer.php'; ?>
+
     <script>
         // Auto-focus next input
         document.querySelectorAll('.otp-inputs input').forEach((input, i, inputs) => {
             input.addEventListener('input', () => {
                 if (input.value && i < inputs.length - 1) inputs[i + 1].focus();
             });
+
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && !input.value && i > 0) inputs[i - 1].focus();
             });
         });
+
         // Countdown timer
         let time = 47;
         const cd = document.getElementById('countdown');
@@ -209,5 +340,4 @@ if (!isset($_SESSION['reg_email'])) {
         }, 1000);
     </script>
 </body>
-
 </html>

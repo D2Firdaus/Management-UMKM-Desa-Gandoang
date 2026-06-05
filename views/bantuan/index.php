@@ -1,14 +1,31 @@
 <?php
+
+// Session
 ob_start();
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+// Akhir Session
+
+
+
+// Error Handling
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+// Akhir Error Handling
+
+
+
+// Koneksi Database dan Path
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../config/path_config.php';
+// Akhir Koneksi Database dan Path
 
+
+
+// Pagination
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5;
 
 if (!in_array($limit, [3, 5, 10])) {
@@ -23,7 +40,11 @@ if ($page < 1) {
 
 $search = $_GET['search'] ?? '';
 $offset = ($page - 1) * $limit;
+// Akhir Pagination
 
+
+
+// Total Data (Pagination)
 $total_sql = "SELECT COUNT(*) AS total
               FROM bantuan
               LEFT JOIN umkm ON bantuan.id_umkm = umkm.id_umkm
@@ -40,32 +61,47 @@ $total_sql = "SELECT COUNT(*) AS total
                     OR pengaju.nama LIKE :search
                     OR validator.nama LIKE :search
               )";
+// Akhir Total Data (Pagination)
 
+
+
+// Menyiapkan Query SQL Total Data
 $total_stmt = $conn->prepare($total_sql);
+// Akhir Menyiapkan Query SQL Total Data
+
+
+
+// Mengisi Nilai Search ke Query SQL Total Data
 $total_stmt->execute([
     ':search' => "%$search%"
 ]);
+// Akhir Mengisi Nilai Search ke Query SQL Total Data
 
+
+
+// Mengambil Hasil Total Data dari Database
 $total_row = $total_stmt->fetch(PDO::FETCH_ASSOC);
+// Akhir Mengambil Hasil Total Data dari Database
+
+
+
+// Menghitung Total Data dan Total Halaman
 $total_data = $total_row['total'];
 $total_page = ceil($total_data / $limit);
+// Akhir Menghitung Total Data dan Total Halaman
 
+
+
+// Query Data Tabel
 $sql = "SELECT 
             bantuan.*,
             umkm.nama_umkm,
             pengaju.nama AS nama_pengaju,
             validator.nama AS nama_validator
         FROM bantuan
-
-        LEFT JOIN umkm 
-            ON bantuan.id_umkm = umkm.id_umkm
-
-        LEFT JOIN user AS pengaju
-            ON umkm.id_user = pengaju.id_user
-
-        LEFT JOIN user AS validator
-            ON umkm.id_validator = validator.id_user
-
+        LEFT JOIN umkm ON bantuan.id_umkm = umkm.id_umkm
+        LEFT JOIN user AS pengaju ON umkm.id_user = pengaju.id_user
+        LEFT JOIN user AS validator ON umkm.id_validator = validator.id_user
         WHERE bantuan.status != 'dihapus'
         AND (
             bantuan.jenis LIKE :search
@@ -77,15 +113,29 @@ $sql = "SELECT
             OR pengaju.nama LIKE :search
             OR validator.nama LIKE :search
         )
-
         LIMIT $limit OFFSET $offset";
+// Akhir Query Data Tabel
 
+
+
+// Menyiapkan Query SQL Tabel Data
 $stmt = $conn->prepare($sql);
+// Akhir Menyiapkan Query SQL Tabel Data
+
+
+
+// Mengisi Nilai Search ke Query SQL Tabel Data
 $stmt->execute([
     ':search' => "%$search%"
 ]);
+// Akhir Mengisi Nilai Search ke Query SQL Tabel Data
 
+
+
+// Mengambil Semua Data dari Database
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Akhir Mengambil Semua Data dari Database
+
 ?>
 
 <!DOCTYPE html>
@@ -232,7 +282,17 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
 
                         <!-- nomor halaman -->
-                        <?php for ($i = 1; $i <= $total_page; $i++) { ?>
+                        <?php 
+                        $start_page = 1;
+                        if ($page >= 5) {
+                            $start_page = floor($page / 5) * 5;
+                        }
+                        $end_page = min($start_page + 5, $total_page);
+                        if ($start_page > 1 && $start_page > $total_page) {
+                            $start_page = max(1, $total_page - 5);
+                        }
+                        for ($i = $start_page; $i <= $end_page; $i++) { 
+                        ?>
                             <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
                                 <a class="page-link" href="?page=<?= $i ?>&limit=<?= $limit ?>">
                                     <?= $i ?>

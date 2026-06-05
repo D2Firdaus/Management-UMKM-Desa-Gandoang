@@ -1,0 +1,462 @@
+/* ===================================================================
+   umkm.css  –  Styles for Profile UMKM pages
+   =================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #fbf8f2;
+}
+
+/* === MOBILE GLOBAL SCROLL FIX === */
+@media (max-width: 768px) {
+  html,
+  body {
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* ─── Layout ──────────────────────────────────────────────────────── */
+.wrapper {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: auto;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  .wrapper > .sidebar {
+    flex: none;
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .sidebar.close {
+    margin-left: -280px;
+  }
+
+  .wrapper > .main {
+    width: 100%;
+    flex: 1;
+  }
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .main {
+    height: auto;
+    min-height: 100vh;
+    width: 100%;
+  }
+}
+
+/* ─── Content area ────────────────────────────────────────────────── */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 35px;
+  background: #f4f1eb;
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex: none;
+    overflow-y: visible;
+    height: auto;
+    padding: 15px;
+    padding-bottom: 120px;
+  }
+}
+
+/* ─── Card ────────────────────────────────────────────────────────── */
+.card-dashboard {
+  background: white;
+  border-radius: 25px;
+  padding: 35px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-dashboard h2 {
+  color: #65835e;
+  margin-bottom: 5px;
+}
+
+.card-dashboard p {
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .card-dashboard {
+    padding: 18px;
+    border-radius: 16px;
+  }
+}
+
+/* ─── Table ───────────────────────────────────────────────────────── */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 600px;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table thead th {
+  background-color: #edf1e6 !important;
+}
+
+.table thead th:first-child { border-top-left-radius: 15px; }
+.table thead th:last-child  { border-top-right-radius: 15px; }
+
+.table th,
+.table td {
+  padding: 16px;
+  font-size: 14px;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: center;
+  border: none;
+}
+
+.table tbody tr:nth-child(odd)  td { background-color: #ffffff !important; }
+.table tbody tr:nth-child(even) td { background-color: #f2f2f2 !important; }
+
+.table tbody tr:hover {
+  background-color: #e9ece5;
+  transition: 0.2s;
+}
+
+/* ─── Status badges ───────────────────────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.pending   { background: #ecd98f; color: #6f5c1d; }
+.status-badge.aktif     { background: #6d8d69; color: white;   }
+.status-badge.nonaktif  { background: #f56b6b; color: white;   }
+
+/* ─── Pagination ──────────────────────────────────────────────────── */
+.custom-pagination .page-link {
+  border: 1px solid #dcdcdc;
+  padding: 10px 18px;
+  transition: 0.2s;
+}
+
+.custom-pagination .page-item:first-child .page-link,
+.custom-pagination .page-item:last-child  .page-link {
+  background-color: #618764;
+  color: #ffffff;
+}
+
+.custom-pagination .page-item:not(:first-child):not(:last-child) .page-link {
+  background-color: #f4f5e1;
+  color: black;
+}
+
+.custom-pagination .page-item.active .page-link {
+  background-color: #618764;
+  border-color: #618764;
+  color: white;
+}
+
+.custom-pagination .page-link:hover { opacity: 0.9; }
+.custom-pagination .page-link:focus  { box-shadow: none; }
+
+@media (max-width: 768px) {
+  .custom-pagination .page-link {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+  }
+  .custom-pagination { flex-wrap: wrap; }
+}
+
+@media (max-width: 480px) {
+  .custom-pagination .page-link {
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ─── Tombol Cari & Tambah ────────────────────────────────────────── */
+.tombol_cari {
+  background-color: #618764;
+  color: #ffffff;
+  border: none;
+}
+.tombol_cari:hover { background-color: #567759; color: #ffffff; }
+.tombol_cari:focus { box-shadow: none; color: #ffffff; }
+
+#tambah {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #618764;
+  color: #ffffff;
+}
+#tambah:hover { background-color: #567759; color: #ffffff; }
+
+/* ─── Form pages (tambah / edit / hapus) ─────────────────────────── */
+.judul-form {
+  text-align: center;
+  color: #65835e;
+  font-weight: bold;
+  margin-bottom: 45px;
+  padding-bottom: 18px;
+}
+
+.form-umkm {
+  display: grid;
+  grid-template-columns: 140px 20px 1fr;
+  gap: 28px 15px;
+  align-items: center;
+  max-width: 850px;
+  margin: auto;
+}
+
+.form-umkm label {
+  font-size: 20px;
+}
+
+.form-umkm input,
+.form-umkm textarea,
+.form-umkm select {
+  border-radius: 10px;
+  border: 1px solid #e1e1e1;
+  padding: 12px 18px;
+  font-size: 18px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-umkm input:read-only {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.form-umkm textarea {
+  height: 130px;
+  resize: none;
+}
+
+/* ─── Tombol form ─────────────────────────────────────────────────── */
+.tombol {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tombol_batal {
+  background: #f0f2e6;
+  color: #65835e;
+  padding: 14px 55px;
+  border-radius: 7px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.tombol_simpan {
+  background: #65835e !important;
+  color: white !important;
+  padding: 14px 35px !important;
+  border: none !important;
+  border-radius: 7px !important;
+  font-size: 20px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-shadow: none !important;
+}
+
+.tombol_simpan:hover,
+.tombol_simpan:focus,
+.tombol_simpan:active {
+  background: #567759 !important;
+  color: white !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Tombol khusus hapus — merah */
+.tombol_hapus {
+  background: #d9534f !important;
+  color: white !important;
+  padding: 14px 35px !important;
+  border: none !important;
+  border-radius: 7px !important;
+  font-size: 20px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+}
+
+.tombol_hapus:hover,
+.tombol_hapus:focus,
+.tombol_hapus:active {
+  background: #c9302c !important;
+  color: white !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.tombol_hapus img {
+  filter: brightness(0) invert(1);
+}
+
+/* ─── Hapus form info box ─────────────────────────────────────────── */
+.hapus-info {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.hapus-konfirmasi {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 60px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* ─── Alert / Notifikasi popup ────────────────────────────────────── */
+.alert_sukses_menambah {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.box_sukses_menambah {
+  width: 420px;
+  background: white;
+  border-radius: 20px;
+  padding: 45px 35px;
+  text-align: center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.icon_sukses_menambah {
+  margin-bottom: 25px;
+}
+
+.icon_sukses_menambah img {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+}
+
+.box_sukses_menambah h2 {
+  font-size: 38px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: black;
+}
+
+.box_sukses_menambah p {
+  font-size: 24px;
+  color: #444;
+  margin-bottom: 35px;
+}
+
+.tombol_sukses_menambah {
+  background: #65835e;
+  color: white;
+  padding: 14px 60px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 20px;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.tombol_sukses_menambah:hover { background: #567759; }
+
+/* ─── Responsive form ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .form-umkm {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .form-umkm span { display: none; }
+
+  .form-umkm label { font-size: 15px; margin-top: 8px; }
+
+  .form-umkm input,
+  .form-umkm textarea,
+  .form-umkm select {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  .form-umkm textarea { height: 100px; }
+
+  .tombol {
+    margin-top: 30px;
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .tombol_batal,
+  .tombol_simpan {
+    width: 100%;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 16px;
+    justify-content: center;
+  }
+
+  .hapus-konfirmasi { font-size: 20px; margin-bottom: 40px; }
+}

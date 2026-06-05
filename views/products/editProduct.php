@@ -102,7 +102,7 @@ $product = $controller->getProductById($id);
                                                         <span class="text-muted small"><?= $file_size_kb ?> Kb</span>
                                                     </div>
                                                     
-                                                    <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="removeOldFile(<?= $index ?>)">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger border-0" onclick="removeSingleFile(<?= $index ?>)">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
