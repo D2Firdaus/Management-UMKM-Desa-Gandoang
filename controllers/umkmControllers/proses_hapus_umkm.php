@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$id_umkm = (int) ($_POST['id_umkm'] ?? 0);
+$id_umkm = (string) ($_POST['id_umkm'] ?? 0);
 
 if (!$id_umkm) {
     header('Location: ' . BASE_URL . 'views/umkm/index.php');

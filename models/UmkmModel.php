@@ -66,7 +66,7 @@ class UmkmModel
     }
 
     // ─── Ambil satu UMKM berdasar id_umkm dan id_user ────────────────────────
-    public function getByIdAndUser(int $id_umkm, int $id_user): array|false
+    public function getByIdAndUser(string $id_umkm, int $id_user): array|false
     {
         $sql = "SELECT * FROM umkm
                 WHERE id_umkm = :id_umkm
@@ -105,7 +105,7 @@ class UmkmModel
     }
 
     // ─── Update UMKM ─────────────────────────────────────────────────────────
-    public function update(int $id_umkm, int $id_user, string $nama_umkm, string $jenis_usaha, string $alamat): bool
+    public function update(string $id_umkm, int $id_user, string $nama_umkm, string $jenis_usaha, string $alamat): bool
     {
         $sql = "UPDATE umkm
                 SET nama_umkm    = :nama_umkm,
@@ -125,7 +125,7 @@ class UmkmModel
     }
 
     // ─── Soft-delete: set status = nonaktif ──────────────────────────────────
-    public function softDelete(int $id_umkm, int $id_user): bool
+    public function softDelete(string $id_umkm, int $id_user): bool
     {
         $sql = "UPDATE umkm
                 SET status = 'nonaktif'
