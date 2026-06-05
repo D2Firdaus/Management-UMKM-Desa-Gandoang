@@ -89,7 +89,6 @@ $status = $_GET['status'] ?? null;
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 <?php endif; ?>
-
                 <!-- TOOLBAR: Show Entries + Search -->
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
                     <!-- Show entries -->
@@ -178,7 +177,6 @@ $status = $_GET['status'] ?? null;
                         </li>
                     </ul>
                     <!-- Akhir Pagination -->
-
                     <!-- Add Button -->
                     <div class="d-flex justify-content-end">
                         <a href="addProduct.php" class="btn" id="tambah">
@@ -186,7 +184,6 @@ $status = $_GET['status'] ?? null;
                         </a>
                     </div>
                 </div>
-                <!-- akhir card-dashboard -->
             </div>
         </div>
     </div>
