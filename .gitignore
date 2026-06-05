@@ -1,3 +1,4 @@
 config/otp_config.php
 vendor/
-asset/images/products/
+storage/images/*
+storage/private/images/*

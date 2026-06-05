@@ -44,10 +44,7 @@ $status = $_GET['status'] ?? null;
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../../asset/icon/bootstrap-icons.min.css">
-    <!-- bootstrap -->
     <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- css -->
     <link href="<?= $asset_path ?>/css/products/products.css" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
@@ -89,7 +86,6 @@ $status = $_GET['status'] ?? null;
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 <?php endif; ?>
-
                 <!-- TOOLBAR: Show Entries + Search -->
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
                     <!-- Show entries -->
@@ -178,7 +174,6 @@ $status = $_GET['status'] ?? null;
                         </li>
                     </ul>
                     <!-- Akhir Pagination -->
-
                     <!-- Add Button -->
                     <div class="d-flex justify-content-end">
                         <a href="addProduct.php" class="btn" id="tambah">
@@ -186,7 +181,6 @@ $status = $_GET['status'] ?? null;
                         </a>
                     </div>
                 </div>
-                <!-- akhir card-dashboard -->
             </div>
         </div>
     </div>
