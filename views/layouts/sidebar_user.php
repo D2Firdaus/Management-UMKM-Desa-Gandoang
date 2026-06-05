@@ -13,26 +13,6 @@ function isFolderActive($folderName)
     return str_contains($current_path, $folderName) ? 'active' : '';
 }
 
-// $id_user = $_SESSION['id_user'];
-
-// $sql = "SELECT
-// user.nama,
-// profile.foto
-// FROM user
-
-// JOIN profile
-// ON user.id_user = profile.id_user
-
-// WHERE user.id_user = :id_user";
-
-// $stmt = $conn->prepare($sql);
-
-// $stmt->execute([
-// ':id_user' => $id_user
-// ]);
-
-// $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
 ?>
 
 <style>
@@ -58,7 +38,7 @@ function isFolderActive($folderName)
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.4);
+        background: rgba(0, 0, 0, 0.4);
         z-index: 199;
     }
 
@@ -118,6 +98,11 @@ function isFolderActive($folderName)
         color: white;
     }
 
+    .isi_menu a:hover img,
+    .isi_menu a.active img {
+        filter: brightness(0) saturate(100%) invert(97%) sepia(8%) saturate(400%) hue-rotate(330deg) brightness(105%) contrast(97%);
+    }
+
     .isi_menu a.active::before {
         content: '';
         position: absolute;
@@ -141,6 +126,7 @@ function isFolderActive($folderName)
         width: 100%;
         display: block;
     }
+
     /* Akhir Gambar Bawah Sidebar */
 
     /* === RESPONSIVE MOBILE === */
@@ -181,6 +167,7 @@ function isFolderActive($folderName)
         .sidebar-close-btn {
             display: none;
         }
+
         .sidebar-overlay {
             display: none !important;
         }
