@@ -223,7 +223,7 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
 
     <div class="nav-links" id="nav-links-main">
         <div class="menu">
-            <a href="<?= $base_url ?>/katalog-produk.php">Lihat Product</a>
+            <a href="<?= $base_url ?>/katalog-produk">Lihat Product</a>
         </div>
         <div class="auth-mobile">
             <?php if ($is_logged_in): ?>
