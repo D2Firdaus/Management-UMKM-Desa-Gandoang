@@ -58,7 +58,7 @@ $pagedProducts = array_slice($filteredProducts, $offset, $per_page);
     <div class="katalog-container">
         <!-- Breadcrumb -->
         <div class="breadcrumb">
-            <a href="<?= BASE_URL ?>/index.php"><i class="bi bi-house-door"></i> Beranda</a>
+            <a href="<?= BASE_URL ?>"><i class="bi bi-house-door"></i> Beranda</a>
             <i class="bi bi-chevron-right separator"></i>
             <span class="current">Lihat Product</span>
         </div>
