@@ -27,6 +27,12 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
         position: relative;
     }
 
+    .logo {
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+    }
+
     .logo a {
         display: flex;
         align-items: center;
@@ -43,7 +49,7 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
         align-items: center;
         justify-content: center;
         gap: 2rem;
-        flex: 1;
+        flex: none;
     }
 
     .menu a {
@@ -61,7 +67,8 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
     .auth-desktop {
         display: flex;
         gap: 1rem;
-        flex-shrink: 0;
+        flex: 1;
+        justify-content: flex-end;
     }
 
     .auth-desktop a {
@@ -216,7 +223,7 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
 
     <div class="nav-links" id="nav-links-main">
         <div class="menu">
-            <a href="<?= $view_path ?>products/index.php">Lihat Product</a>
+            <a href="<?= $base_url ?>/katalog-produk.php">Lihat Product</a>
         </div>
         <div class="auth-mobile">
             <?php if ($is_logged_in): ?>
