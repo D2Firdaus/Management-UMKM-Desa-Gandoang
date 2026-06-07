@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 07 Jun 2026 pada 11.40
+-- Waktu pembuatan: 07 Jun 2026 pada 12.08
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.0.30
 
@@ -216,7 +216,7 @@ CREATE TABLE `journey_history` (
 --
 
 CREATE TABLE `produk` (
-  `id_produk` varchar(36) NOT NULL DEFAULT (uid())
+  `id_produk` varchar(36) NOT NULL DEFAULT (uuid()),
   `id_umkm` varchar(36) NOT NULL,
   `nama_produk` varchar(100) NOT NULL,
   `status` enum('aktif','dihapus') NOT NULL DEFAULT 'aktif',
@@ -398,12 +398,14 @@ CREATE TABLE `profile_history` (
 --
 
 CREATE TABLE `umkm` (
-  `id_umkm` varchar(36) NOT NULL DEFAULT (uid())
+  `id_umkm` varchar(36) NOT NULL DEFAULT (uuid()),
   `nama_umkm` varchar(100) NOT NULL,
   `jenis_usaha` varchar(100) NOT NULL DEFAULT '',
   `id_user` int(11) NOT NULL,
   `id_validator` int(11) NOT NULL,
   `alamat` text NOT NULL,
+  `latitude` decimal(10,8) DEFAULT NULL,
+  `longitude` decimal(11,8) DEFAULT NULL,
   `status` enum('pending','aktif','nonaktif') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -411,19 +413,20 @@ CREATE TABLE `umkm` (
 -- Dumping data untuk tabel `umkm`
 --
 
-INSERT INTO `umkm` (`id_umkm`, `nama_umkm`, `jenis_usaha`, `id_user`, `id_validator`, `alamat`, `status`) VALUES
-('84d1cc3f-60bc-11f1-bf39-00e01e54316e', 'Warung Makan Barokah', 'kuliner', 1, 1, 'Jl. Gandoang No.1, RT 01/RW 01', 'aktif'),
-('84d1da34-60bc-11f1-bf39-00e01e54316e', 'Toko Kelontong Sejahtera', 'perdagangan', 2, 1, 'Jl. Gandoang No.5, RT 02/RW 01', 'aktif'),
-('84d1dc5f-60bc-11f1-bf39-00e01e54316e', 'Bengkel Motor Jaya', 'jasa', 3, 1, 'Jl. Raya Cileungsi No.10', 'aktif'),
-('84d1ea1d-60bc-11f1-bf39-00e01e54316e', 'Konveksi Mandiri', 'konveksi', 4, 1, 'Jl. Gandoang No.15, RT 03/RW 02', 'aktif'),
-('84d1ebb5-60bc-11f1-bf39-00e01e54316e', 'Keripik Singkong Ibu Ani', 'kuliner', 5, 1, 'Jl. Jonggol No.8, RT 01/RW 03', 'aktif'),
-('84d1ecd8-60bc-11f1-bf39-00e01e54316e', 'Salon Cantik Alami', 'jasa', 6, 12, 'Jl. Gandoang No.20, RT 04/RW 01', 'pending'),
-('84d1eddd-60bc-11f1-bf39-00e01e54316e', 'Ternak Lele Makmur', 'peternakan', 7, 1, 'Jl. Gandoang No.25, RT 05/RW 02', 'aktif'),
-('84d1eedf-60bc-11f1-bf39-00e01e54316e', 'Jahit Rina Collection', 'konveksi', 8, 1, 'Jl. Raya Cileungsi No.30', 'aktif'),
-('84d1efe4-60bc-11f1-bf39-00e01e54316e', 'Toko Bangunan Maju', 'perdagangan', 9, 1, 'Jl. Gandoang No.35, RT 02/RW 03', 'pending'),
-('84d1f110-60bc-11f1-bf39-00e01e54316e', 'Kue Basah Bu Dewi', 'kuliner', 10, 1, 'Jl. Jonggol No.12, RT 03/RW 01', 'aktif'),
-('84d1f212-60bc-11f1-bf39-00e01e54316e', 'Jawir', 'Jasa', 13, 12, 'warungbambu', 'pending'),
-('9168485d-60bc-11f1-bf39-00e01e54316e', 'test', 'test', 13, 12, 'tst', 'pending');
+INSERT INTO `umkm` (`id_umkm`, `nama_umkm`, `jenis_usaha`, `id_user`, `id_validator`, `alamat`, `latitude`, `longitude`, `status`) VALUES
+('84d1cc3f-60bc-11f1-bf39-00e01e54316e', 'Warung Makan Barokah', 'kuliner', 1, 1, 'Jl. Gandoang No.1, RT 01/RW 01', -6.39827307, 107.03156493, 'aktif'),
+('84d1da34-60bc-11f1-bf39-00e01e54316e', 'Toko Kelontong Sejahtera', 'perdagangan', 2, 1, 'Jl. Gandoang No.5, RT 02/RW 01', -6.39885612, 107.03002460, 'aktif'),
+('84d1dc5f-60bc-11f1-bf39-00e01e54316e', 'Bengkel Motor Jaya', 'jasa', 3, 1, 'Jl. Raya Cileungsi No.10', -6.39980863, 107.02988304, 'aktif'),
+('84d1ea1d-60bc-11f1-bf39-00e01e54316e', 'Konveksi Mandiri', 'konveksi', 4, 1, 'Jl. Gandoang No.15, RT 03/RW 02', -6.39765892, 107.03105627, 'aktif'),
+('84d1ebb5-60bc-11f1-bf39-00e01e54316e', 'Keripik Singkong Ibu Ani', 'kuliner', 5, 1, 'Jl. Jonggol No.8, RT 01/RW 03', -6.39824187, 107.02962183, 'aktif'),
+('84d1ecd8-60bc-11f1-bf39-00e01e54316e', 'Salon Cantik Alami', 'jasa', 6, 12, 'Jl. Gandoang No.20, RT 04/RW 01', -6.39866524, 107.03180830, 'pending'),
+('84d1eddd-60bc-11f1-bf39-00e01e54316e', 'Ternak Lele Makmur', 'peternakan', 7, 1, 'Jl. Gandoang No.25, RT 05/RW 02', -6.39646278, 107.03126121, 'aktif'),
+('84d1eedf-60bc-11f1-bf39-00e01e54316e', 'Jahit Rina Collection', 'konveksi', 8, 1, 'Jl. Raya Cileungsi No.30', -6.40080563, 107.03118823, 'aktif'),
+('84d1efe4-60bc-11f1-bf39-00e01e54316e', 'Toko Bangunan Maju', 'perdagangan', 9, 1, 'Jl. Gandoang No.35, RT 02/RW 03', -6.39814195, 107.02972555, 'pending'),
+('84d1f110-60bc-11f1-bf39-00e01e54316e', 'Kue Basah Bu Dewi', 'kuliner', 10, 1, 'Jl. Jonggol No.12, RT 03/RW 01', -6.39844638, 107.03259143, 'aktif'),
+('84d1f212-60bc-11f1-bf39-00e01e54316e', 'Jawir', 'Jasa', 13, 12, 'warungbambu', -6.39820373, 107.03020710, 'pending'),
+('9168485d-60bc-11f1-bf39-00e01e54316e', 'test', 'test', 13, 12, 'tst', -6.40085333, 107.02911204, 'pending'),
+('9b6bcc73-6257-11f1-ae73-00e01e54316e', 'ssss', 'Jasa', 13, 12, 'jalan kebumen 1/2 jawaw wibu', -6.32387540, 107.30648960, 'pending');
 
 --
 -- Trigger `umkm`
@@ -469,6 +472,8 @@ CREATE TABLE `umkm_history` (
   `id_user` int(11) DEFAULT NULL,
   `id_validator` int(11) DEFAULT NULL,
   `alamat` text DEFAULT NULL,
+  `latitude` varchar(50) DEFAULT NULL,
+  `longitude` varchar(50) DEFAULT NULL,
   `status` enum('pending','aktif','nonaktif') DEFAULT NULL,
   `action_type` varchar(20) DEFAULT NULL,
   `action_time` timestamp NULL DEFAULT current_timestamp()
@@ -478,18 +483,30 @@ CREATE TABLE `umkm_history` (
 -- Dumping data untuk tabel `umkm_history`
 --
 
-INSERT INTO `umkm_history` (`id_history`, `id_umkm`, `nama_umkm`, `jenis_usaha`, `id_user`, `id_validator`, `alamat`, `status`, `action_type`, `action_time`) VALUES
-(1, 1, 'Warung Makan Barokah', 'kuliner', 1, 1, 'Jl. Gandoang No.1, RT 01/RW 01', 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
-(2, 2, 'Toko Kelontong Sejahtera', 'perdagangan', 2, 1, 'Jl. Gandoang No.5, RT 02/RW 01', 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
-(3, 3, 'Bengkel Motor Jaya', 'jasa', 3, 1, 'Jl. Raya Cileungsi No.10', 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
-(4, 4, 'Konveksi Mandiri', 'konveksi', 4, 1, 'Jl. Gandoang No.15, RT 03/RW 02', 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
-(5, 5, 'Keripik Singkong Ibu Ani', 'kuliner', 5, 1, 'Jl. Jonggol No.8, RT 01/RW 03', 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
-(6, 6, 'Salon Cantik Alami', 'jasa', 6, 12, 'Jl. Gandoang No.20, RT 04/RW 01', 'pending', 'UPDATE', '2026-06-05 08:57:02'),
-(7, 7, 'Ternak Lele Makmur', 'peternakan', 7, 1, 'Jl. Gandoang No.25, RT 05/RW 02', 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
-(8, 8, 'Jahit Rina Collection', 'konveksi', 8, 1, 'Jl. Raya Cileungsi No.30', 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
-(9, 9, 'Toko Bangunan Maju', 'perdagangan', 9, 1, 'Jl. Gandoang No.35, RT 02/RW 03', 'pending', 'UPDATE', '2026-06-05 08:57:02'),
-(10, 10, 'Kue Basah Bu Dewi', 'kuliner', 10, 1, 'Jl. Jonggol No.12, RT 03/RW 01', 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
-(11, 11, 'Jawir', 'Jasa', 13, 12, 'warungbambu', 'pending', 'UPDATE', '2026-06-05 08:57:02');
+INSERT INTO `umkm_history` (`id_history`, `id_umkm`, `nama_umkm`, `jenis_usaha`, `id_user`, `id_validator`, `alamat`, `latitude`, `longitude`, `status`, `action_type`, `action_time`) VALUES
+(1, 1, 'Warung Makan Barokah', 'kuliner', 1, 1, 'Jl. Gandoang No.1, RT 01/RW 01', NULL, NULL, 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
+(2, 2, 'Toko Kelontong Sejahtera', 'perdagangan', 2, 1, 'Jl. Gandoang No.5, RT 02/RW 01', NULL, NULL, 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
+(3, 3, 'Bengkel Motor Jaya', 'jasa', 3, 1, 'Jl. Raya Cileungsi No.10', NULL, NULL, 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
+(4, 4, 'Konveksi Mandiri', 'konveksi', 4, 1, 'Jl. Gandoang No.15, RT 03/RW 02', NULL, NULL, 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
+(5, 5, 'Keripik Singkong Ibu Ani', 'kuliner', 5, 1, 'Jl. Jonggol No.8, RT 01/RW 03', NULL, NULL, 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
+(6, 6, 'Salon Cantik Alami', 'jasa', 6, 12, 'Jl. Gandoang No.20, RT 04/RW 01', NULL, NULL, 'pending', 'UPDATE', '2026-06-05 08:57:02'),
+(7, 7, 'Ternak Lele Makmur', 'peternakan', 7, 1, 'Jl. Gandoang No.25, RT 05/RW 02', NULL, NULL, 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
+(8, 8, 'Jahit Rina Collection', 'konveksi', 8, 1, 'Jl. Raya Cileungsi No.30', NULL, NULL, 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
+(9, 9, 'Toko Bangunan Maju', 'perdagangan', 9, 1, 'Jl. Gandoang No.35, RT 02/RW 03', NULL, NULL, 'pending', 'UPDATE', '2026-06-05 08:57:02'),
+(10, 10, 'Kue Basah Bu Dewi', 'kuliner', 10, 1, 'Jl. Jonggol No.12, RT 03/RW 01', NULL, NULL, 'aktif', 'UPDATE', '2026-06-05 08:57:02'),
+(11, 11, 'Jawir', 'Jasa', 13, 12, 'warungbambu', NULL, NULL, 'pending', 'UPDATE', '2026-06-05 08:57:02'),
+(12, 84, 'Warung Makan Barokah', 'kuliner', 1, 1, 'Jl. Gandoang No.1, RT 01/RW 01', NULL, NULL, 'aktif', 'UPDATE', '2026-06-07 09:53:58'),
+(13, 84, 'Toko Kelontong Sejahtera', 'perdagangan', 2, 1, 'Jl. Gandoang No.5, RT 02/RW 01', NULL, NULL, 'aktif', 'UPDATE', '2026-06-07 09:53:58'),
+(14, 84, 'Bengkel Motor Jaya', 'jasa', 3, 1, 'Jl. Raya Cileungsi No.10', NULL, NULL, 'aktif', 'UPDATE', '2026-06-07 09:53:58'),
+(15, 84, 'Konveksi Mandiri', 'konveksi', 4, 1, 'Jl. Gandoang No.15, RT 03/RW 02', NULL, NULL, 'aktif', 'UPDATE', '2026-06-07 09:53:58'),
+(16, 84, 'Keripik Singkong Ibu Ani', 'kuliner', 5, 1, 'Jl. Jonggol No.8, RT 01/RW 03', NULL, NULL, 'aktif', 'UPDATE', '2026-06-07 09:53:58'),
+(17, 84, 'Salon Cantik Alami', 'jasa', 6, 12, 'Jl. Gandoang No.20, RT 04/RW 01', NULL, NULL, 'pending', 'UPDATE', '2026-06-07 09:53:58'),
+(18, 84, 'Ternak Lele Makmur', 'peternakan', 7, 1, 'Jl. Gandoang No.25, RT 05/RW 02', NULL, NULL, 'aktif', 'UPDATE', '2026-06-07 09:53:58'),
+(19, 84, 'Jahit Rina Collection', 'konveksi', 8, 1, 'Jl. Raya Cileungsi No.30', NULL, NULL, 'aktif', 'UPDATE', '2026-06-07 09:53:58'),
+(20, 84, 'Toko Bangunan Maju', 'perdagangan', 9, 1, 'Jl. Gandoang No.35, RT 02/RW 03', NULL, NULL, 'pending', 'UPDATE', '2026-06-07 09:53:58'),
+(21, 84, 'Kue Basah Bu Dewi', 'kuliner', 10, 1, 'Jl. Jonggol No.12, RT 03/RW 01', NULL, NULL, 'aktif', 'UPDATE', '2026-06-07 09:53:58'),
+(22, 84, 'Jawir', 'Jasa', 13, 12, 'warungbambu', NULL, NULL, 'pending', 'UPDATE', '2026-06-07 09:53:58'),
+(23, 9168485, 'test', 'test', 13, 12, 'tst', NULL, NULL, 'pending', 'UPDATE', '2026-06-07 09:53:58');
 
 -- --------------------------------------------------------
 
@@ -653,7 +670,7 @@ ALTER TABLE `profile_history`
 -- AUTO_INCREMENT untuk tabel `umkm_history`
 --
 ALTER TABLE `umkm_history`
-  MODIFY `id_history` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_history` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
