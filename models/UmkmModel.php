@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 class UmkmModel
@@ -10,7 +11,6 @@ class UmkmModel
         $this->conn = $conn;
     }
 
-    // ─── Ambil semua UMKM milik user tertentu (pagination + search) ──────────
     public function getAllByUser(int $id_user, int $limit, int $offset, string $search = ''): array
     {
         $sql = "SELECT
@@ -18,6 +18,8 @@ class UmkmModel
                     u.nama_umkm,
                     u.jenis_usaha,
                     u.alamat,
+                    u.latitude,
+                    u.longitude,
                     u.status,
                     usr.nama AS nama_pengaju,
                     v.nama   AS nama_validator
@@ -83,11 +85,11 @@ class UmkmModel
     }
 
     // ─── Tambah UMKM baru ─────────────────────────────────────────────────────
-    public function insert(int $id_user, string $nama_umkm, string $jenis_usaha, string $alamat): bool
+    public function insert(int $id_user, string $nama_umkm, string $jenis_usaha, string $alamat, ?string $latitude = null, ?string $longitude = null): bool
     {
         // Default status = pending
-        $sql = "INSERT INTO umkm (nama_umkm, jenis_usaha, id_user, id_validator, alamat, status)
-                VALUES (:nama_umkm, :jenis_usaha, :id_user, :id_validator, :alamat, 'pending')";
+        $sql = "INSERT INTO umkm (nama_umkm, jenis_usaha, id_user, id_validator, alamat, latitude, longitude, status)
+                VALUES (:nama_umkm, :jenis_usaha, :id_user, :id_validator, :alamat, :latitude, :longitude, 'pending')";
 
         // Cari id admin pertama sebagai default validator
         $admin_stmt = $this->conn->query("SELECT id_user FROM user WHERE role = 'admin' LIMIT 1");
@@ -101,16 +103,20 @@ class UmkmModel
             ':id_user'      => $id_user,
             ':id_validator' => $id_validator,
             ':alamat'       => $alamat,
+            ':latitude'     => $latitude,
+            ':longitude'    => $longitude,
         ]);
     }
 
     // ─── Update UMKM ─────────────────────────────────────────────────────────
-    public function update(string $id_umkm, int $id_user, string $nama_umkm, string $jenis_usaha, string $alamat): bool
+    public function update(string $id_umkm, int $id_user, string $nama_umkm, string $jenis_usaha, string $alamat, ?string $latitude = null, ?string $longitude = null): bool
     {
         $sql = "UPDATE umkm
                 SET nama_umkm    = :nama_umkm,
                     jenis_usaha  = :jenis_usaha,
-                    alamat       = :alamat
+                    alamat       = :alamat,
+                    latitude     = :latitude,
+                    longitude    = :longitude
                 WHERE id_umkm = :id_umkm
                   AND id_user = :id_user";
 
@@ -119,6 +125,8 @@ class UmkmModel
             ':nama_umkm'   => $nama_umkm,
             ':jenis_usaha' => $jenis_usaha,
             ':alamat'      => $alamat,
+            ':latitude'    => $latitude,
+            ':longitude'   => $longitude,
             ':id_umkm'     => $id_umkm,
             ':id_user'     => $id_user,
         ]);

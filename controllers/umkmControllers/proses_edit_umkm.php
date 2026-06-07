@@ -27,6 +27,8 @@ $id_umkm    = (string) ($_POST['id_umkm']    ?? 0);
 $nama_umkm  = trim($_POST['nama_umkm']    ?? '');
 $jenis_usaha = trim($_POST['jenis_usaha'] ?? '');
 $alamat     = trim($_POST['alamat']       ?? '');
+$latitude   = isset($_POST['latitude']) && $_POST['latitude'] !== '' ? trim($_POST['latitude']) : null;
+$longitude  = isset($_POST['longitude']) && $_POST['longitude'] !== '' ? trim($_POST['longitude']) : null;
 
 if (!$id_umkm || $nama_umkm === '' || $alamat === '') {
     header('Location: ' . BASE_URL . 'views/umkm/edit_umkm.php?id=' . $id_umkm . '&status=gagal');
@@ -35,7 +37,7 @@ if (!$id_umkm || $nama_umkm === '' || $alamat === '') {
 
 try {
     $umkmModel = new UmkmModel($conn);
-    $ok = $umkmModel->update($id_umkm, $id_user, $nama_umkm, $jenis_usaha, $alamat);
+    $ok = $umkmModel->update($id_umkm, $id_user, $nama_umkm, $jenis_usaha, $alamat, $latitude, $longitude);
 
     if ($ok) {
         header('Location: ' . BASE_URL . 'views/umkm/index.php?status=edit_sukses');

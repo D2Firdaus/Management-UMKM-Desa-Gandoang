@@ -36,6 +36,24 @@ $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ad
 
     <link href="<?= $asset_path ?>boostrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= $asset_path ?>css/umkm.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map-picker {
+            height: 350px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #ced4da;
+            z-index: 1;
+        }
+        .form-umkm {
+            display: grid;
+            grid-template-columns: 200px 20px 1fr;
+            row-gap: 15px;
+            align-items: start;
+        }
+    </style>
 </head>
 
 <body>
@@ -88,6 +106,15 @@ $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ad
                                 placeholder="Masukkan alamat lengkap UMKM"
                                 required></textarea>
 
+                            <label>Lokasi Peta</label>
+                            <span>:</span>
+                            <div>
+                                <div id="map-picker"></div>
+                                <small class="text-muted d-block mt-1">Klik pada peta atau geser marker untuk menentukan koordinat lokasi UMKM.</small>
+                                <input type="hidden" name="latitude" id="latitude" value="-6.4024312">
+                                <input type="hidden" name="longitude" id="longitude" value="107.0321451">
+                            </div>
+
                         </div>
 
                         <div class="tombol">
@@ -126,6 +153,40 @@ $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ad
     <script src="<?= $asset_path ?>boostrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?= $asset_path ?>js/bantuan.js"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultLat = -6.4024312;
+            const defaultLng = 107.0321451;
+
+            const map = L.map('map-picker').setView([defaultLat, defaultLng], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Buat marker yang bisa digeser
+            const marker = L.marker([defaultLat, defaultLng], {
+                draggable: true
+            }).addTo(map);
+
+            function updateCoords(lat, lng) {
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+            }
+
+            marker.on('dragend', function(e) {
+                const position = marker.getLatLng();
+                updateCoords(position.lat.toFixed(7), position.lng.toFixed(7));
+            });
+
+            map.on('click', function(e) {
+                marker.setLatLng(e.latlng);
+                updateCoords(e.latlng.lat.toFixed(7), e.latlng.lng.toFixed(7));
+            });
+
+            updateCoords(defaultLat, defaultLng);
+        });
+    </script>
     <?php ob_end_flush(); ?>
 </body>
 
