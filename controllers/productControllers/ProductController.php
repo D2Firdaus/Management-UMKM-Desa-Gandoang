@@ -57,13 +57,13 @@ class ProductController
         }
     }
 
-    public function getProductById(int $id): array|false
+    public function getProductById(string $id): array|false
 
     {
         return $this->productModel->getById($id);
     }
 
-    public function update(int $id)
+    public function update(string $id)
 
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -102,7 +102,7 @@ class ProductController
         }
     }
 
-    public function delete(int $id)
+    public function delete(string $id)
 
     {
         $oldData = $this->productModel->getById($id);
@@ -127,7 +127,7 @@ class ProductController
         $uploadedFiles = [];
         if (is_array($files['name'])) {
             $totalFiles = count($files['name']);
-            
+
             $limit = min($totalFiles, 3);
 
             for ($i = 0; $i < $limit; $i++) {
@@ -135,11 +135,11 @@ class ProductController
                     $namaFile   = $files['name'][$i];
                     $tmpName    = $files['tmp_name'][$i];
                     $ekstensi   = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
-                    
+
                     $ekstensiDiperbolehkan = ['jpg', 'jpeg', 'png', 'webp'];
                     if (in_array($ekstensi, $ekstensiDiperbolehkan)) {
                         $namaBaru   = uniqid() . '_' . $i . '.' . $ekstensi;
-                        
+
                         if (move_uploaded_file($tmpName, $targetDir . $namaBaru)) {
                             $uploadedFiles[] = $namaBaru;
                         }
@@ -152,7 +152,7 @@ class ProductController
                 $tmpName    = $files['tmp_name'];
                 $ekstensi   = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
                 $namaBaru   = uniqid() . '.' . $ekstensi;
-                
+
                 if (move_uploaded_file($tmpName, $targetDir . $namaBaru)) {
                     $uploadedFiles[] = $namaBaru;
                 }

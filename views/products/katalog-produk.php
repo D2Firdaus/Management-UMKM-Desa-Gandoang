@@ -85,7 +85,7 @@ $pagedProducts = array_slice($filteredProducts, $offset, $per_page);
                         <div class="katalog-info">
                             <h3 class="katalog-name"><?= htmlspecialchars($prod['nama']) ?></h3>
                             <p class="katalog-price">Rp <?= number_format($prod['harga'], 0, ',', '.') ?></p>
-                            <a href="#" class="btn-detail">Detail</a>
+                            <a href="<?= BASE_URL ?>view/product/katalog-produk/<?= $prod['id'] ?>" class="btn-detail">Detail</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -174,7 +174,6 @@ $pagedProducts = array_slice($filteredProducts, $offset, $per_page);
 
                     const filterValue = this.getAttribute('data-filter');
 
-                    // Filter products
                     productItems.forEach(item => {
                         const itemCategory = item.getAttribute('data-category');
                         if (filterValue === 'Semua kategori' || filterValue === itemCategory) {
@@ -187,7 +186,6 @@ $pagedProducts = array_slice($filteredProducts, $offset, $per_page);
             });
         });
 
-        // Infinite Carousel logic for Recommendations
         let isCarouselScrolling = false;
 
         function scrollProductCarousel(direction) {

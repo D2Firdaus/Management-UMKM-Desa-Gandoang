@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Jangan routing jika file/folder nyata ada (assets, css, images, dll)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route semua sisa request ke index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
