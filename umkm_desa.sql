@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 05 Jun 2026 pada 11.02
+-- Waktu pembuatan: 07 Jun 2026 pada 11.40
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.0.30
 
@@ -216,7 +216,7 @@ CREATE TABLE `journey_history` (
 --
 
 CREATE TABLE `produk` (
-  `id_produk` int(11) NOT NULL,
+  `id_produk` varchar(36) NOT NULL DEFAULT uuid(),
   `id_umkm` varchar(36) NOT NULL,
   `nama_produk` varchar(100) NOT NULL,
   `status` enum('aktif','dihapus') NOT NULL DEFAULT 'aktif',
@@ -231,23 +231,25 @@ CREATE TABLE `produk` (
 --
 
 INSERT INTO `produk` (`id_produk`, `id_umkm`, `nama_produk`, `status`, `kategori`, `harga`, `deskripsi`, `foto`) VALUES
-(1, '84d1cc3f-60bc-11f1-bf39-00e01e54316e', 'Nasi Goreng Spesial', 'aktif', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg'),
-(2, '84d1cc3f-60bc-11f1-bf39-00e01e54316e', 'Mie Ayam Bakso', 'aktif', 'Makanan', 12000, 'Mie ayam dengan bakso sapi', 'mieayam.jpg'),
-(3, '84d1da34-60bc-11f1-bf39-00e01e54316e', 'Beras Premium 5kg', 'aktif', 'Sembako', 65000, 'Beras kualitas premium', 'beras.jpg'),
-(4, '84d1da34-60bc-11f1-bf39-00e01e54316e', 'Minyak Goreng 2L', 'aktif', 'Sembako', 32000, 'Minyak goreng kemasan 2 liter', 'minyak.jpg'),
-(5, '84d1dc5f-60bc-11f1-bf39-00e01e54316e', 'Service Ringan Motor', 'aktif', 'Jasa', 50000, 'Ganti oli dan tune up', 'service.jpg'),
-(6, '84d1ea1d-60bc-11f1-bf39-00e01e54316e', 'Kaos Polos', 'aktif', 'Pakaian', 45000, 'Kaos cotton combed 30s', 'kaos.jpg'),
-(7, '84d1ebb5-60bc-11f1-bf39-00e01e54316e', 'Keripik Singkong Original', 'aktif', 'Makanan', 10000, 'Keripik singkong renyah 200gr', 'keripik.jpg'),
-(8, '84d1ebb5-60bc-11f1-bf39-00e01e54316e', 'Keripik Singkong Pedas', 'aktif', 'Makanan', 12000, 'Keripik singkong pedas 200gr', 'keripik_pedas.jpg'),
-(9, '84d1eddd-60bc-11f1-bf39-00e01e54316e', 'Lele Segar 1kg', 'aktif', 'Perikanan', 25000, 'Lele segar siap masak', 'lele.jpg'),
-(10, '84d1f110-60bc-11f1-bf39-00e01e54316e', 'Kue Lapis Legit', 'aktif', 'Makanan', 85000, 'Kue lapis legit homemade', 'lapis.jpg'),
-(11, '84d1ebb5-60bc-11f1-bf39-00e01e54316e', 'Singkong Rebus', 'aktif', 'Kuliner', 1000, 'Lezat Dan Bergizi', 'prod_6a2148bd225cd7.75935071.jpg');
+('28e0b7f0-6248-11f1-ae73-00e01e54316e', '84d1cc3f-60bc-11f1-bf39-00e01e54316e', 'Nasi Goreng Spesial', 'aktif', 'kue', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg'),
+('28e0bfe6-6248-11f1-ae73-00e01e54316e', '84d1f110-60bc-11f1-bf39-00e01e54316e', 'Kue Lapis Legit', 'aktif', 'Makanan', 85000, 'Kue lapis legit homemade', 'lapis.jpg'),
+('28e0c077-6248-11f1-ae73-00e01e54316e', '84d1ebb5-60bc-11f1-bf39-00e01e54316e', 'Singkong Rebus', 'aktif', 'Kuliner', 1000, 'Lezat Dan Bergizi', 'prod_6a2148bd225cd7.75935071.jpg'),
+('28e0c0f2-6248-11f1-ae73-00e01e54316e', '84d1cc3f-60bc-11f1-bf39-00e01e54316e', 'Mie Ayam Bakso', 'aktif', 'Makanan', 12000, 'Mie ayam dengan bakso sapi', 'mieayam.jpg'),
+('28e0c13f-6248-11f1-ae73-00e01e54316e', '84d1da34-60bc-11f1-bf39-00e01e54316e', 'Beras Premium 5kg', 'aktif', 'Sembako', 65000, 'Beras kualitas premium', 'beras.jpg'),
+('28e0c186-6248-11f1-ae73-00e01e54316e', '84d1da34-60bc-11f1-bf39-00e01e54316e', 'Minyak Goreng 2L', 'aktif', 'Sembako', 32000, 'Minyak goreng kemasan 2 liter', 'minyak.jpg'),
+('28e0c1cd-6248-11f1-ae73-00e01e54316e', '84d1dc5f-60bc-11f1-bf39-00e01e54316e', 'Service Ringan Motor', 'aktif', 'Jasa', 50000, 'Ganti oli dan tune up', 'service.jpg'),
+('28e0c20b-6248-11f1-ae73-00e01e54316e', '84d1ea1d-60bc-11f1-bf39-00e01e54316e', 'Kaos Polos', 'aktif', 'Pakaian', 45000, 'Kaos cotton combed 30s', 'kaos.jpg'),
+('28e0c24c-6248-11f1-ae73-00e01e54316e', '84d1ebb5-60bc-11f1-bf39-00e01e54316e', 'Keripik Singkong Original', 'aktif', 'Makanan', 10000, 'Keripik singkong renyah 200gr', 'keripik.jpg'),
+('28e0c290-6248-11f1-ae73-00e01e54316e', '84d1ebb5-60bc-11f1-bf39-00e01e54316e', 'Keripik Singkong Pedas', 'aktif', 'Makanan', 12000, 'Keripik singkong pedas 200gr', 'keripik_pedas.jpg'),
+('28e0c2d3-6248-11f1-ae73-00e01e54316e', '84d1eddd-60bc-11f1-bf39-00e01e54316e', 'Lele Segar 1kg', 'aktif', 'Perikanan', 25000, 'Lele segar siap masak', 'lele.jpg'),
+('63e49b8f-6249-11f1-ae73-00e01e54316e', '84d1cc3f-60bc-11f1-bf39-00e01e54316e', 'Ikan Koi', 'aktif', 'perternakan', 909090, 'xixixi', '6a2529364c866_0.png');
 
 --
 -- Trigger `produk`
 --
 DELIMITER $$
-CREATE TRIGGER `trg_produk_update` BEFORE UPDATE ON `produk` FOR EACH ROW INSERT INTO produk_history (
+CREATE TRIGGER `trg_produk_update` BEFORE UPDATE ON `produk` FOR EACH ROW BEGIN
+  INSERT INTO produk_history (
     id_produk,
     id_umkm,
     nama_produk,
@@ -256,8 +258,8 @@ CREATE TRIGGER `trg_produk_update` BEFORE UPDATE ON `produk` FOR EACH ROW INSERT
     deskripsi,
     foto,
     action_type
-)
-VALUES (
+  )
+  VALUES (
     OLD.id_produk,
     OLD.id_umkm,
     OLD.nama_produk,
@@ -266,7 +268,8 @@ VALUES (
     OLD.deskripsi,
     OLD.foto,
     'UPDATE'
-)
+  );
+END
 $$
 DELIMITER ;
 
@@ -278,7 +281,7 @@ DELIMITER ;
 
 CREATE TABLE `produk_history` (
   `id_history` int(11) NOT NULL,
-  `id_produk` int(11) DEFAULT NULL,
+  `id_produk` varchar(36) DEFAULT NULL,
   `id_umkm` int(11) DEFAULT NULL,
   `nama_produk` varchar(100) DEFAULT NULL,
   `kategori` varchar(50) DEFAULT NULL,
@@ -294,17 +297,20 @@ CREATE TABLE `produk_history` (
 --
 
 INSERT INTO `produk_history` (`id_history`, `id_produk`, `id_umkm`, `nama_produk`, `kategori`, `harga`, `deskripsi`, `foto`, `action_type`, `action_time`) VALUES
-(1, 1, 1, 'Nasi Goreng Spesial', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(2, 2, 1, 'Mie Ayam Bakso', 'Makanan', 12000, 'Mie ayam dengan bakso sapi', 'mieayam.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(3, 3, 2, 'Beras Premium 5kg', 'Sembako', 65000, 'Beras kualitas premium', 'beras.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(4, 4, 2, 'Minyak Goreng 2L', 'Sembako', 32000, 'Minyak goreng kemasan 2 liter', 'minyak.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(5, 5, 3, 'Service Ringan Motor', 'Jasa', 50000, 'Ganti oli dan tune up', 'service.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(6, 6, 4, 'Kaos Polos', 'Pakaian', 45000, 'Kaos cotton combed 30s', 'kaos.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(7, 7, 5, 'Keripik Singkong Original', 'Makanan', 10000, 'Keripik singkong renyah 200gr', 'keripik.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(8, 8, 5, 'Keripik Singkong Pedas', 'Makanan', 12000, 'Keripik singkong pedas 200gr', 'keripik_pedas.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(9, 9, 7, 'Lele Segar 1kg', 'Perikanan', 25000, 'Lele segar siap masak', 'lele.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(10, 10, 10, 'Kue Lapis Legit', 'Makanan', 85000, 'Kue lapis legit homemade', 'lapis.jpg', 'UPDATE', '2026-06-05 08:57:02'),
-(11, 11, 5, 'Singkong Rebus', 'Kuliner', 1000, 'Lezat Dan Bergizi', 'prod_6a2148bd225cd7.75935071.jpg', 'UPDATE', '2026-06-05 08:57:02');
+(1, '1', 1, 'Nasi Goreng Spesial', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(2, '2', 1, 'Mie Ayam Bakso', 'Makanan', 12000, 'Mie ayam dengan bakso sapi', 'mieayam.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(3, '3', 2, 'Beras Premium 5kg', 'Sembako', 65000, 'Beras kualitas premium', 'beras.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(4, '4', 2, 'Minyak Goreng 2L', 'Sembako', 32000, 'Minyak goreng kemasan 2 liter', 'minyak.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(5, '5', 3, 'Service Ringan Motor', 'Jasa', 50000, 'Ganti oli dan tune up', 'service.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(6, '6', 4, 'Kaos Polos', 'Pakaian', 45000, 'Kaos cotton combed 30s', 'kaos.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(7, '7', 5, 'Keripik Singkong Original', 'Makanan', 10000, 'Keripik singkong renyah 200gr', 'keripik.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(8, '8', 5, 'Keripik Singkong Pedas', 'Makanan', 12000, 'Keripik singkong pedas 200gr', 'keripik_pedas.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(9, '9', 7, 'Lele Segar 1kg', 'Perikanan', 25000, 'Lele segar siap masak', 'lele.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(10, '10', 10, 'Kue Lapis Legit', 'Makanan', 85000, 'Kue lapis legit homemade', 'lapis.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(11, '11', 5, 'Singkong Rebus', 'Kuliner', 1000, 'Lezat Dan Bergizi', 'prod_6a2148bd225cd7.75935071.jpg', 'UPDATE', '2026-06-05 08:57:02'),
+(12, '28e0b7f0-6248-11f1-ae73-00e01e54316e', 84, 'Nasi Goreng Spesial', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg', 'UPDATE', '2026-06-07 08:17:15'),
+(13, '28e0b7f0-6248-11f1-ae73-00e01e54316e', 84, 'Nasi Goreng Spesial', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg', 'UPDATE', '2026-06-07 08:17:20'),
+(14, '28e0b7f0-6248-11f1-ae73-00e01e54316e', 84, 'Nasi Goreng Spesial', 'Makanan', 15000, 'Nasi goreng dengan telur dan ayam', 'nasgor.jpg', 'UPDATE', '2026-06-07 08:17:30');
 
 -- --------------------------------------------------------
 
@@ -392,7 +398,7 @@ CREATE TABLE `profile_history` (
 --
 
 CREATE TABLE `umkm` (
-  `id_umkm` varchar(36) NOT NULL DEFAULT (uuid()),
+  `id_umkm` varchar(36) NOT NULL DEFAULT uuid(),
   `nama_umkm` varchar(100) NOT NULL,
   `jenis_usaha` varchar(100) NOT NULL DEFAULT '',
   `id_user` int(11) NOT NULL,
@@ -626,16 +632,10 @@ ALTER TABLE `journey_history`
   MODIFY `id_history` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `produk`
---
-ALTER TABLE `produk`
-  MODIFY `id_produk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
 -- AUTO_INCREMENT untuk tabel `produk_history`
 --
 ALTER TABLE `produk_history`
-  MODIFY `id_history` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_history` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT untuk tabel `profile`
