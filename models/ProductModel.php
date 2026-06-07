@@ -9,7 +9,7 @@ class ProductModel
         $this->db = $db;
     }
 
-    public function getById(int $id)
+    public function getById(string $id)
     {
         $sql = "SELECT * FROM produk WHERE id_produk = :id";
 
@@ -34,7 +34,7 @@ class ProductModel
         ]);
     }
 
-    public function update(int $id, array $data)
+    public function update(string $id, array $data)
     {
         $sql = "UPDATE produk SET 
                 nama_produk = :nama_produk, 
@@ -55,7 +55,7 @@ class ProductModel
         ]);
     }
 
-    public function delete(int $id)
+    public function delete(string $id)
     {
         $sql = "UPDATE produk SET status = 'dihapus' WHERE id_produk = :id";
         $stmt = $this->db->prepare($sql);
@@ -68,7 +68,6 @@ class ProductModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':keyword' => "%$keyword%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     }
 
     public function getPaginated(string $search = '', int $per_page = 3, int $offset = 0)

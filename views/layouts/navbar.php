@@ -1,18 +1,30 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
-?>
 
-<?php require_once __DIR__ . '/../../config/path_config.php'; ?>
+require_once __DIR__ . '/../../config/path_config.php';
+
+// Fallback untuk variabel path jika navbar dipanggil dari dalam scope method controller
+if (!isset($base_url)) {
+    $base_url = '/Management_UMKM_Desa_Gandoang';
+}
+if (!isset($asset_path)) {
+    $asset_path = defined('BASE_URL') ? BASE_URL . 'asset/' : $base_url . '/asset/';
+}
+if (!isset($view_path)) {
+    $view_path = defined('BASE_URL') ? BASE_URL . 'views/' : $base_url . '/views/';
+}
+if (!isset($auth_controller_path)) {
+    $auth_controller_path = defined('CONTROLLER_PATH') ? CONTROLLER_PATH . 'authControllers/' : (defined('BASE_URL') ? BASE_URL . 'controllers/authControllers/' : $base_url . '/controllers/authControllers/');
+}
+?>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
+    nav, nav * {
         box-sizing: border-box;
         font-family: 'Poppins', sans-serif;
     }
@@ -210,7 +222,7 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
 
 <nav>
     <div class="logo">
-        <a href="<?= $base_url ?>/index.php">
+        <a href="<?= $base_url ?>/">
             <img src="<?= $asset_path ?>images/logo_navbar.png" alt="UMKM Gandoang">
         </a>
     </div>
