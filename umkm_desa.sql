@@ -216,7 +216,7 @@ CREATE TABLE `journey_history` (
 --
 
 CREATE TABLE `produk` (
-  `id_produk` varchar(36) NOT NULL DEFAULT uuid(),
+  `id_produk` varchar(36) NOT NULL DEFAULT (uid())
   `id_umkm` varchar(36) NOT NULL,
   `nama_produk` varchar(100) NOT NULL,
   `status` enum('aktif','dihapus') NOT NULL DEFAULT 'aktif',
@@ -398,7 +398,7 @@ CREATE TABLE `profile_history` (
 --
 
 CREATE TABLE `umkm` (
-  `id_umkm` varchar(36) NOT NULL DEFAULT uuid(),
+  `id_umkm` varchar(36) NOT NULL DEFAULT (uid())
   `nama_umkm` varchar(100) NOT NULL,
   `jenis_usaha` varchar(100) NOT NULL DEFAULT '',
   `id_user` int(11) NOT NULL,
