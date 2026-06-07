@@ -1,10 +1,4 @@
-<?php
-// Pastikan halaman ini hanya diakses melalui controller
-if (!isset($pagedProducts, $rekomendasi, $kategoriList, $activeCategory, $current_page, $total_pages)) {
-    die('Akses langsung tidak diizinkan.');
-}
-$is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
-?>
+
 <!DOCTYPE html>
 <html lang="id">
 

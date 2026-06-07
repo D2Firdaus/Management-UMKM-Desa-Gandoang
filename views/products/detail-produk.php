@@ -1,8 +1,3 @@
-<?php
-if (!isset($product)) {
-    die('Akses langsung tidak diizinkan atau data produk tidak ditemukan.');
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 
