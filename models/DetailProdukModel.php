@@ -19,7 +19,7 @@ class DetailProdukModel
 
     public function getUmkmInfoByUmkmId(string $id_umkm)
     {
-        $sql = "SELECT u.nama_umkm, u.alamat, p.no_hp 
+        $sql = "SELECT u.nama_umkm, u.alamat, u.latitude, u.longitude, p.no_hp 
                 FROM umkm u 
                 LEFT JOIN profile p ON u.id_user = p.id_user 
                 WHERE u.id_umkm = :id_umkm LIMIT 1";

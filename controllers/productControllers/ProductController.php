@@ -12,6 +12,17 @@ class ProductController
     }
 
     /**
+     * Ambil daftar UMKM milik user untuk opsi dropdown di form tambah/edit produk.
+     *
+     * @param int $id_user ID user yang sedang login (dari session)
+     * @return array Daftar UMKM aktif
+     */
+    public function getUmkmList(int $id_user): array
+    {
+        return $this->productModel->getAllUmkmByUser($id_user);
+    }
+
+    /**
      * Menampilkan daftar produk (Index)
      */
     public function index()

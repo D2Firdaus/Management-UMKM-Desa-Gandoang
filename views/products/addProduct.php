@@ -4,7 +4,20 @@ ob_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 require_once __DIR__ . '/../../config/path_config.php';
+require_once __DIR__ . '/../../config/koneksi.php';
+require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
+
+$id_user = $_SESSION['user_id'] ?? null;
+
+if (!$id_user) {
+    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    exit;
+}
+
+$productController = new ProductController($conn);
+$umkm_list         = $productController->getUmkmList((int) $id_user);
 ?>
 
 <!DOCTYPE html>
@@ -76,9 +89,16 @@ require_once __DIR__ . '/../../config/path_config.php';
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Pilih UMKM :</label>
                             <div class="col-sm-9">
-                                <select name="id_umkm" class="form-select bg-light" style="width: 200px;">
-                                    <option value="84d1cc3f-60bc-11f1-bf39-00e01e54316e">Warung Makan Barokah</option>
-                                    <option value="84d1cc3f-60bc-11f1-bf39-00e01e54316e">Toko Kelontong Sejahtera</option>
+                                <select name="id_umkm" class="form-select bg-light" style="width: 200px;" required>
+                                    <option value="" disabled selected>-- Pilih UMKM --</option>
+                                    <?php foreach ($umkm_list as $umkm): ?>
+                                        <option value="<?= htmlspecialchars($umkm['id_umkm']) ?>">
+                                            <?= htmlspecialchars($umkm['nama_umkm']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                    <?php if (empty($umkm_list)): ?>
+                                        <option value="" disabled>Belum ada UMKM aktif</option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>

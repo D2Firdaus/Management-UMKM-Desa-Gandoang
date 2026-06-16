@@ -9,8 +9,10 @@ $router->get('/', function () {
 });
 
 $router->get('/katalog-produk', function () {
-
-    require_once __DIR__ . '/views/products/katalog-produk.php';
+    require_once __DIR__ . '/config/koneksi.php';
+    require_once __DIR__ . '/controllers/productControllers/KatalogProdukController.php';
+    $controller = new KatalogProdukController($conn);
+    $controller->index();
 });
 
 $router->get('/view/product/katalog-produk/([^/]+)', function ($id) {

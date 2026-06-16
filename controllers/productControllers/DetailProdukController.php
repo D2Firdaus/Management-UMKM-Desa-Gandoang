@@ -62,21 +62,23 @@ class DetailProdukController
             }
 
             $product = [
-                'id' => $dbProduct['id_produk'],
-                'nama' => $dbProduct['nama_produk'],
-                'kategori' => $dbProduct['kategori'],
-                'deskripsi' => $dbProduct['deskripsi'],
-                'harga' => $dbProduct['harga'],
+                'id'          => $dbProduct['id_produk'],
+                'nama'        => $dbProduct['nama_produk'],
+                'kategori'    => $dbProduct['kategori'],
+                'deskripsi'   => $dbProduct['deskripsi'],
+                'harga'       => $dbProduct['harga'],
                 'harga_coret' => $dbProduct['harga'] * 1.3,
-                'diskon' => '30%',
-                'terjual' => '50+',
-                'rating' => '4.8',
-                'ulasan' => 15,
-                'gambar_utama' => $gambar_utama,
+                'diskon'      => '30%',
+                'terjual'     => '50+',
+                'rating'      => '4.8',
+                'ulasan'      => 15,
+                'gambar_utama'=> $gambar_utama,
                 'gambar_lain' => $gambar_lain,
-                'pilihan' => ['Original'],
-                'no_hp' => $no_hp,
-                'nama_umkm' => $nama_umkm
+                'pilihan'     => ['Original'],
+                'no_hp'       => $no_hp,
+                'nama_umkm'   => $nama_umkm,
+                'latitude'    => $umkmInfo['latitude']  ?? null,
+                'longitude'   => $umkmInfo['longitude'] ?? null,
             ];
         } else {
             // Fallback dummy
