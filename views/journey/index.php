@@ -21,9 +21,9 @@ if (!$id_user) {
 
 $journeyController = new JourneyController($conn);
 
-// Proses hapus jika ada parameter delete
-if (isset($_GET['delete'])) {
-    $journeyController->delete((int)$_GET['delete']);
+// Proses hapus jika ada request POST action delete
+if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id_journey'])) {
+    $journeyController->delete((int)$_POST['id_journey']);
 }
 
 // Ambil data untuk index
@@ -33,6 +33,56 @@ $search = $data['search'];
 $per_page = $data['per_page'];
 $current_page = $data['current_page'];
 $total_pages = $data['total_pages'];
+
+// ─── Popup helper ─────────────────────────────────────────────────────────────
+function journeyStatusPopup(string $asset_path): void
+{
+    $status_key = $_GET['status'] ?? '';
+
+    $popups = [
+        'tambah_sukses' => [
+            'icon'  => '<i class="bi bi-check-circle-fill mb-3" style="font-size: 64px; color: #28a745;"></i>',
+            'title' => 'Berhasil<br>Menambahkan',
+            'msg'   => 'Data Journey Berhasil Ditambahkan'
+        ],
+        'edit_sukses' => [
+            'icon'  => '<i class="bi bi-check-circle-fill mb-3" style="font-size: 64px; color: #28a745;"></i>',
+            'title' => 'Berhasil<br>Memperbarui',
+            'msg'   => 'Data Journey Berhasil Diperbarui'
+        ],
+        'hapus_sukses' => [
+            'icon'  => '<i class="bi bi-check-circle-fill mb-3" style="font-size: 64px; color: #28a745;"></i>',
+            'title' => 'Berhasil<br>Menghapus',
+            'msg'   => 'Data Journey Berhasil Dihapus'
+        ],
+        'error' => [
+            'icon'  => '<i class="bi bi-x-circle-fill mb-3" style="font-size: 64px; color: #dc3545;"></i>',
+            'title' => 'Terjadi<br>Kesalahan',
+            'msg'   => 'Data tidak ditemukan atau gagal diproses.'
+        ],
+    ];
+
+    if (!isset($popups[$status_key])) return;
+
+    $d = $popups[$status_key];
+    ?>
+    <div class="alert_sukses_menambah" id="statusPopup">
+        <div class="box_sukses_menambah text-center">
+            <div class="icon_sukses_menambah">
+                <?= $d['icon'] ?>
+            </div>
+            <h2><?= $d['title'] ?></h2>
+            <p><?= htmlspecialchars($d['msg']) ?></p>
+            <a href="index.php" class="tombol_sukses_menambah" style="text-decoration:none;">Tutup</a>
+        </div>
+    </div>
+    <style>
+        /* Minimal style adjustments to make svg look like the original img */
+        .box_sukses_menambah { padding: 30px; }
+        .icon_sukses_menambah { margin-bottom: 15px; }
+    </style>
+    <?php
+}
 
 $sidebar_file = (
     isset($_SESSION['user_role']) &&
@@ -52,6 +102,7 @@ $sidebar_file = (
 
     <!-- bootstrap -->
     <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
     
     <!-- css -->
     <link href="<?= $asset_path ?>css/bantuan.css" rel="stylesheet">
@@ -84,17 +135,7 @@ $sidebar_file = (
                         </div>
                     </div>
 
-                    <?php if (isset($_GET['status'])): ?>
-                        <?php if ($_GET['status'] === 'success'): ?>
-                            <div class="alert alert-success">Data journey berhasil ditambahkan!</div>
-                        <?php elseif ($_GET['status'] === 'updated'): ?>
-                            <div class="alert alert-success">Data journey berhasil diperbarui!</div>
-                        <?php elseif ($_GET['status'] === 'deleted'): ?>
-                            <div class="alert alert-success">Data journey berhasil dihapus!</div>
-                        <?php elseif ($_GET['status'] === 'error'): ?>
-                            <div class="alert alert-danger">Terjadi kesalahan. Data tidak ditemukan atau gagal diproses.</div>
-                        <?php endif; ?>
-                    <?php endif; ?>
+
 
                     <div class="table-controls d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
                         <form method="GET" class="d-flex align-items-center mb-2 mb-md-0">
@@ -116,16 +157,14 @@ $sidebar_file = (
                                 <input type="hidden" name="show" value="<?= $per_page ?>">
                             <?php endif; ?>
                             <button type="submit" class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-1 bg-transparent border-0 text-muted">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                </svg>
+                                <i class="bi bi-search"></i>
                             </button>
                         </form>
                     </div>
 
-                    <div class="table-responsive bg-light p-3 rounded shadow-sm border border-success-subtle mb-3">
-                        <table class="table table-borderless table-hover text-center align-middle mb-0 journey-table">
-                            <thead class="text-secondary table-light-green">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>nama_umkm</th>
@@ -147,20 +186,14 @@ $sidebar_file = (
                                             <td><?= date('d-m-Y', strtotime($row['tanggal'])) ?></td>
                                             <td><?= htmlspecialchars($row['deskripsi']) ?></td>
                                             <td>
-                                                <img src="<?= $asset_path ?>images/journey/<?= htmlspecialchars($row['foto']) ?>" alt="Foto Journey" class="journey-photo">
+                                                <img src="<?= BASE_URL ?>storage/images/journey/<?= htmlspecialchars($row['foto']) ?>" alt="Foto Journey" class="journey-photo" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="document.getElementById('modalImage').src=this.src" style="cursor: pointer; max-width: 100px;">
                                             </td>
                                             <td>
                                                 <a href="edit.php?id=<?= $row['id_journey'] ?>" class="btn btn-warning btn-sm btn-icon text-white">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                                      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                                    </svg>
+                                                    <i class="bi bi-pencil-square"></i>
                                                 </a>
-                                                <a href="index.php?delete=<?= $row['id_journey'] ?>" class="btn btn-danger btn-sm btn-icon" onclick="return confirm('Yakin ingin menghapus journey ini?')">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                                    </svg>
+                                                <a href="hapus.php?id=<?= $row['id_journey'] ?>" class="btn btn-danger btn-sm btn-icon">
+                                                    <i class="bi bi-trash"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -176,6 +209,7 @@ $sidebar_file = (
 
                     <div class="position-relative d-flex justify-content-center align-items-center mt-3 flex-column flex-md-row">
                         <!-- Pagination -->
+                        <?php if (count($journeys) > 0): ?>
                         <nav aria-label="Page navigation" class="mb-3 mb-md-0">
                             <ul class="pagination pagination-sm m-0 custom-pagination">
                                 <?php if ($current_page > 1): ?>
@@ -205,6 +239,7 @@ $sidebar_file = (
                                 <?php endif; ?>
                             </ul>
                         </nav>
+                        <?php endif; ?>
 
                         <!-- Button Tambah Journey -->
                         <div class="position-absolute end-0 d-none d-md-block">
@@ -225,9 +260,37 @@ $sidebar_file = (
 
     </div>
 
+    <!-- Modal Image -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0 shadow-none">
+          <div class="modal-body text-center position-relative p-0">
+            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 1055; background-color: rgba(0,0,0,0.5); border-radius: 50%;"></button>
+            <img id="modalImage" src="" class="img-fluid rounded" alt="Enlarged Image" style="max-height: 90vh;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popup Notifikasi -->
+    <?php journeyStatusPopup($asset_path); ?>
+
     <!-- js scripts -->
     <script src="<?= $asset_path ?>/boostrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?= $asset_path ?>js/bantuan.js"></script>
+
+    <script>
+        // Auto-dismiss popup setelah 4 detik
+        setTimeout(function () {
+            const popup = document.getElementById('statusPopup');
+            if (popup) {
+                popup.style.display = 'none';
+                const url = new URL(window.location.href);
+                url.searchParams.delete('status');
+                window.history.replaceState({}, document.title, url.pathname + url.search);
+            }
+        }, 4000);
+    </script>
 
     <?php ob_end_flush(); ?>
 </body>

@@ -53,7 +53,7 @@ class JourneyController
             ];
 
             if ($this->journeyModel->create($data)) {
-                header('Location: ../../views/journey/index.php?status=success');
+                header('Location: ../../views/journey/index.php?status=tambah_sukses');
                 exit;
             }
         }
@@ -88,7 +88,7 @@ class JourneyController
                 $nama_foto_db = $this->uploadFoto($_FILES['foto']);
 
                 if ($oldData['foto'] !== 'default.jpg' && !empty($oldData['foto'])) {
-                    $oldFilePath = __DIR__ . '/../../asset/images/journey/' . trim($oldData['foto']);
+                    $oldFilePath = __DIR__ . '/../../storage/images/journey/' . trim($oldData['foto']);
                     if (file_exists($oldFilePath)) {
                         unlink($oldFilePath);
                     }
@@ -103,7 +103,7 @@ class JourneyController
             ];
 
             if ($this->journeyModel->update($id, $data)) {
-                header('Location: ../../views/journey/index.php?status=updated');
+                header('Location: ../../views/journey/index.php?status=edit_sukses');
                 exit;
             }
         }
@@ -116,14 +116,14 @@ class JourneyController
 
         if ($oldData) {
             if ($oldData['foto'] !== 'default.jpg' && !empty($oldData['foto'])) {
-                $oldFilePath = __DIR__ . '/../../asset/images/journey/' . trim($oldData['foto']);
+                $oldFilePath = __DIR__ . '/../../storage/images/journey/' . trim($oldData['foto']);
                 if (file_exists($oldFilePath)) {
                     unlink($oldFilePath);
                 }
             }
 
             if ($this->journeyModel->delete($id)) {
-                header('Location: ../../views/journey/index.php?status=deleted');
+                header('Location: ../../views/journey/index.php?status=hapus_sukses');
                 exit;
             }
         } else {
@@ -138,7 +138,7 @@ class JourneyController
             return 'default.jpg';
         }
 
-        $targetDir = __DIR__ . '/../../asset/images/journey/';
+        $targetDir = __DIR__ . '/../../storage/images/journey/';
         if (!file_exists($targetDir)) {
             mkdir($targetDir, 0755, true);
         }
