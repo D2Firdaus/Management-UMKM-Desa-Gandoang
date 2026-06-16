@@ -92,21 +92,21 @@ class ProductModel
     public function getPaginated(string $search = '', int $per_page = 3, int $offset = 0)
     {
         if ($search !== '') {
-            $total_sql = "SELECT COUNT(*) FROM produk WHERE nama_produk LIKE :keyword AND status != 'dihapus'";
+            $total_sql = "SELECT COUNT(*) FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.nama_produk LIKE :keyword AND produk.status != 'dihapus'";
             $stmt_total = $this->db->prepare($total_sql);
             $stmt_total->execute([':keyword' => "%$search%"]);
         } else {
-            $total_sql = "SELECT COUNT(*) FROM produk WHERE status != 'dihapus'";
+            $total_sql = "SELECT COUNT(*) FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.status != 'dihapus'";
             $stmt_total = $this->db->query($total_sql);
         }
         $total_rows = $stmt_total->fetchColumn();
 
         if ($search !== '') {
-            $sql = "SELECT * FROM produk WHERE nama_produk LIKE :keyword AND status != 'dihapus' ORDER BY id_produk ASC LIMIT $per_page OFFSET $offset";
+            $sql = "SELECT * FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.nama_produk LIKE :keyword AND produk.status != 'dihapus' ORDER BY umkm.nama_umkm ASC LIMIT $per_page OFFSET $offset";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([':keyword' => "%$search%"]);
         } else {
-            $sql = "SELECT * FROM produk WHERE status != 'dihapus' ORDER BY id_produk ASC LIMIT $per_page OFFSET $offset";
+            $sql = "SELECT * FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.status != 'dihapus' ORDER BY umkm.nama_umkm ASC LIMIT $per_page OFFSET $offset";
             $stmt = $this->db->query($sql);
         }
 

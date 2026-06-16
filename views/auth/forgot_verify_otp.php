@@ -14,6 +14,10 @@ if (!isset($_SESSION['reset_email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi OTP - UMKM Gandoang</title>
     <style>
+        * {
+            font-family: Arial, sans-serif;
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
@@ -45,6 +49,7 @@ if (!isset($_SESSION['reset_email'])) {
         .card .logo {
             text-align: center;
             margin-bottom: 1rem;
+            justify-content: center;
         }
 
         .card h1 {

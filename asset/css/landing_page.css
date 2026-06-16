@@ -425,6 +425,8 @@ nav.scrolled-nav::before {
 
 .product-card {
 	flex: 0 0 280px;
+	width: 280px;
+	height: 380px;
 	background: white;
 	border-radius: 12px;
 	overflow: hidden;
@@ -435,14 +437,16 @@ nav.scrolled-nav::before {
 
 .product-img-wrapper {
 	width: 100%;
-	aspect-ratio: 1 / 1;
+	height: 250px;
 	background-color: #f4f4f4;
+	overflow: hidden;
 }
 
 .product-img-wrapper img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+	object-position: center;
 }
 
 .product-info {

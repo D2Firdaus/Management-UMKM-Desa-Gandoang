@@ -305,7 +305,7 @@
 
             <!-- Right: CTA Card -->
             <div class="cta-wrapper">
-                <p class="cta-text">"Stay Connected Easily with<br><?= htmlspecialchars($product['nama_umkm']) ?>"</p>
+                <p class="cta-text">"Hubungi langsung penjual <br><?= htmlspecialchars($product['nama_umkm']) ?>"</p>
                 <a href="https://wa.me/<?= $product['no_hp'] ?>?text=Halo%20saya%20tertarik%20dengan%20produk%20<?= urlencode($product['nama']) ?>%20dari%20<?= urlencode($product['nama_umkm']) ?>" target="_blank" class="btn-wa">
                     <i class="bi bi-whatsapp"></i>
                     Kirim Pesan Whatsapp

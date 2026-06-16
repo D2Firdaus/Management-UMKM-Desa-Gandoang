@@ -14,6 +14,10 @@ if (!isset($_SESSION['reg_email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Email - UMKM Gandoang</title>
     <style>
+        * {
+            font-family: Arial, sans-serif;
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
@@ -45,6 +49,7 @@ if (!isset($_SESSION['reg_email'])) {
         .card .logo {
             text-align: center;
             margin-bottom: 1rem;
+            justify-content: center;
         }
 
         .card h1 {
@@ -274,28 +279,30 @@ if (!isset($_SESSION['reg_email'])) {
         }
     </style>
 </head>
+
 <body>
     <div class="main">
         <div class="card">
             <div class="logo">
                 <img src="<?= $asset_path ?>images/logo_form.png" alt="UMKM Gandoang" style="height:55px;">
             </div>
-            
+
             <!-- otp illustration -->
             <div style="text-align: center; margin-bottom: 1.5rem;">
                 <img src="<?= $asset_path ?>images/otp.png" style="width: 140px; height: auto;">
             </div>
-            
+
             <h1>Verifikasi Email</h1>
             <p class="subtitle">Kami telah mengirimkan kode OTP ke email</p>
             <p class="email-display"><?= htmlspecialchars($_SESSION['reg_email']) ?></p>
-            
+
             <?php if (isset($_SESSION['error'])): ?>
                 <div class="error-msg">
-                    <?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                    <?= htmlspecialchars($_SESSION['error']);
+                    unset($_SESSION['error']); ?>
                 </div>
             <?php endif; ?>
-            
+
             <form action="<?= $auth_controller_path ?>AuthController.php?action=verifyOtp" method="POST">
                 <div class="otp-inputs">
                     <input type="text" name="otp1" maxlength="1" required autofocus>
@@ -305,11 +312,11 @@ if (!isset($_SESSION['reg_email'])) {
                     <input type="text" name="otp5" maxlength="1" required>
                     <input type="text" name="otp6" maxlength="1" required>
                 </div>
-                
+
                 <p class="timer">Kirim Ulang Dalam <span id="countdown">00:47</span> detik</p>
                 <button type="submit" class="btn-submit">Lanjutkan</button>
             </form>
-            
+
             <p class="resend">
                 Belum menerima kode? <a href="<?= $auth_controller_path ?>OtpController.php?action=resend">Kirim Ulang</a>
             </p>
@@ -340,4 +347,5 @@ if (!isset($_SESSION['reg_email'])) {
         }, 1000);
     </script>
 </body>
+
 </html>

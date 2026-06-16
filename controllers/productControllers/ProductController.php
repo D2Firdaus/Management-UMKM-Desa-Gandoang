@@ -11,20 +11,11 @@ class ProductController
         $this->productModel = new ProductModel($db);
     }
 
-    /**
-     * Ambil daftar UMKM milik user untuk opsi dropdown di form tambah/edit produk.
-     *
-     * @param int $id_user ID user yang sedang login (dari session)
-     * @return array Daftar UMKM aktif
-     */
     public function getUmkmList(int $id_user): array
     {
         return $this->productModel->getAllUmkmByUser($id_user);
     }
 
-    /**
-     * Menampilkan daftar produk (Index)
-     */
     public function index()
     {
         $search   = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -46,19 +37,23 @@ class ProductController
         ];
     }
 
-    /**
-     * Proses Tambah Produk
-     */
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $foto = $this->uploadFoto($_FILES['foto']);
+            
+            if ($foto === 'default.jpg') {
+                header('Location: ../../views/products/addProduct.php?status=image_required');
+                exit;
+            }
+
             $data = [
                 'id_umkm'     => $_POST['id_umkm'],
                 'nama_produk' => htmlspecialchars($_POST['nama_produk']),
                 'kategori'    => htmlspecialchars($_POST['kategori']),
                 'harga'       => (int)$_POST['harga'],
                 'deskripsi'   => htmlspecialchars($_POST['deskripsi']),
-                'foto'        => $this->uploadFoto($_FILES['foto'])
+                'foto'        => $foto
             ];
 
             if ($this->productModel->create($data)) {
@@ -75,22 +70,37 @@ class ProductController
     }
 
     public function update(string $id)
-
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $oldData = $this->productModel->getById($id);
 
-            if (!isset($_FILES['foto']['error']) || $_FILES['foto']['error'][0] === 4) {
-                $nama_foto_db = $oldData['foto'];
-            } else {
-                $nama_foto_db = $this->uploadFoto($_FILES['foto']);
+            // Ambil file lama yang tidak dihapus oleh user
+            $existing_fotos = $_POST['existing_foto'] ?? [];
 
-                if ($oldData['foto'] !== 'default.jpg' && !empty($oldData['foto'])) {
-                    // Pecah string nama file yang dipisah koma menjadi array
-                    $oldImages = explode(',', $oldData['foto']);
-                    foreach ($oldImages as $oldImage) {
-                        $oldFilePath = __DIR__ . '/../../storage/images/products/' . trim($oldImage);
-                        if (file_exists($oldFilePath) && !empty($oldImage)) {
+            // Proses upload file baru jika ada
+            $new_foto_db = '';
+            if (isset($_FILES['foto']['error']) && $_FILES['foto']['error'][0] !== 4) {
+                $new_foto_db = $this->uploadFoto($_FILES['foto']);
+            }
+
+            $new_fotos_arr = (!empty($new_foto_db) && $new_foto_db !== 'default.jpg') ? explode(',', $new_foto_db) : [];
+            $combined_fotos = array_merge($existing_fotos, $new_fotos_arr);
+
+            if (empty($combined_fotos)) {
+                header('Location: ../../views/products/editProduct.php?id=' . $id . '&status=image_required');
+                exit;
+            } else {
+                $nama_foto_db = implode(',', $combined_fotos);
+            }
+
+            // Hapus file fisik dari storage jika file lama tersebut dihapus oleh user
+            if ($oldData['foto'] !== 'default.jpg' && !empty($oldData['foto'])) {
+                $oldImages = explode(',', $oldData['foto']);
+                foreach ($oldImages as $oldImage) {
+                    $oldImageTrimmed = trim($oldImage);
+                    if (!empty($oldImageTrimmed) && !in_array($oldImageTrimmed, $existing_fotos)) {
+                        $oldFilePath = __DIR__ . '/../../storage/images/products/' . $oldImageTrimmed;
+                        if (file_exists($oldFilePath)) {
                             unlink($oldFilePath);
                         }
                     }

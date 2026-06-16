@@ -28,7 +28,7 @@ $total_umkm = $stmt->fetchColumn();
 $stmt = $conn->prepare("
     SELECT COUNT(*) FROM produk
     LEFT JOIN umkm ON produk.id_umkm = umkm.id_umkm
-    WHERE umkm.id_user = :id_user
+    WHERE umkm.id_user = :id_user AND produk.status = 'aktif'
 ");
 $stmt->execute([':id_user' => $id_user]);
 $total_produk = $stmt->fetchColumn();
@@ -38,7 +38,7 @@ $stmt = $conn->prepare("
     SELECT umkm.id_umkm, umkm.nama_umkm, COUNT(produk.id_produk) AS jumlah_produk
     FROM umkm
     LEFT JOIN produk ON umkm.id_umkm = produk.id_umkm
-    WHERE umkm.id_user = :id_user
+    WHERE umkm.id_user = :id_user AND produk.status = 'aktif'
     GROUP BY umkm.id_umkm, umkm.nama_umkm
     ORDER BY umkm.id_umkm ASC
 ");
@@ -108,12 +108,18 @@ $card_colors = [
         .stat-box.green {
             background: #e8f2e8;
         }
-        .stat-box.green .stat-number { color: #4a7c59; }
+
+        .stat-box.green .stat-number {
+            color: #4a7c59;
+        }
 
         .stat-box.orange {
             background: #fdf3e7;
         }
-        .stat-box.orange .stat-number { color: #e07b00; }
+
+        .stat-box.orange .stat-number {
+            color: #e07b00;
+        }
 
         /* Divider */
         .section-divider {

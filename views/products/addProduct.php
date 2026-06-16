@@ -21,22 +21,21 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Produk</title>
+    <title>Tambah Produk - UMKM Gandoang</title>
 
     <!-- Font Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= $asset_path ?>boostrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= $asset_path ?>css/products/addProducts.css">
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
-
 </head>
 
 <body>
@@ -46,14 +45,21 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
         <div class="main">
             <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
 
-            <div class="content container-fluid">
+            <div class="content">
                 <div class="form-card shadow-sm">
                     <h2 class="text-center fw-bold mb-5" style="color: #65835e;">Form Tambah Produk</h2>
 
-                    <form action="<?= $product_controller_path ?>AddProduct.php" method="POST" enctype="multipart/form-data">
+                    <?php if (isset($_GET['status']) && $_GET['status'] === 'image_required'): ?>
+                        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                            <strong>Gagal!</strong> Foto produk wajib diupload minimal 1 foto.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <form action="<?= $product_controller_path ?>AddProduct.php" method="POST" enctype="multipart/form-data" id="form-tambah">
 
                         <div class="row mb-3 align-items-center">
-                            <label class="col-sm-3 form-label text-end">Nama Product :</label>
+                            <label class="col-sm-3 form-label text-end">Nama Produk :</label>
                             <div class="col-sm-9">
                                 <input type="text" name="nama_produk" class="form-control bg-light" placeholder="Nama produk" required>
                             </div>
@@ -69,7 +75,7 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Harga :</label>
                             <div class="col-sm-9">
-                                <input type="number" name="harga" class="form-control bg-light" placeholder="10.000" required>
+                                <input type="number" name="harga" class="form-control bg-light" placeholder="10000" required>
                             </div>
                         </div>
 
@@ -80,7 +86,7 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
                                     <label for="foto" class="btn btn-sm btn-light border">
                                         <i class="bi bi-cloud-upload"></i> Upload
                                     </label>
-                                    <input type="file" name="foto[]" id="foto" class="d-none" onchange="previewFiles()" multiple accept=".jpg, .jpeg, .png, .webp">
+                                    <input type="file" name="foto[]" id="foto" class="d-none" onchange="previewFiles()" multiple accept=".jpg,.jpeg,.png,.webp">
                                     <div id="preview-container" class="d-flex flex-wrap flex-row gap-2 mt-2"></div>
                                 </div>
                             </div>
@@ -106,9 +112,10 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
                         <div class="row mb-4">
                             <label class="col-sm-3 form-label text-end pt-2">Deskripsi :</label>
                             <div class="col-sm-9">
-                                <textarea name="deskripsi" class="form-control bg-light" rows="4" placeholder="Good"></textarea>
+                                <textarea name="deskripsi" class="form-control bg-light" rows="4" placeholder="Deskripsi produk..."></textarea>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-sm-9 offset-sm-3 d-flex justify-content-between">
                                 <a href="index.php" class="btn btn-batal fw-bold">Batal</a>
@@ -117,6 +124,7 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
                                 </button>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -124,13 +132,11 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
     </div>
 
     <script>
-        // 1. Buat kantong penampung file global di latar belakang
         let kumpulanFile = new DataTransfer();
 
         function previewFiles() {
             const input = document.querySelector('#foto');
             const container = document.querySelector('#preview-container');
-            
             const fileBaru = input.files;
 
             Array.from(fileBaru).forEach(file => {
@@ -170,7 +176,7 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
                         </button>
                     `;
                     container.appendChild(previewBox);
-                }
+                };
 
                 reader.readAsDataURL(file);
             });
@@ -178,9 +184,8 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
 
         function removeSingleFile(index) {
             const input = document.querySelector('#foto');
-            
             const kantongBaru = new DataTransfer();
-            
+
             Array.from(kumpulanFile.files).forEach((file, i) => {
                 if (i !== index) {
                     kantongBaru.items.add(file);
@@ -188,10 +193,16 @@ $umkm_list         = $productController->getUmkmList((int) $id_user);
             });
 
             kumpulanFile = kantongBaru;
-
             input.files = kumpulanFile.files;
             renderPreview();
         }
+
+        document.querySelector('#form-tambah').addEventListener('submit', function(e) {
+            if (kumpulanFile.files.length === 0) {
+                e.preventDefault();
+                alert('Silakan upload minimal 1 foto produk!');
+            }
+        });
     </script>
     <?php ob_end_flush(); ?>
 </body>

@@ -1,6 +1,6 @@
 <?php
-session_start();
-require_once __DIR__ . '/../config/path_config.php';
+/** @var array $umkmList */
+/** @var array $productsToShow */
 $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 ?>
 <!DOCTYPE html>
@@ -93,69 +93,25 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
                     <button class="nav-btn" onclick="scrollProductCarousel(-1)">&#10094;</button>
                     <button class="nav-btn" onclick="scrollProductCarousel(1)">&#10095;</button>
                 </div>
-                <a href="#" class="btn-outline">PRODUK LAINNYA</a>
+                <a href="<?= BASE_URL ?>katalog-produk" class="btn-outline">PRODUK LAINNYA</a>
             </div>
             <div class="product-carousel">
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="<?= BASE_URL ?>asset/images/lele_segar.png" alt="Lele Segar">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag">Budidaya</span>
-                        <h3 class="product-name">Lele segar hasil budidaya warga desa kualitas terbaik</h3>
-                        <p class="product-desc">30 Desember 2006</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="<?= BASE_URL ?>asset/images/wifi_desa.png" alt="Layanan WiFi">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag">Layanan</span>
-                        <h3 class="product-name">Layanan WiFi Desa untuk Masyarakat</h3>
-                        <p class="product-desc">30 Desember 2006</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="<?= BASE_URL ?>asset/images/pakan_lele.png" alt="Pakan Lele">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag">Produk Tani</span>
-                        <h3 class="product-name">Pakan Lele Berkualitas untuk Hasil Panen Maksimal</h3>
-                        <p class="product-desc">30 Desember 2006</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="<?= BASE_URL ?>asset/images/lele_segar.png" alt="Lele Segar">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag">Budidaya</span>
-                        <h3 class="product-name">Lele segar hasil budidaya warga desa kualitas terbaik</h3>
-                        <p class="product-desc">30 Desember 2006</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="<?= BASE_URL ?>asset/images/wifi_desa.png" alt="Layanan WiFi">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag">Layanan</span>
-                        <h3 class="product-name">Layanan WiFi Desa untuk Masyarakat</h3>
-                        <p class="product-desc">30 Desember 2006</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-img-wrapper">
-                        <img src="<?= BASE_URL ?>asset/images/pakan_lele.png" alt="Pakan Lele">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-tag">Produk Tani</span>
-                        <h3 class="product-name">Pakan Lele Berkualitas untuk Hasil Panen Maksimal</h3>
-                        <p class="product-desc">30 Desember 2006</p>
-                    </div>
-                </div>
+                <?php if (!empty($productsToShow)): ?>
+                    <?php foreach ($productsToShow as $prod): ?>
+                        <div class="product-card" style="cursor: pointer;" onclick="window.location.href='<?= BASE_URL ?>katalog-produk/<?= $prod['id_produk'] ?>'">
+                            <div class="product-img-wrapper">
+                                <img src="<?= htmlspecialchars($prod['gambar']) ?>" alt="<?= htmlspecialchars($prod['nama_produk']) ?>"
+                                     onerror="this.onerror=null; this.src='<?= BASE_URL ?>asset/images/logo.png';">
+                            </div>
+                            <div class="product-info">
+                                <span class="product-tag"><?= htmlspecialchars($prod['kategori']) ?></span>
+                                <h3 class="product-name"><?= htmlspecialchars($prod['nama_produk']) ?></h3>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-muted w-100 text-center py-4">Belum ada produk tersedia.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -181,49 +137,31 @@ $is_logged_in = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // --- Data dummy UMKM terdaftar ---
-        const dummyUMKM = [{
-                nama: "Keripik Singkong Ibu Kokom",
-                deskripsi: "Produksi keripik singkong aneka rasa.",
-                lat: -6.398500,
-                lng: 107.031000
-            },
-            {
-                nama: "Kerajinan Bambu Pak Jajang",
-                deskripsi: "Berbagai anyaman bambu dan perabotan unik.",
-                lat: -6.405500,
-                lng: 107.033500
-            },
-            {
-                nama: "Kopi Seduh Gandoang",
-                deskripsi: "Kopi robusta asli panenan lokal.",
-                lat: -6.401000,
-                lng: 107.036000
-            },
-            {
-                nama: "Budidaya Lele Jaya",
-                deskripsi: "Penyedia lele konsumsi dan bibit lele.",
-                lat: -6.404500,
-                lng: 107.028500
-            },
-            {
-                nama: "Pusat Oleh-oleh Gandoang",
-                deskripsi: "Toko pusat jajan dan oleh-oleh khas desa.",
-                lat: -6.400500,
-                lng: 107.033000
-            }
-        ];
+        // --- Data UMKM terdaftar dari database ---
+        const activeUMKM = <?= json_encode($umkmList) ?>;
+        const markerList = [];
 
-        // Tampilkan marker dummy di peta menggunakan icon default
-        dummyUMKM.forEach(umkm => {
-            const marker = L.marker([umkm.lat, umkm.lng]).addTo(map);
-            marker.bindPopup(`
-                <div class="custom-popup">
-                    <div style="margin:0 0 5px 0; color:#0b1615; font-weight:700; font-size:1.1rem;">${umkm.nama}</div>
-                    <div style="font-size:0.95rem; color:#444; line-height:1.4;">${umkm.deskripsi}</div>
-                </div>
-            `);
+        // Tampilkan marker di peta menggunakan icon default
+        activeUMKM.forEach(umkm => {
+            const lat = parseFloat(umkm.latitude);
+            const lng = parseFloat(umkm.longitude);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                const marker = L.marker([lat, lng]).addTo(map);
+                marker.bindPopup(`
+                    <div class="custom-popup">
+                        <div style="margin:0 0 5px 0; color:#0b1615; font-weight:700; font-size:1.1rem;">${umkm.nama_umkm}</div>
+                        <div style="margin:0 0 5px 0; font-size:0.9rem; font-style: italic; color:#666;">${umkm.jenis_usaha}</div>
+                        <div style="font-size:0.95rem; color:#444; line-height:1.4;">${umkm.alamat}</div>
+                    </div>
+                `);
+                markerList.push(marker);
+            }
         });
+
+        if (markerList.length > 0) {
+            const group = new L.featureGroup(markerList);
+            map.fitBounds(group.getBounds().pad(0.1));
+        }
 
         window.addEventListener('scroll', function() {
             const nav = document.querySelector('nav');

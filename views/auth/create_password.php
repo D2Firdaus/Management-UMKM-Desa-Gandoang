@@ -14,6 +14,10 @@ if (!isset($_SESSION['otp_verified'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat Password - UMKM Gandoang</title>
     <style>
+        * {
+            font-family: Arial, sans-serif;
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
@@ -44,6 +48,7 @@ if (!isset($_SESSION['otp_verified'])) {
         .card .logo {
             text-align: center;
             margin-bottom: 1rem;
+            justify-content: center;
         }
 
         .card h1 {
