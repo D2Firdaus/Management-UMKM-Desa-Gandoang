@@ -1,97 +1,218 @@
+/* ===================================================================
+   addProducts.css  –  Form Add / Edit / Delete Product
+   Layout outer: matching bantuan/umkm (#f4f1eb background)
+   Form inner  : original style (form-card, btn-simpan, btn-batal)
+   =================================================================== */
+
 :root {
-  --primary-background: #fbf8f2;
-  --card-content-background: #fefdfb;
-  --font-family: Arial, sans-serif;
+	--primary-background: #fbf8f2;
+	--card-content-background: #fefdfb;
+	--font-family: Arial, sans-serif;
 }
 
 * {
-  box-sizing: border-box;
-  font-family: var(--font-family);
-  margin: 0;
-  padding: 0;
+	box-sizing: border-box;
+	font-family: var(--font-family);
+	margin: 0;
+	padding: 0;
 }
 
-
-body, html {
-  background-color: var(--primary-background);
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  overflow-x: hidden;
+body,
+html {
+	background-color: var(--primary-background);
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	overflow-x: hidden;
 }
 
+/* === MOBILE GLOBAL SCROLL FIX === */
+@media (max-width: 768px) {
+	html,
+	body {
+		height: auto;
+		overflow: auto;
+		overflow-x: hidden;
+	}
+}
+
+/* ─── Layout: wrapper ─────────────────────────────────────────────── */
 .wrapper {
-  display: flex;
-  height: 100vh; /* Gunakan height tetap agar scroll pindah ke konten */
-  width: 100%;
-  overflow: hidden; /* Wrapper memegang kontrol layar */
+	display: flex;
+	height: 100vh;
+	width: 100%;
+	overflow: hidden;
 }
 
-/* Main */
+@media (max-width: 768px) {
+	.wrapper {
+		height: auto;
+		min-height: 100vh;
+		flex-direction: column;
+	}
+
+	.wrapper > .sidebar {
+		flex: none;
+		width: 0;
+		min-width: 0;
+		padding: 0;
+		overflow: visible;
+	}
+
+	.sidebar {
+		position: fixed;
+		left: 0;
+		top: 0;
+		z-index: 1000;
+	}
+
+	.sidebar.close {
+		margin-left: -280px;
+	}
+
+	.wrapper > .main {
+		width: 100%;
+		flex: 1;
+	}
+}
+
+/* ─── Main ────────────────────────────────────────────────────────── */
 .main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  height: 100vh;
-  position: relative;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	height: 100vh;
+	position: relative;
 }
 
+@media (max-width: 768px) {
+	.main {
+		height: auto;
+		min-height: 100vh;
+		width: 100%;
+	}
+}
+
+/* ─── Content area — matching bantuan/umkm (#f4f1eb) ─────────────── */
 .content {
-  flex: 1;
-  overflow-y: auto; /* Scroll hanya di dalam area konten */
-  overflow-x: hidden;
-  padding: 25px;
-  border-radius: 2rem; /* Agar terlihat rapi di sudut */
+	flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 35px;
+	background: #f4f1eb;
 }
 
+@media (max-width: 768px) {
+	.content {
+		flex: none;
+		overflow-y: visible;
+		height: auto;
+		padding: 15px;
+		padding-bottom: 120px;
+	}
+}
+
+/* ─── Form card (original style) ─────────────────────────────────── */
 .form-card {
-  background-color: #fefdfb;
-  border-radius: 15px;
-  padding: 30px;
-  max-width: 100%;
-  box-shadow: 0 0.5rem 5px rgba(0, 0, 0, 0.3);
+	background-color: #fefdfb;
+	border-radius: 15px;
+	padding: 30px;
+	max-width: 100%;
+	box-shadow: 0 0.5rem 5px rgba(0, 0, 0, 0.3);
 }
 
+/* ─── Form labels ─────────────────────────────────────────────────── */
 .form-label {
-  font-weight: 500;
-  color: #333;
+	font-weight: 500;
+	color: #333;
 }
 
+/* ─── Tombol Simpan ───────────────────────────────────────────────── */
 .btn-simpan {
-  background-color: #65835e;
-  color: white;
-  border: none;
-  padding: 10px 25px;
+	background-color: #65835e;
+	color: white;
+	border: none;
+	padding: 10px 25px;
 }
 
 .btn-simpan:hover {
-  background-color: #556e4f;
-  color: white;
+	background-color: #556e4f;
+	color: white;
 }
 
+/* ─── Tombol Batal ────────────────────────────────────────────────── */
 .btn-batal {
-  background-color: #f1f5eb;
-  color: #65835e;
-  border: none;
-  padding: 10px 25px;
+	background-color: #f1f5eb;
+	color: #65835e;
+	border: none;
+	padding: 10px 25px;
 }
 
+.btn-batal:hover {
+	background-color: #e2e8d8;
+	color: #65835e;
+	text-decoration: none;
+}
+
+/* ─── Tombol Hapus (merah) ────────────────────────────────────────── */
+.btn-hapus {
+	background-color: #d9534f;
+	color: white;
+	border: none;
+	padding: 10px 25px;
+}
+
+.btn-hapus:hover {
+	background-color: #c9302c;
+	color: white;
+}
+
+/* ─── Upload area ─────────────────────────────────────────────────── */
 .upload-area {
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	gap: 15px;
 }
 
+/* ─── Preview box ─────────────────────────────────────────────────── */
 .preview-box {
-  border: 1px dotted #ccc;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  background: #fff;
+	border: 1px dotted #ccc;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 12px;
+	background: #fff;
+}
+
+/* ─── Info & konfirmasi hapus ─────────────────────────────────────── */
+.hapus-info {
+	font-size: 18px;
+	margin-bottom: 30px;
+	color: #444;
+}
+
+.hapus-konfirmasi {
+	text-align: center;
+	font-size: 22px;
+	margin-bottom: 60px;
+	line-height: 1.6;
+	color: #333;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+	.form-card {
+		padding: 18px;
+		border-radius: 12px;
+	}
+
+	.hapus-konfirmasi {
+		font-size: 18px;
+		margin-bottom: 35px;
+	}
 }

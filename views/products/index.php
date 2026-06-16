@@ -22,10 +22,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 $controller   = new ProductController($conn);
 $data         = $controller->index();
 
@@ -37,28 +33,52 @@ $total_pages  = $data['total_pages'];
 
 // Notifikasi status dari URL
 $status = $_GET['status'] ?? null;
+
+// ─── Popup helper ─────────────────────────────────────────────────────────────
+function productStatusPopup(string $asset_path): void
+{
+    $status_key = $_GET['status'] ?? '';
+
+    $popups = [
+        'success' => ['icon' => 'sukses.png',      'title' => 'Berhasil<br>Menambahkan', 'msg' => 'Produk Berhasil Ditambahkan'],
+        'updated' => ['icon' => 'sukses.png',      'title' => 'Berhasil<br>Memperbarui', 'msg' => 'Produk Berhasil Diperbarui'],
+        'deleted' => ['icon' => 'hapus_alert.png', 'title' => 'Berhasil<br>Menghapus',  'msg' => 'Produk Berhasil Dihapus'],
+    ];
+
+    if (!isset($popups[$status_key])) return;
+
+    $d = $popups[$status_key];
+?>
+    <div class="alert_sukses_menambah" id="statusPopup">
+        <div class="box_sukses_menambah">
+            <div class="icon_sukses_menambah">
+                <img src="<?= $asset_path ?>icon/<?= htmlspecialchars($d['icon']) ?>" alt="Status">
+            </div>
+            <h2><?= $d['title'] ?></h2>
+            <p><?= htmlspecialchars($d['msg']) ?></p>
+            <a href="index.php" class="tombol_sukses_menambah">Tutup</a>
+        </div>
+    </div>
+<?php
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products</title>
+    <title>Produk - UMKM Gandoang</title>
 
     <!-- Font Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="../../asset/icon/bootstrap-icons.min.css">
-    <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?= $asset_path ?>/css/products/products.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
     <link href="<?= $asset_path ?>boostrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?= $asset_path ?>css/products.css" rel="stylesheet">
+    <link href="<?= $asset_path ?>css/products/products.css" rel="stylesheet">
 </head>
 
 <body>
@@ -74,102 +94,91 @@ $status = $_GET['status'] ?? null;
             <!-- Navbar -->
             <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
             <!-- Akhir Navbar -->
-            <div class="content rounded-5">
-                <div class="card-header">
-                    <h1 class="fs-2 fw-bold">Detail Produk</h1>
-                    <p class="fs-5">Daftar produk yang tersedia.</p>
-                </div>
-                <?php if ($status === 'success'): ?>
-                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                        Produk berhasil ditambahkan!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php elseif ($status === 'updated'): ?>
-                    <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-                        Produk berhasil diupdate!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php elseif ($status === 'deleted'): ?>
-                    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
-                        Produk berhasil dihapus!
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-                <!-- TOOLBAR: Show Entries + Search -->
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
-                    <!-- Show entries -->
-                    <form method="GET" class="show-entries d-flex align-items-center gap-2">
-                        <label for="show">Show</label>
-                        <select name="show" id="show" onchange="this.form.submit()">
-                            <?php foreach ([3, 5, 10] as $opt): ?>
-                                <option value="<?= $opt ?>" <?= $per_page == $opt ? 'selected' : '' ?>><?= $opt ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <label>entries</label>
-                        <?php if ($search): ?>
-                            <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
-                        <?php endif; ?>
-                    </form>
 
-                    <!-- Search -->
-                    <form method="GET" class="search-form">
-                        <div class="input-group justify-content-center align-items-center border border-1 m-3 border-black rounded-3">
+            <div class="content">
+                <div class="card-dashboard">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3">
+                        <div>
+                            <h2>Daftar Produk</h2>
+                            <p>Kelola produk UMKM Anda di sini.</p>
+                        </div>
+                    </div>
+
+                    <!-- TOOLBAR: Show Entries + Search -->
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3 mt-3">
+
+                        <!-- Show entries -->
+                        <form method="GET" class="d-flex align-items-center gap-2">
+                            Show
+                            <select name="show" id="show" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                                <?php foreach ([3, 5, 10] as $opt): ?>
+                                    <option value="<?= $opt ?>" <?= $per_page == $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            entries
+                            <?php if ($search): ?>
+                                <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+                            <?php endif; ?>
+                        </form>
+
+                        <!-- Search -->
+                        <form method="GET" class="d-flex gap-2">
+                            <input type="hidden" name="show" value="<?= $per_page ?>">
                             <input
                                 type="text"
                                 name="search"
-                                class="input-group-text text-start input-search"
+                                class="form-control"
                                 placeholder="Cari Produk..."
                                 value="<?= htmlspecialchars($search) ?>"
                                 autocomplete="off">
-                            <button class="input-group-text bg-white border-0" onclick="this.form.submit()">
-                                <i class="bi bi-search"></i>
+                            <button type="submit" class="btn tombol_cari">
+                                Cari
                             </button>
-                            <input type="hidden" name="show" value="<?= $per_page ?>">
-                            <input type="hidden" name="page" value="1">
-                        </div>
-                    </form>
+                        </form>
 
-                </div>
+                    </div>
 
-                <!-- Table -->
-                <div class="table-responsive mt-3">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Nama Produk</th>
-                                <th scope="col">Harga</th>
-                                <th scope="col">Kategori</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($products)): ?>
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted py-4">Tidak ada produk ditemukan.</td>
+                                    <th scope="col">Nama Umkm</th>
+                                    <th scope="col">Nama Produk</th>
+                                    <th scope="col">Harga</th>
+                                    <th scope="col">Kategori</th>
+                                    <th scope="col">Aksi</th>
                                 </tr>
-                            <?php else: ?>
-                                <?php foreach ($products as $row): ?>
+                            </thead>
+                            <tbody>
+                                <?php if (empty($products)): ?>
                                     <tr>
-                                        <td><?= $row['id_produk'] ?></td>
-                                        <td><?= htmlspecialchars($row['nama_produk']) ?></td>
-                                        <td>Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
-                                        <td><?= htmlspecialchars($row['kategori']) ?></td>
-                                        <td>
-                                            <a href="editProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-sm btn-warning">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a href="deleteProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-sm btn-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
-                                        </td>
+                                        <td colspan="5" class="text-center text-muted py-4">Tidak ada produk ditemukan.</td>
                                     </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                    <ul class="pagination custom-pagination justify-content-center mt-4">
-                        <!-- tombol previous -->
+                                <?php else: ?>
+                                    <?php foreach ($products as $row): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($row['nama_umkm']) ?></td>
+                                            <td><?= htmlspecialchars($row['nama_produk']) ?></td>
+                                            <td>Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
+                                            <td><?= htmlspecialchars($row['kategori']) ?></td>
+                                            <td>
+                                                <a href="editProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-warning btn-sm">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a href="deleteProduct.php?id=<?= $row['id_produk'] ?>" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <ul class="pagination custom-pagination justify-content-center mt-4 flex-wrap">
                         <li class="page-item <?= ($current_page == 1) ? 'disabled' : '' ?>">
                             <a class="page-link" href="?page=<?= $current_page - 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">Previous</a>
                         </li>
@@ -182,19 +191,38 @@ $status = $_GET['status'] ?? null;
                             <a class="page-link" href="?page=<?= $current_page + 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">Next</a>
                         </li>
                     </ul>
-                    <!-- Akhir Pagination -->
-                    <!-- Add Button -->
-                    <div class="d-flex justify-content-end">
+
+                    <!-- Tombol Tambah -->
+                    <div class="d-flex justify-content-end mt-3">
                         <a href="addProduct.php" class="btn" id="tambah">
                             + Tambah Produk
                         </a>
                     </div>
+
                 </div>
+                <!-- akhir card-dashboard -->
             </div>
         </div>
     </div>
+
+    <!-- Popup Notifikasi -->
+    <?php productStatusPopup($asset_path); ?>
+    <!-- Akhir Popup Notifikasi -->
+
     <script src="<?= $asset_path ?>boostrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?= $asset_path ?>js/bantuan.js"></script>
+    <script>
+        // Auto-dismiss popup setelah 4 detik
+        setTimeout(function() {
+            const popup = document.getElementById('statusPopup');
+            if (popup) {
+                popup.style.display = 'none';
+                const url = new URL(window.location.href);
+                url.searchParams.delete('status');
+                window.history.replaceState({}, document.title, url.pathname + url.search);
+            }
+        }, 4000);
+    </script>
     <?php ob_end_flush(); ?>
 </body>
 

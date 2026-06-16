@@ -64,6 +64,7 @@ $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ad
             border: 1px solid #ced4da;
             z-index: 1;
         }
+
         .form-umkm {
             display: grid;
             grid-template-columns: 200px 20px 1fr;
@@ -93,15 +94,6 @@ $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ad
                         <h2 class="judul-form">Form Edit UMKM</h2>
 
                         <div class="form-umkm">
-
-                            <!-- Nama UMKM (read-only sebagai info) -->
-                            <label>Nama UMKM</label>
-                            <span>:</span>
-                            <input
-                                type="text"
-                                value="<?= htmlspecialchars($umkm['nama_umkm']) ?>"
-                                readonly
-                                class="form-control">
 
                             <!-- No ID UMKM -->
                             <label>No ID UMKM</label>
@@ -147,14 +139,14 @@ $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ad
                                 class="form-control"
                                 required><?= htmlspecialchars($umkm['alamat']) ?></textarea>
 
-                             <label>Lokasi Peta</label>
-                             <span>:</span>
-                             <div>
-                                 <div id="map-picker"></div>
-                                 <small class="text-muted d-block mt-1">Klik pada peta atau geser marker untuk menentukan koordinat lokasi UMKM.</small>
-                                 <input type="hidden" name="latitude" id="latitude" value="<?= htmlspecialchars($umkm['latitude'] ?? '') ?>">
-                                 <input type="hidden" name="longitude" id="longitude" value="<?= htmlspecialchars($umkm['longitude'] ?? '') ?>">
-                             </div>
+                            <label>Lokasi Peta</label>
+                            <span>:</span>
+                            <div>
+                                <div id="map-picker"></div>
+                                <small class="text-muted d-block mt-1">Klik pada peta atau geser marker untuk menentukan koordinat lokasi UMKM.</small>
+                                <input type="hidden" name="latitude" id="latitude" value="<?= htmlspecialchars($umkm['latitude'] ?? '') ?>">
+                                <input type="hidden" name="longitude" id="longitude" value="<?= htmlspecialchars($umkm['longitude'] ?? '') ?>">
+                            </div>
 
                         </div>
 
@@ -177,25 +169,25 @@ $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ad
 
     <!-- Popup gagal -->
     <?php if (isset($_GET['status']) && $_GET['status'] === 'gagal'): ?>
-    <div class="alert_sukses_menambah" id="popupGagal">
-        <div class="box_sukses_menambah">
-            <div class="icon_sukses_menambah">
-                <img src="<?= $asset_path ?>icon/hapus_alert.png" alt="Gagal">
+        <div class="alert_sukses_menambah" id="popupGagal">
+            <div class="box_sukses_menambah">
+                <div class="icon_sukses_menambah">
+                    <img src="<?= $asset_path ?>icon/hapus_alert.png" alt="Gagal">
+                </div>
+                <h2>Gagal<br>Memperbarui</h2>
+                <p>UMKM Gagal Diperbarui</p>
+                <button onclick="document.getElementById('popupGagal').style.display='none'" class="tombol_sukses_menambah">
+                    Tutup
+                </button>
             </div>
-            <h2>Gagal<br>Memperbarui</h2>
-            <p>UMKM Gagal Diperbarui</p>
-            <button onclick="document.getElementById('popupGagal').style.display='none'" class="tombol_sukses_menambah">
-                Tutup
-            </button>
         </div>
-    </div>
     <?php endif; ?>
 
     <script src="<?= $asset_path ?>boostrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?= $asset_path ?>js/bantuan.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const defaultLat = -6.4024312;
             const defaultLng = 107.0321451;
 
@@ -219,12 +211,12 @@ $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ad
                 document.getElementById('longitude').value = lng;
             }
 
-            marker.on('dragend', function (e) {
+            marker.on('dragend', function(e) {
                 const position = marker.getLatLng();
                 updateCoords(position.lat.toFixed(7), position.lng.toFixed(7));
             });
 
-            map.on('click', function (e) {
+            map.on('click', function(e) {
                 marker.setLatLng(e.latlng);
                 updateCoords(e.latlng.lat.toFixed(7), e.latlng.lng.toFixed(7));
             });

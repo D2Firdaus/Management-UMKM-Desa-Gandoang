@@ -9,6 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - UMKM Gandoang</title>
     <style>
+        * {
+            font-family: Arial, sans-serif;
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
@@ -18,7 +22,7 @@
 
         .main {
             flex: 1;
-            background: url('../asset/images/bg-desa.png') center/cover no-repeat;
+            background: url('<?= $asset_path ?>images/backround_desa.png') center/cover no-repeat;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -37,6 +41,7 @@
         .card .logo {
             text-align: center;
             margin-bottom: 0.5rem;
+            justify-content: center;
         }
 
         .card h1 {
@@ -134,7 +139,7 @@
 <body>
     <div class="main">
         <div class="card">
-            <div class="logo"><img src="<?= $asset_path ?>images/logo.png" alt="UMKM Gandoang" style="height:60px;"></div>
+            <div class="logo"><img src="<?= $asset_path ?>images/logo_form.png" alt="UMKM Gandoang" style="height:60px;"></div>
             <h1>Lupa Password</h1>
             <p class="subtitle">Masukkan email yang terdaftar untuk menerima kode OTP</p>
 

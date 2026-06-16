@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -18,7 +19,6 @@ declare(strict_types=1);
 class Encryption
 {
     private const CIPHER    = 'AES-256-CBC';
-    private const SEPARATOR = '::';
 
     /**
      * Kunci enkripsi 32-byte yang diturunkan dari SECRET_KEY di env.php.

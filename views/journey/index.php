@@ -65,7 +65,7 @@ function journeyStatusPopup(string $asset_path): void
     if (!isset($popups[$status_key])) return;
 
     $d = $popups[$status_key];
-    ?>
+?>
     <div class="alert_sukses_menambah" id="statusPopup">
         <div class="box_sukses_menambah text-center">
             <div class="icon_sukses_menambah">
@@ -78,18 +78,23 @@ function journeyStatusPopup(string $asset_path): void
     </div>
     <style>
         /* Minimal style adjustments to make svg look like the original img */
-        .box_sukses_menambah { padding: 30px; }
-        .icon_sukses_menambah { margin-bottom: 15px; }
+        .box_sukses_menambah {
+            padding: 30px;
+        }
+
+        .icon_sukses_menambah {
+            margin-bottom: 15px;
+        }
     </style>
-    <?php
+<?php
 }
 
 $sidebar_file = (
     isset($_SESSION['user_role']) &&
     $_SESSION['user_role'] === 'admin'
 )
-? 'sidebar_admin.php'
-: 'sidebar_user.php';
+    ? 'sidebar_admin.php'
+    : 'sidebar_user.php';
 ?>
 
 <!DOCTYPE html>
@@ -103,7 +108,7 @@ $sidebar_file = (
     <!-- bootstrap -->
     <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
-    
+
     <!-- css -->
     <link href="<?= $asset_path ?>css/bantuan.css" rel="stylesheet">
     <!-- custom journey css -->
@@ -118,14 +123,14 @@ $sidebar_file = (
         <!-- sidebar -->
         <?php require_once __DIR__ . '/../layouts/' . $sidebar_file; ?>
         <!-- akhir sidebar -->
-        
+
         <!-- Content -->
         <div class="main">
 
             <!-- Navbar -->
             <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
             <!-- Akhir Navbar -->
-            
+
             <div class="content">
                 <div class="card-dashboard">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-4 gap-3">
@@ -167,18 +172,18 @@ $sidebar_file = (
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>nama_umkm</th>
+                                    <th>Nama Umkm</th>
                                     <th>Tanggal</th>
                                     <th>Deskripsi</th>
-                                    <th>foto</th>
-                                    <th>aksi</th>
+                                    <th>Foto</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if (count($journeys) > 0): ?>
-                                    <?php 
+                                    <?php
                                     $no = ($current_page - 1) * $per_page + 1;
-                                    foreach ($journeys as $row): 
+                                    foreach ($journeys as $row):
                                     ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
@@ -210,35 +215,35 @@ $sidebar_file = (
                     <div class="position-relative d-flex justify-content-center align-items-center mt-3 flex-column flex-md-row">
                         <!-- Pagination -->
                         <?php if (count($journeys) > 0): ?>
-                        <nav aria-label="Page navigation" class="mb-3 mb-md-0">
-                            <ul class="pagination pagination-sm m-0 custom-pagination">
-                                <?php if ($current_page > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?= $current_page - 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">previous</a>
-                                    </li>
-                                <?php else: ?>
-                                    <li class="page-item disabled">
-                                        <span class="page-link">previous</span>
-                                    </li>
-                                <?php endif; ?>
+                            <nav aria-label="Page navigation" class="mb-3 mb-md-0">
+                                <ul class="pagination pagination-sm m-0 custom-pagination">
+                                    <?php if ($current_page > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<?= $current_page - 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">previous</a>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">previous</span>
+                                        </li>
+                                    <?php endif; ?>
 
-                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                    <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
-                                        <a class="page-link" href="?page=<?= $i ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>"><?= $i ?></a>
-                                    </li>
-                                <?php endfor; ?>
+                                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                        <li class="page-item <?= ($i == $current_page) ? 'active' : '' ?>">
+                                            <a class="page-link" href="?page=<?= $i ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>"><?= $i ?></a>
+                                        </li>
+                                    <?php endfor; ?>
 
-                                <?php if ($current_page < $total_pages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?= $current_page + 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">next</a>
-                                    </li>
-                                <?php else: ?>
-                                    <li class="page-item disabled">
-                                        <span class="page-link">next</span>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
+                                    <?php if ($current_page < $total_pages): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<?= $current_page + 1 ?>&show=<?= $per_page ?>&search=<?= urlencode($search) ?>">next</a>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">next</span>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
                         <?php endif; ?>
 
                         <!-- Button Tambah Journey -->
@@ -262,14 +267,14 @@ $sidebar_file = (
 
     <!-- Modal Image -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-transparent border-0 shadow-none">
-          <div class="modal-body text-center position-relative p-0">
-            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 1055; background-color: rgba(0,0,0,0.5); border-radius: 50%;"></button>
-            <img id="modalImage" src="" class="img-fluid rounded" alt="Enlarged Image" style="max-height: 90vh;">
-          </div>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-transparent border-0 shadow-none">
+                <div class="modal-body text-center position-relative p-0">
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 1055; background-color: rgba(0,0,0,0.5); border-radius: 50%;"></button>
+                    <img id="modalImage" src="" class="img-fluid rounded" alt="Enlarged Image" style="max-height: 90vh;">
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
     <!-- Popup Notifikasi -->
@@ -281,7 +286,7 @@ $sidebar_file = (
 
     <script>
         // Auto-dismiss popup setelah 4 detik
-        setTimeout(function () {
+        setTimeout(function() {
             const popup = document.getElementById('statusPopup');
             if (popup) {
                 popup.style.display = 'none';

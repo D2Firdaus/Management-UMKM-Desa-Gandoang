@@ -174,9 +174,9 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="wrapper">
 
         <!-- sidebar -->
-        <?php 
+        <?php
         $sidebar_file = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'sidebar_admin.php' : 'sidebar_user.php';
-        require_once __DIR__ . '/../layouts/' . $sidebar_file; 
+        require_once __DIR__ . '/../layouts/' . $sidebar_file;
         ?>
         <!-- akhir sidebar -->
 
@@ -235,47 +235,38 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <table class="table align-middle">
                             <thead>
                                 <tr>
-                                    <th>id_kebutuhan</th>
-                                    <th>nama_umkm</th>
-                                    <th>prioritas</th>
-                                    <th>nama_pengaju</th>
-                                    <th>nama_validator</th>
-                                    <th>jenis_bantuan</th>
-                                    <th>tanggal_pengajuan</th>
-                                    <th>tanggal_validasi</th>
+                                    <th>Nama UMKM</th>
+                                    <th>Prioritas</th>
+                                    <th>Jenis Bantuan</th>
+                                    <th>Tanggal Pengajuan</th>
+                                    <th>Tanggal Validasi</th>
                                     <th>Catatan</th>
-                                    <th>deskripsi</th>
-                                    <th>status</th>
-                                    <th>aksi</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($data as $row): ?>
-                                    <tr>
-                                        <td><?= $row['id_kebutuhan']; ?></td>
-                                        <td><?= htmlspecialchars($row['nama_umkm']); ?></td>
-                                        <td><?= htmlspecialchars($row['prioritas']); ?></td>
-                                        <td><?= htmlspecialchars($row['nama_pengaju'] ?? 'Tidak diketahui'); ?></td>
-                                        <td><?= $row['tanggal_validasi'] ? htmlspecialchars($row['nama_validator']) : 'Belum divalidasi'; ?></td>
-                                        <td><?= htmlspecialchars($row['jenis']); ?></td>
-                                        <td><?= $row['tanggal_pengajuan']; ?></td>
-                                        <td><?= $row['tanggal_validasi'] ?? 'Null'; ?></td>
-                                        <td><?= $row['catatan'] ? htmlspecialchars($row['catatan']) : 'Belum ada catatan'; ?></td>
-                                        <td><?= htmlspecialchars($row['deskripsi']); ?></td>
-                                        <td>
-                                            <span class="<?= $row['status']; ?>">
-                                                <?= $row['status']; ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="edit_bantuan.php?id=<?= $row['id_kebutuhan'] ?>" class="btn btn-warning btn-sm">
-                                                <img src="<?= $asset_path ?>/icon/edit.png" width="30px" height="30px">
-                                            </a>
+                                    <td><?= htmlspecialchars($row['nama_umkm']); ?></td>
+                                    <td><?= htmlspecialchars($row['prioritas']); ?></td>
+                                    <td><?= htmlspecialchars($row['jenis']); ?></td>
+                                    <td><?= $row['tanggal_pengajuan']; ?></td>
+                                    <td><?= $row['tanggal_validasi'] ?? '-'; ?></td>
+                                    <td><?= $row['catatan'] ? htmlspecialchars($row['catatan']) : 'Belum ada catatan'; ?></td>
+                                    <td>
+                                        <span class="<?= $row['status']; ?>">
+                                            <?= $row['status']; ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="edit_bantuan.php?id=<?= $row['id_kebutuhan'] ?>" class="btn btn-warning btn-sm">
+                                            <img src="<?= $asset_path ?>/icon/edit.png" width="30px" height="30px">
+                                        </a>
 
-                                            <a href="hapus_bantuan.php?id=<?= $row['id_kebutuhan'] ?>" class="btn btn-danger btn-sm">
-                                                <img src="<?= $asset_path ?>icon/hapus.png" style="padding:5px" width="30px" height="30px">
-                                            </a>
-                                        </td>
+                                        <a href="hapus_bantuan.php?id=<?= $row['id_kebutuhan'] ?>" class="btn btn-danger btn-sm">
+                                            <img src="<?= $asset_path ?>icon/hapus.png" style="padding:5px" width="30px" height="30px">
+                                        </a>
+                                    </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -295,7 +286,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </li>
 
                         <!-- nomor halaman -->
-                        <?php 
+                        <?php
                         $start_page = 1;
                         if ($page >= 5) {
                             $start_page = floor($page / 5) * 5;
@@ -304,7 +295,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         if ($start_page > 1 && $start_page > $total_page) {
                             $start_page = max(1, $total_page - 5);
                         }
-                        for ($i = $start_page; $i <= $end_page; $i++) { 
+                        for ($i = $start_page; $i <= $end_page; $i++) {
                         ?>
                             <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
                                 <a class="page-link" href="?page=<?= $i ?>&limit=<?= $limit ?>">

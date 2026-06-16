@@ -1,8 +1,3 @@
-<?php
-if (!isset($product)) {
-    die('Akses langsung tidak diizinkan atau data produk tidak ditemukan.');
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -310,7 +305,7 @@ if (!isset($product)) {
 
             <!-- Right: CTA Card -->
             <div class="cta-wrapper">
-                <p class="cta-text">"Stay Connected Easily with<br><?= htmlspecialchars($product['nama_umkm']) ?>"</p>
+                <p class="cta-text">"Hubungi langsung penjual <br><?= htmlspecialchars($product['nama_umkm']) ?>"</p>
                 <a href="https://wa.me/<?= $product['no_hp'] ?>?text=Halo%20saya%20tertarik%20dengan%20produk%20<?= urlencode($product['nama']) ?>%20dari%20<?= urlencode($product['nama_umkm']) ?>" target="_blank" class="btn-wa">
                     <i class="bi bi-whatsapp"></i>
                     Kirim Pesan Whatsapp
@@ -359,9 +354,9 @@ if (!isset($product)) {
                 document.head.appendChild(style);
             }
 
-            // Initialize Map
-            const defaultLat = -6.4024312;
-            const defaultLng = 107.0321451;
+            // Initialize Map — koordinat dari database UMKM
+            const defaultLat = <?= !empty($product['latitude'])  ? (float)$product['latitude']  : -6.4024312 ?>;
+            const defaultLng = <?= !empty($product['longitude']) ? (float)$product['longitude'] : 107.0321451 ?>;
 
             const map = L.map('map-manual-picker').setView([defaultLat, defaultLng], 15);
 

@@ -4,26 +4,38 @@ ob_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 require_once __DIR__ . '/../../config/path_config.php';
+require_once __DIR__ . '/../../config/koneksi.php';
+require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
+
+$id_user = $_SESSION['user_id'] ?? null;
+
+if (!$id_user) {
+    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    exit;
+}
+
+$productController = new ProductController($conn);
+$umkm_list         = $productController->getUmkmList((int) $id_user);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Produk</title>
+    <title>Tambah Produk - UMKM Gandoang</title>
 
     <!-- Font Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= $asset_path ?>boostrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= $asset_path ?>css/products/addProducts.css">
     <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
-
 </head>
 
 <body>
@@ -33,14 +45,21 @@ require_once __DIR__ . '/../../config/path_config.php';
         <div class="main">
             <?php require_once __DIR__ . '/../layouts/navbar_user.php'; ?>
 
-            <div class="content container-fluid">
+            <div class="content">
                 <div class="form-card shadow-sm">
                     <h2 class="text-center fw-bold mb-5" style="color: #65835e;">Form Tambah Produk</h2>
 
-                    <form action="<?= $product_controller_path ?>AddProduct.php" method="POST" enctype="multipart/form-data">
+                    <?php if (isset($_GET['status']) && $_GET['status'] === 'image_required'): ?>
+                        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                            <strong>Gagal!</strong> Foto produk wajib diupload minimal 1 foto.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <form action="<?= $product_controller_path ?>AddProduct.php" method="POST" enctype="multipart/form-data" id="form-tambah">
 
                         <div class="row mb-3 align-items-center">
-                            <label class="col-sm-3 form-label text-end">Nama Product :</label>
+                            <label class="col-sm-3 form-label text-end">Nama Produk :</label>
                             <div class="col-sm-9">
                                 <input type="text" name="nama_produk" class="form-control bg-light" placeholder="Nama produk" required>
                             </div>
@@ -56,7 +75,7 @@ require_once __DIR__ . '/../../config/path_config.php';
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Harga :</label>
                             <div class="col-sm-9">
-                                <input type="number" name="harga" class="form-control bg-light" placeholder="10.000" required>
+                                <input type="number" name="harga" class="form-control bg-light" placeholder="10000" required>
                             </div>
                         </div>
 
@@ -67,7 +86,7 @@ require_once __DIR__ . '/../../config/path_config.php';
                                     <label for="foto" class="btn btn-sm btn-light border">
                                         <i class="bi bi-cloud-upload"></i> Upload
                                     </label>
-                                    <input type="file" name="foto[]" id="foto" class="d-none" onchange="previewFiles()" multiple accept=".jpg, .jpeg, .png, .webp">
+                                    <input type="file" name="foto[]" id="foto" class="d-none" onchange="previewFiles()" multiple accept=".jpg,.jpeg,.png,.webp">
                                     <div id="preview-container" class="d-flex flex-wrap flex-row gap-2 mt-2"></div>
                                 </div>
                             </div>
@@ -76,9 +95,16 @@ require_once __DIR__ . '/../../config/path_config.php';
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Pilih UMKM :</label>
                             <div class="col-sm-9">
-                                <select name="id_umkm" class="form-select bg-light" style="width: 200px;">
-                                    <option value="84d1cc3f-60bc-11f1-bf39-00e01e54316e">Warung Makan Barokah</option>
-                                    <option value="84d1cc3f-60bc-11f1-bf39-00e01e54316e">Toko Kelontong Sejahtera</option>
+                                <select name="id_umkm" class="form-select bg-light" style="width: 200px;" required>
+                                    <option value="" disabled selected>-- Pilih UMKM --</option>
+                                    <?php foreach ($umkm_list as $umkm): ?>
+                                        <option value="<?= htmlspecialchars($umkm['id_umkm']) ?>">
+                                            <?= htmlspecialchars($umkm['nama_umkm']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                    <?php if (empty($umkm_list)): ?>
+                                        <option value="" disabled>Belum ada UMKM aktif</option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>
@@ -86,9 +112,10 @@ require_once __DIR__ . '/../../config/path_config.php';
                         <div class="row mb-4">
                             <label class="col-sm-3 form-label text-end pt-2">Deskripsi :</label>
                             <div class="col-sm-9">
-                                <textarea name="deskripsi" class="form-control bg-light" rows="4" placeholder="Good"></textarea>
+                                <textarea name="deskripsi" class="form-control bg-light" rows="4" placeholder="Deskripsi produk..."></textarea>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-sm-9 offset-sm-3 d-flex justify-content-between">
                                 <a href="index.php" class="btn btn-batal fw-bold">Batal</a>
@@ -97,6 +124,7 @@ require_once __DIR__ . '/../../config/path_config.php';
                                 </button>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -104,13 +132,11 @@ require_once __DIR__ . '/../../config/path_config.php';
     </div>
 
     <script>
-        // 1. Buat kantong penampung file global di latar belakang
         let kumpulanFile = new DataTransfer();
 
         function previewFiles() {
             const input = document.querySelector('#foto');
             const container = document.querySelector('#preview-container');
-            
             const fileBaru = input.files;
 
             Array.from(fileBaru).forEach(file => {
@@ -150,7 +176,7 @@ require_once __DIR__ . '/../../config/path_config.php';
                         </button>
                     `;
                     container.appendChild(previewBox);
-                }
+                };
 
                 reader.readAsDataURL(file);
             });
@@ -158,9 +184,8 @@ require_once __DIR__ . '/../../config/path_config.php';
 
         function removeSingleFile(index) {
             const input = document.querySelector('#foto');
-            
             const kantongBaru = new DataTransfer();
-            
+
             Array.from(kumpulanFile.files).forEach((file, i) => {
                 if (i !== index) {
                     kantongBaru.items.add(file);
@@ -168,10 +193,16 @@ require_once __DIR__ . '/../../config/path_config.php';
             });
 
             kumpulanFile = kantongBaru;
-
             input.files = kumpulanFile.files;
             renderPreview();
         }
+
+        document.querySelector('#form-tambah').addEventListener('submit', function(e) {
+            if (kumpulanFile.files.length === 0) {
+                e.preventDefault();
+                alert('Silakan upload minimal 1 foto produk!');
+            }
+        });
     </script>
     <?php ob_end_flush(); ?>
 </body>

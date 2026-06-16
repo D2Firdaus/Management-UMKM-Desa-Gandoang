@@ -8,6 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk - UMKM Gandoang</title>
     <style>
+        * {
+            font-family: Arial, sans-serif;
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
@@ -48,6 +52,7 @@
         .card .logo {
             text-align: center;
             margin-bottom: 1.5rem;
+            justify-content: center;
         }
 
         .card h1 {
@@ -202,9 +207,18 @@
         }
 
         @media (max-width: 768px) {
-            .main { padding: 1.5rem 1rem; }
-            .card { padding: 2rem 1.5rem; border-radius: 20px; }
-            .card h1 { font-size: 1.5rem; }
+            .main {
+                padding: 1.5rem 1rem;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .card h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
