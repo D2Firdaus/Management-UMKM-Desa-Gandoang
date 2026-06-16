@@ -354,9 +354,9 @@
                 document.head.appendChild(style);
             }
 
-            // Initialize Map
-            const defaultLat = -6.4024312;
-            const defaultLng = 107.0321451;
+            // Initialize Map — koordinat dari database UMKM
+            const defaultLat = <?= !empty($product['latitude'])  ? (float)$product['latitude']  : -6.4024312 ?>;
+            const defaultLng = <?= !empty($product['longitude']) ? (float)$product['longitude'] : 107.0321451 ?>;
 
             const map = L.map('map-manual-picker').setView([defaultLat, defaultLng], 15);
 

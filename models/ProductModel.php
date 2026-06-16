@@ -70,6 +70,25 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Ambil daftar UMKM milik user untuk opsi dropdown.
+     * Hanya UMKM dengan status 'aktif' yang ditampilkan.
+     *
+     * @param int $id_user ID user yang sedang login
+     * @return array Daftar UMKM [ ['id_umkm' => ..., 'nama_umkm' => ...], ... ]
+     */
+    public function getAllUmkmByUser(int $id_user): array
+    {
+        $sql = "SELECT id_umkm, nama_umkm
+                FROM umkm
+                WHERE id_user = :id_user AND status = 'aktif'
+                ORDER BY nama_umkm ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id_user' => $id_user]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getPaginated(string $search = '', int $per_page = 3, int $offset = 0)
     {
         if ($search !== '') {
