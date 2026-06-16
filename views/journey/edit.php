@@ -47,6 +47,7 @@ $sidebar_file = (
 
     <!-- bootstrap -->
     <link href="<?= $asset_path ?>/boostrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= $asset_path ?>icon/bootstrap-icons.min.css">
     
     <!-- css -->
     <link href="<?= $asset_path ?>css/bantuan.css" rel="stylesheet">
@@ -79,10 +80,7 @@ $sidebar_file = (
                             <span class="fw-bold" style="width: 100px;">Deskripsi</span>
                             <span>: <?= htmlspecialchars($journey['deskripsi']) ?></span>
                         </div>
-                        <div class="d-flex mb-1">
-                            <span class="fw-bold" style="width: 100px;">No ID</span>
-                            <span>: <?= $journey['id_journey'] ?></span>
-                        </div>
+
                         <div class="d-flex mb-1">
                             <span class="fw-bold" style="width: 100px;">Tanggal</span>
                             <span>: <?= date('d F Y', strtotime($journey['tanggal'])) ?></span>
@@ -102,7 +100,7 @@ $sidebar_file = (
                             <div class="col-md-9">
                                 <div class="d-flex align-items-center">
                                     <span class="me-3">:</span>
-                                    <input type="date" name="tanggal" id="tanggal" class="form-control" value="<?= $journey['tanggal'] ?>" required>
+                                    <input type="date" name="tanggal" id="tanggal" class="form-control" value="<?= $journey['tanggal'] ?>" onclick="this.showPicker()" required>
                                 </div>
                             </div>
                         </div>
@@ -128,25 +126,25 @@ $sidebar_file = (
                                     <span class="me-3">:</span>
                                     <div class="file-upload-wrapper w-100 d-flex flex-column flex-md-row gap-3">
                                         <button type="button" class="btn btn-upload-custom d-flex align-items-center justify-content-center" onclick="document.getElementById('foto').click()">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill me-2" viewBox="0 0 16 16">
-                                              <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2zm2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2z"/>
-                                            </svg>
+                                            <i class="bi bi-cloud-arrow-up-fill me-2"></i>
                                             Upload
                                         </button>
                                         <input type="file" name="foto" id="foto" class="d-none" accept=".jpg,.jpeg,.png,.webp" onchange="previewImage(this)">
                                         
                                         <!-- Image Preview Box -->
-                                        <div id="imagePreviewContainer" class="image-preview-box align-items-center flex-grow-1 p-2 border rounded d-flex bg-white">
-                                            <img id="imagePreview" src="<?= $asset_path ?>images/journey/<?= $journey['foto'] ?>" alt="Preview" class="preview-img me-3">
-                                            <div class="preview-info flex-grow-1">
-                                                <div id="fileName" class="fw-bold file-name-text text-truncate"><?= htmlspecialchars($journey['foto']) ?></div>
-                                                <div id="fileSize" class="text-muted small">Current Image</div>
+                                        <div id="imagePreviewContainer" class="flex-grow-1">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="image-preview-box align-items-center p-2 border rounded d-flex bg-white flex-grow-0" style="min-width: 250px;">
+                                                    <img id="imagePreview" src="<?= BASE_URL ?>storage/images/journey/<?= $journey['foto'] ?>" alt="Preview" class="preview-img me-3" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                                    <div class="preview-info" style="min-width: 0;">
+                                                        <div id="fileName" class="fw-bold file-name-text text-truncate" style="font-size: 14px;"><?= htmlspecialchars($journey['foto']) ?></div>
+                                                        <div id="fileSize" class="text-muted small" style="font-size: 12px;">Current Image</div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-outline-danger d-flex align-items-center justify-content-center d-none" id="btnRemoveImage" onclick="removeImage()" style="width: 38px; height: 38px; padding: 0; flex-shrink: 0;">
+                                                    <i class="bi bi-trash-fill"></i>
+                                                </button>
                                             </div>
-                                            <button type="button" class="btn btn-sm btn-outline-danger ms-2 d-none" id="btnRemoveImage" onclick="removeImage()">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                                                </svg>
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -175,10 +173,7 @@ $sidebar_file = (
                         <div class="d-flex justify-content-between mt-5">
                             <a href="index.php" class="btn btn-batal px-5 py-2">Batal</a>
                             <button type="submit" class="btn btn-simpan px-4 py-2 d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy-fill me-2" viewBox="0 0 16 16">
-                                  <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5H14v-5.5A1.5 1.5 0 0 0 12.5 9h-9A1.5 1.5 0 0 0 2 10.5V16h-.5A1.5 1.5 0 0 1 0 14.5v-13Z"/>
-                                  <path d="M3 16h10v-5.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5V16Zm9-16H4v5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V0ZM9 1h2v4H9V1Z"/>
-                                </svg>
+                                <i class="bi bi-floppy-fill me-2"></i>
                                 Simpan
                             </button>
                         </div>

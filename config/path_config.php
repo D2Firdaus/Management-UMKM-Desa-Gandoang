@@ -19,3 +19,4 @@ $auth_controller_path = CONTROLLER_PATH . 'authControllers/';
 $bantuan_controller_path = CONTROLLER_PATH . 'bantuanControllers/';
 $product_controller_path = CONTROLLER_PATH . 'productControllers/';
 $umkm_controller_path    = CONTROLLER_PATH . 'umkmControllers/';
+$journey_controller_path = CONTROLLER_PATH . 'journeyControllers/';
