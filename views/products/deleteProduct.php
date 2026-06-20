@@ -2,9 +2,18 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../../config/path_config.php';
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
+
+$id_user = $_SESSION['user_id'] ?? null;
+if (!$id_user) {
+    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    exit;
+}
 
 $id = $_GET['id'] ?? null;
 
@@ -14,8 +23,7 @@ if (!$id) {
 }
 
 $controller = new ProductController($conn);
-$product    = $controller->getProductById($id);
-$product    = $controller->getProductById($id);
+$product    = $controller->getProductByIdAndUser($id, (int)$id_user);
 
 if (!$product) {
     header("Location: index.php");

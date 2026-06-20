@@ -23,7 +23,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $controller   = new ProductController($conn);
-$data         = $controller->index();
+$data         = $controller->index((int)$id_user);
 
 $products     = $data['products'];
 $search       = $data['search'];

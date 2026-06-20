@@ -8,6 +8,9 @@ class ProductController
 
     public function __construct(PDO $db)
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $this->productModel = new ProductModel($db);
     }
 
@@ -16,15 +19,14 @@ class ProductController
         return $this->productModel->getAllUmkmByUser($id_user);
     }
 
-    public function index()
+    public function index(int $id_user)
     {
         $search   = isset($_GET['search']) ? trim($_GET['search']) : '';
         $per_page = isset($_GET['show'])   ? (int)$_GET['show']    : 3;
         $page     = isset($_GET['page'])   ? (int)$_GET['page']    : 1;
         $offset   = ($page - 1) * $per_page;
 
-        $result = $this->productModel->getPaginated($search, $per_page, $offset);
-
+        $result = $this->productModel->getPaginated($id_user, $search, $per_page, $offset);
 
         $total_pages = ceil($result['total_count'] / $per_page);
 
@@ -40,6 +42,20 @@ class ProductController
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id_user = $_SESSION['user_id'] ?? null;
+            if (!$id_user) {
+                header('Location: ../../views/auth/login.php');
+                exit;
+            }
+
+            $id_umkm = $_POST['id_umkm'] ?? null;
+            $umkm_list = $this->getUmkmList((int)$id_user);
+            $allowed_umkm_ids = array_column($umkm_list, 'id_umkm');
+            if (!$id_umkm || !in_array($id_umkm, $allowed_umkm_ids)) {
+                header('Location: ../../views/products/index.php');
+                exit;
+            }
+
             $foto = $this->uploadFoto($_FILES['foto']);
             
             if ($foto === 'default.jpg') {
@@ -48,7 +64,7 @@ class ProductController
             }
 
             $data = [
-                'id_umkm'     => $_POST['id_umkm'],
+                'id_umkm'     => $id_umkm,
                 'nama_produk' => htmlspecialchars($_POST['nama_produk']),
                 'kategori'    => htmlspecialchars($_POST['kategori']),
                 'harga'       => (int)$_POST['harga'],
@@ -64,15 +80,37 @@ class ProductController
     }
 
     public function getProductById(string $id): array|false
-
     {
         return $this->productModel->getById($id);
+    }
+
+    public function getProductByIdAndUser(string $id, int $id_user): array|false
+    {
+        return $this->productModel->getByIdAndUser($id, $id_user);
     }
 
     public function update(string $id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $oldData = $this->productModel->getById($id);
+            $id_user = $_SESSION['user_id'] ?? null;
+            if (!$id_user) {
+                header('Location: ../../views/auth/login.php');
+                exit;
+            }
+
+            $oldData = $this->productModel->getByIdAndUser($id, (int)$id_user);
+            if (!$oldData) {
+                header('Location: ../../views/products/index.php');
+                exit;
+            }
+
+            $id_umkm = $_POST['id_umkm'] ?? null;
+            $umkm_list = $this->getUmkmList((int)$id_user);
+            $allowed_umkm_ids = array_column($umkm_list, 'id_umkm');
+            if (!$id_umkm || !in_array($id_umkm, $allowed_umkm_ids)) {
+                header('Location: ../../views/products/index.php');
+                exit;
+            }
 
             // Ambil file lama yang tidak dihapus oleh user
             $existing_fotos = $_POST['existing_foto'] ?? [];
@@ -108,7 +146,7 @@ class ProductController
             }
 
             $data = [
-                'id_umkm'     => $_POST['id_umkm'],
+                'id_umkm'     => $id_umkm,
                 'nama_produk' => htmlspecialchars($_POST['nama_produk']),
                 'kategori'    => htmlspecialchars($_POST['kategori']),
                 'harga'       => (int)$_POST['harga'],
@@ -124,9 +162,18 @@ class ProductController
     }
 
     public function delete(string $id)
-
     {
-        $oldData = $this->productModel->getById($id);
+        $id_user = $_SESSION['user_id'] ?? null;
+        if (!$id_user) {
+            header('Location: ../../views/auth/login.php');
+            exit;
+        }
+
+        $oldData = $this->productModel->getByIdAndUser($id, (int)$id_user);
+        if (!$oldData) {
+            header('Location: ../../views/products/index.php');
+            exit;
+        }
 
         if ($this->productModel->delete($id)) {
             header('Location: ../../views/products/index.php?status=deleted');
