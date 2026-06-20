@@ -1,7 +1,16 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../../config/path_config.php';
 require_once __DIR__ . '/../../config/koneksi.php';
 require_once __DIR__ . '/../../controllers/productControllers/ProductController.php';
+
+$id_user = $_SESSION['user_id'] ?? null;
+if (!$id_user) {
+    header('Location: ' . BASE_URL . 'views/auth/login.php');
+    exit;
+}
 
 $id = $_GET['id'] ?? null;
 if (!$id) {
@@ -10,12 +19,14 @@ if (!$id) {
 }
 
 $controller = new ProductController($conn);
-$product    = $controller->getProductById($id);
+$product    = $controller->getProductByIdAndUser($id, (int)$id_user);
 
 if (!$product) {
     header("Location: index.php");
     exit;
 }
+
+$umkm_list = $controller->getUmkmList((int)$id_user);
 ?>
 
 <!DOCTYPE html>
@@ -129,9 +140,15 @@ if (!$product) {
                         <div class="row mb-3 align-items-center">
                             <label class="col-sm-3 form-label text-end">Pilih UMKM :</label>
                             <div class="col-sm-9">
-                                <select name="id_umkm" class="form-select bg-light" style="width: 200px;">
-                                    <option value="1" <?= ($product['id_umkm'] == 1) ? 'selected' : ''; ?>>Konveksi</option>
-                                    <option value="2" <?= ($product['id_umkm'] == 2) ? 'selected' : ''; ?>>Kuliner</option>
+                                <select name="id_umkm" class="form-select bg-light" style="width: 200px;" required>
+                                    <?php foreach ($umkm_list as $umkm): ?>
+                                        <option value="<?= htmlspecialchars($umkm['id_umkm']) ?>" <?= ($product['id_umkm'] == $umkm['id_umkm']) ? 'selected' : ''; ?>>
+                                            <?= htmlspecialchars($umkm['nama_umkm']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                    <?php if (empty($umkm_list)): ?>
+                                        <option value="" disabled>Belum ada UMKM aktif</option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>

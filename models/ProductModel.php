@@ -18,6 +18,17 @@ class ProductModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getByIdAndUser(string $id, int $id_user)
+    {
+        $sql = "SELECT p.* FROM produk p 
+                JOIN umkm u ON p.id_umkm = u.id_umkm 
+                WHERE p.id_produk = :id AND u.id_user = :id_user";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $id, ':id_user' => $id_user]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function create(array $data)
     {
         $sql = "INSERT INTO produk (id_umkm, nama_produk, kategori, harga, deskripsi, foto) 
@@ -89,25 +100,27 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getPaginated(string $search = '', int $per_page = 3, int $offset = 0)
+    public function getPaginated(int $id_user, string $search = '', int $per_page = 3, int $offset = 0)
     {
         if ($search !== '') {
-            $total_sql = "SELECT COUNT(*) FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.nama_produk LIKE :keyword AND produk.status != 'dihapus'";
+            $total_sql = "SELECT COUNT(*) FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.nama_produk LIKE :keyword AND produk.status != 'dihapus' AND umkm.id_user = :id_user";
             $stmt_total = $this->db->prepare($total_sql);
-            $stmt_total->execute([':keyword' => "%$search%"]);
+            $stmt_total->execute([':keyword' => "%$search%", ':id_user' => $id_user]);
         } else {
-            $total_sql = "SELECT COUNT(*) FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.status != 'dihapus'";
-            $stmt_total = $this->db->query($total_sql);
+            $total_sql = "SELECT COUNT(*) FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.status != 'dihapus' AND umkm.id_user = :id_user";
+            $stmt_total = $this->db->prepare($total_sql);
+            $stmt_total->execute([':id_user' => $id_user]);
         }
         $total_rows = $stmt_total->fetchColumn();
 
         if ($search !== '') {
-            $sql = "SELECT * FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.nama_produk LIKE :keyword AND produk.status != 'dihapus' ORDER BY umkm.nama_umkm ASC LIMIT $per_page OFFSET $offset";
+            $sql = "SELECT * FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.nama_produk LIKE :keyword AND produk.status != 'dihapus' AND umkm.id_user = :id_user ORDER BY umkm.nama_umkm ASC LIMIT $per_page OFFSET $offset";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([':keyword' => "%$search%"]);
+            $stmt->execute([':keyword' => "%$search%", ':id_user' => $id_user]);
         } else {
-            $sql = "SELECT * FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.status != 'dihapus' ORDER BY umkm.nama_umkm ASC LIMIT $per_page OFFSET $offset";
-            $stmt = $this->db->query($sql);
+            $sql = "SELECT * FROM produk JOIN umkm ON produk.id_umkm = umkm.id_umkm WHERE produk.status != 'dihapus' AND umkm.id_user = :id_user ORDER BY umkm.nama_umkm ASC LIMIT $per_page OFFSET $offset";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':id_user' => $id_user]);
         }
 
         return [
